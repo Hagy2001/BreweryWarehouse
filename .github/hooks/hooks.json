@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "type": "command",
+        "command": "bash -c \"cat >> /home/$USER/AspNetProjects/BreweryWarehouse/lab-1/agent_log.txt\""
+      }
+    ],
+    "preToolUse": [
+      {
+        "type": "command",
+        "command": "bash -c \"cat >> /home/$USER/AspNetProjects/BreweryWarehouse/lab-1/agent_log.txt\""
+      }
+    ]
+  }
+}
