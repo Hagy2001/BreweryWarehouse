@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="BreweryWarehouse.Console/BreweryWarehouse.Console.csproj" />
   <Project Path="BreweryWarehouse.Model/BreweryWarehouse.Model.csproj" />
+  <Project Path="BreweryWarehouse.Web/BreweryWarehouse.Web.csproj" />
 </Solution>
