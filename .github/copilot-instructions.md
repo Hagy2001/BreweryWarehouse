@@ -21,7 +21,7 @@ the current state of the project. Keep entries concise, one line per item.
 - Container: Id (int), SLCode (string), BestBefore (DateTime)
 - BeerStyle: Id (int), Name (string), Description (string), AlcoholPercentage (double), IBU (int), ColorEBC (double), Category (BeerCategory), Cans (List<Can>), Kegs (List<Keg>)
 - Can: inherits Container (Id, SLCode, BestBefore), Size (CanSize), Barcode (string), PackagingDate (DateTime), StockEntries (List<StockEntry>), BeerStyle (BeerStyle)
-- Keg: inherits Container (Id, SLCode, BestBefore)
+- Keg: inherits Container (Id, SLCode, BestBefore), Material (KegMaterial), HeadType (KegHeadType), VolumeInLitres (int: 20 or 30), SerialNumber (string), LastInspection (DateTime), StockEntries (List<StockEntry>), BeerStyle (BeerStyle)
 - StockEntry: minimal placeholder class
 
 ## Current Enums
