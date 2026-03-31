@@ -68,3 +68,20 @@ foreach (var styleTotal in quantityByStyle)
 {
 	Console.WriteLine($"{styleTotal.BeerStyleName} - Qty: {styleTotal.TotalQuantity}");
 }
+
+string targetSlCode = "SL205";
+
+// Combines cans and kegs into one sequence and finds exactly one container by SLCode, or null when no match is found.
+Container? matchingContainer = cans
+	.Cast<Container>()
+	.Concat(kegs.Cast<Container>())
+	.SingleOrDefault(container => container.SLCode == targetSlCode);
+
+if (matchingContainer is null)
+{
+	Console.WriteLine("Not found");
+}
+else
+{
+	Console.WriteLine($"Found {matchingContainer.GetType().Name}: {matchingContainer.SLCode} - {matchingContainer.BestBefore:yyyy-MM-dd}");
+}
