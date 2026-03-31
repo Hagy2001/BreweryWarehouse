@@ -28,3 +28,20 @@ foreach (Container container in expiringContainers)
 {
 	Console.WriteLine($"{container.SLCode} - {container.BestBefore:yyyy-MM-dd}");
 }
+
+string targetLocationCode = "A-01-3";
+
+// Finds stock entries stored at a specific warehouse location by matching each entry's Location against a subquery filtered by LocationCode.
+List<StockEntry> stockEntriesAtLocation = stockEntries
+	.Where(entry => locations
+		.Where(location => location.LocationCode == targetLocationCode)
+		.Any(location => location.Id == entry.Location.Id))
+	.ToList();
+
+Console.WriteLine($"Stock entries at location {targetLocationCode}:");
+
+foreach (StockEntry entry in stockEntriesAtLocation)
+{
+	string containerType = entry.Container is Can ? "Can" : "Keg";
+	Console.WriteLine($"{entry.Container.SLCode} - {containerType} - Qty: {entry.Quantity}");
+}
