@@ -12,9 +12,9 @@ Console.WriteLine(
 	$"Seeded {beerStyles.Count} beer styles, {cans.Count} cans, {kegs.Count} kegs, {locations.Count} locations, {stockEntries.Count} stock entries, {employees.Count} employees");
 
 DateTime now = DateTime.Now;
-DateTime cutoffDate = now.AddDays(90);
+DateTime cutoffDate = now.AddDays(180);
 
-// Finds all seeded cans and kegs expiring within the next 90 days and orders them by earliest best-before date.
+// Finds all seeded cans and kegs expiring within the next 180 days and orders them by earliest best-before date.
 List<Container> expiringContainers = cans
 	.Cast<Container>()
 	.Concat(kegs.Cast<Container>())
@@ -22,7 +22,7 @@ List<Container> expiringContainers = cans
 	.OrderBy(container => container.BestBefore)
 	.ToList();
 
-Console.WriteLine("Expiring in the next 90 days:");
+Console.WriteLine("Expiring in the next 180 days:");
 
 foreach (Container container in expiringContainers)
 {
@@ -44,4 +44,27 @@ foreach (StockEntry entry in stockEntriesAtLocation)
 {
 	string containerType = entry.Container is Can ? "Can" : "Keg";
 	Console.WriteLine($"{entry.Container.SLCode} - {containerType} - Qty: {entry.Quantity}");
+}
+
+// Groups stock entries by the beer style name of each linked container, sums total quantity per style, and sorts from highest to lowest quantity.
+var quantityByStyle = stockEntries
+	.GroupBy(entry => entry.Container switch
+	{
+		Can can => can.BeerStyle.Name,
+		Keg keg => keg.BeerStyle.Name,
+		_ => "Unknown Style"
+	})
+	.Select(group => new
+	{
+		BeerStyleName = group.Key,
+		TotalQuantity = group.Sum(entry => entry.Quantity)
+	})
+	.OrderByDescending(item => item.TotalQuantity)
+	.ToList();
+
+Console.WriteLine("Total quantity by beer style:");
+
+foreach (var styleTotal in quantityByStyle)
+{
+	Console.WriteLine($"{styleTotal.BeerStyleName} - Qty: {styleTotal.TotalQuantity}");
 }
