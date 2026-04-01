@@ -1,5 +1,7 @@
 ﻿using BreweryWarehouse.Model;
 
+await LoadWarehouseDataAsync();
+
 DataSeeder.Seed(
 	out List<BeerStyle> beerStyles,
 	out List<Can> cans,
@@ -84,4 +86,14 @@ if (matchingContainer is null)
 else
 {
 	Console.WriteLine($"Found {matchingContainer.GetType().Name}: {matchingContainer.SLCode} - {matchingContainer.BestBefore:yyyy-MM-dd}");
+}
+
+static async Task LoadWarehouseDataAsync()
+{
+	Console.WriteLine("Loading warehouse data...");
+
+	// await on Task.Delay pauses this async method without blocking the thread, while Thread.Sleep would block the current thread for the full duration.
+	await Task.Delay(1500);
+
+	Console.WriteLine("Warehouse data loaded.");
 }
