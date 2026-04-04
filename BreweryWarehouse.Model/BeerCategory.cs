@@ -1,12 +1,14 @@
+using System.ComponentModel;
+
 namespace BreweryWarehouse.Model;
 
 public enum BeerCategory
 {
-    Lager,
-    Ale,
-    IPA,
-    Stout,
-    Wheat,
-    Sour,
-    Porter
+    [Description("Lager")] Lager,
+    [Description("Ale")] Ale,
+    [Description("IPA")] IPA,
+    [Description("Stout")] Stout,
+    [Description("Wheat")] Wheat,
+    [Description("Sour")] Sour,
+    [Description("Porter")] Porter
 }

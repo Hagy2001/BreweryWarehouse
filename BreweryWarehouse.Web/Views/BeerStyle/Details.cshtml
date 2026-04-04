@@ -1,0 +1,111 @@
+@model BreweryWarehouse.Model.BeerStyle
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li><a asp-controller="BeerStyle" asp-action="Index">Beer Styles</a></li>
+        <li aria-current="page">@Model.Name</li>
+    </ol>
+</nav>
+
+<h1 class="bw-page-title">@Model.Name</h1>
+
+<div class="detail-card">
+    <div class="detail-card__header">
+        <h2 class="detail-card__title">Style Details</h2>
+        <span class="bw-badge bw-badge--category">@Model.Category.GetDescription()</span>
+    </div>
+
+    <dl class="detail-grid">
+        <dt>Id</dt>
+        <dd>@Model.Id</dd>
+
+        <dt>Name</dt>
+        <dd>@Model.Name</dd>
+
+        <dt>Description</dt>
+        <dd>@Model.Description</dd>
+
+        <dt>Alcohol Percentage</dt>
+        <dd>@Model.AlcoholPercentage.ToString("0.0")%</dd>
+
+        <dt>IBU / Color EBC</dt>
+        <dd>@Model.IBU / @Model.ColorEBC.ToString("0.0")</dd>
+    </dl>
+</div>
+
+<section class="subsection">
+    <h2 class="subsection__title">Associated Cans</h2>
+    <div class="bw-table-wrap bw-table-wrap--compact">
+        <table class="bw-table bw-table--compact">
+            <thead>
+                <tr>
+                    <th>SLCode</th>
+                    <th>Size</th>
+                    <th>BestBefore</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Cans.Count == 0)
+                {
+                    <tr>
+                        <td colspan="3">No cans linked to this beer style.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var can in Model.Cans)
+                    {
+                        <tr>
+                            <td>@can.SLCode</td>
+                            <td>@can.Size.GetDescription()</td>
+                            <td>@can.BestBefore.ToString("dd MMM yyyy")</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="subsection">
+    <h2 class="subsection__title">Associated Kegs</h2>
+    <div class="bw-table-wrap bw-table-wrap--compact">
+        <table class="bw-table bw-table--compact">
+            <thead>
+                <tr>
+                    <th>SLCode</th>
+                    <th>Volume</th>
+                    <th>Material</th>
+                    <th>BestBefore</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Kegs.Count == 0)
+                {
+                    <tr>
+                        <td colspan="4">No kegs linked to this beer style.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var keg in Model.Kegs)
+                    {
+                        <tr>
+                            <td>@keg.SLCode</td>
+                            <td>@keg.VolumeInLitres L</td>
+                            <td>@keg.Material.GetDescription()</td>
+                            <td>@keg.BestBefore.ToString("dd MMM yyyy")</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<a asp-controller="BeerStyle" asp-action="Index" class="bw-back-link">Back to Beer Styles</a>

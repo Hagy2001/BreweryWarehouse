@@ -1,7 +1,9 @@
+using System.ComponentModel;
+
 namespace BreweryWarehouse.Model;
 
 public enum KegHeadType
 {
-    KeyHead,
-    SHead
+    [Description("Key Head")] KeyHead,
+    [Description("S Head")] SHead
 }

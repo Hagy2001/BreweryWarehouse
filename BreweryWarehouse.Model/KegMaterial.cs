@@ -1,7 +1,9 @@
+using System.ComponentModel;
+
 namespace BreweryWarehouse.Model;
 
 public enum KegMaterial
 {
-    Plastic,
-    Metal
+    [Description("Plastic")] Plastic,
+    [Description("Metal")] Metal
 }
