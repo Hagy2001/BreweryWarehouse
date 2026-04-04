@@ -3,13 +3,13 @@
     "UserPromptSubmit": [
       {
         "type": "command",
-        "command": "bash -c \"(cat; echo) >> /home/$USER/AspNetProjects/BreweryWarehouse/lab-1/agent_log.txt\""
+        "command": "bash -c \"(cat; echo) >> /home/$USER/AspNetProjects/BreweryWarehouse/lab-2/agent_log.txt\""
       }
     ],
     "preToolUse": [
       {
         "type": "command",
-        "command": "bash -c \"(cat; echo) >> /home/$USER/AspNetProjects/BreweryWarehouse/lab-1/agent_log.txt\""
+        "command": "bash -c \"(cat; echo) >> /home/$USER/AspNetProjects/BreweryWarehouse/lab-2/agent_log.txt\""
       }
     ]
   }
