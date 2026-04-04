@@ -26,6 +26,10 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - BeerStyleController: Controllers/BeerStyleController.cs with Index() and Details(int id)
 - BeerStyle Views: Views/BeerStyle/Index.cshtml and Views/BeerStyle/Details.cshtml
 - Shared Layout: Views/Shared/_Layout.cshtml uses brewery sidebar navigation and shared site.css theme
+- AuthService: Services/AuthService.cs with ValidateCredentials(email,password) and CreatePrincipal(email)
+- AuthController: Controllers/AuthController.cs with Login(GET/POST) and Logout(POST)
+- LoginViewModel: Models/LoginViewModel.cs with Required/EmailAddress validation
+- Login View: Views/Auth/Login.cshtml standalone login page without shared layout
 
 ## Sub-Agent
 A UX sub-agent is defined at `.github/agents/ux-agent.agent.md` (model: gemini-3.1-pro).
@@ -47,6 +51,8 @@ the current state of the project. Keep entries concise, one line per item.
 - Employee: Id (int), FirstName (string), LastName (string), Email (string), Role (string), DateHired (DateTime), IsActive (bool)
 - EnumExtensions: GetDescription(this Enum) helper for enum DescriptionAttribute labels
 - DataSeeder: static class with Seed(out List<BeerStyle>, out List<Can>, out List<Keg>, out List<WarehouseLocation>, out List<StockEntry>, out List<Employee>)
+- AuthService: mock credential validator and ClaimsPrincipal creator for admin@brewery.com
+- LoginViewModel: Email and Password with DataAnnotations validation
 
 ## Current Enums
 - BeerCategory: Lager, Ale, IPA, Stout, Wheat, Sour, Porter

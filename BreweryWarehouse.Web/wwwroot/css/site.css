@@ -93,13 +93,67 @@ a:hover {
 
 .bw-content {
   margin-left: 220px;
-  padding: 2rem 1.2rem 2.4rem;
+  padding: 0 1.2rem 2.4rem;
   width: calc(100% - 220px);
 }
 
 .bw-content-inner {
   margin-inline: auto;
   max-width: 1100px;
+  padding-top: 1.35rem;
+}
+
+.bw-topbar {
+  align-items: center;
+  background: var(--bw-surface);
+  border-bottom: 1px solid var(--bw-border);
+  display: flex;
+  justify-content: space-between;
+  margin-inline: auto;
+  max-width: 1100px;
+  min-height: 60px;
+  padding: 0.8rem 0;
+}
+
+.bw-topbar__title {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.bw-topbar__actions {
+  align-items: center;
+  display: flex;
+  gap: 0.7rem;
+}
+
+.bw-topbar__user {
+  color: var(--bw-text-muted);
+  font-size: 0.9rem;
+}
+
+.bw-signout-form {
+  margin: 0;
+}
+
+.bw-signout-btn {
+  background: transparent;
+  border: 1px solid var(--bw-border);
+  border-radius: 4px;
+  color: var(--bw-text-muted);
+  cursor: pointer;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  padding: 0.35rem 0.8rem;
+  text-transform: uppercase;
+}
+
+.bw-signout-btn:hover {
+  border-color: var(--bw-accent-hover);
+  color: var(--bw-text);
 }
 
 .bw-footer {
@@ -273,6 +327,111 @@ a:hover {
   margin-top: 1rem;
 }
 
+.bw-login-body {
+  align-items: center;
+  background: var(--bw-bg);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.bw-login-main {
+  padding: 1rem;
+  width: 100%;
+}
+
+.bw-login-card {
+  background: var(--bw-surface);
+  border: 1px solid var(--bw-border);
+  border-radius: 10px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+  margin: 0 auto;
+  max-width: 380px;
+  padding: 1.8rem;
+}
+
+.bw-login-brand {
+  color: var(--bw-accent);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.05em;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.bw-login-subtitle {
+  color: var(--bw-text-muted);
+  margin: 0.35rem 0 1.4rem;
+  text-align: center;
+}
+
+.bw-login-form label {
+  color: var(--bw-text-muted);
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.bw-field-group {
+  margin-bottom: 1rem;
+}
+
+.bw-input {
+  background: var(--bw-bg);
+  border: 1px solid var(--bw-border);
+  border-radius: 5px;
+  color: var(--bw-text);
+  font-family: "Barlow", sans-serif;
+  font-size: 0.95rem;
+  padding: 0.65rem 0.7rem;
+  width: 100%;
+}
+
+.bw-input:focus {
+  border-color: var(--bw-accent);
+  outline: none;
+}
+
+.bw-login-btn {
+  background: var(--bw-accent);
+  border: none;
+  border-radius: 4px;
+  color: var(--bw-bg);
+  cursor: pointer;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  margin-top: 0.3rem;
+  padding: 0.65rem 0.85rem;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.bw-login-btn:hover {
+  background: var(--bw-accent-hover);
+}
+
+.bw-validation-summary,
+.bw-field-error {
+  color: var(--bw-danger);
+}
+
+.bw-validation-summary {
+  margin-bottom: 0.8rem;
+}
+
+.bw-validation-summary ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.bw-field-error {
+  display: block;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
 @media (max-width: 767px) {
   .bw-sidebar {
     min-height: auto;
@@ -286,7 +445,19 @@ a:hover {
 
   .bw-content {
     margin-left: 0;
+    padding-top: 0;
     width: 100%;
+  }
+
+  .bw-topbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 0.75rem 0;
+  }
+
+  .bw-content-inner {
+    padding-top: 1rem;
   }
 
   .bw-footer {

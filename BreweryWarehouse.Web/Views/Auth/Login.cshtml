@@ -1,0 +1,47 @@
+@model BreweryWarehouse.Web.Models.LoginViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In - BreweryWarehouse</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="bw-login-body">
+    <main class="bw-login-main" role="main">
+        <section class="bw-login-card" aria-label="Sign in">
+            <h1 class="bw-login-brand">BreweryWarehouse</h1>
+            <p class="bw-login-subtitle">Warehouse Management System</p>
+
+            <form method="post" asp-controller="Auth" asp-action="Login" class="bw-login-form">
+                @if (ViewData["ReturnUrl"] is string returnUrl && !string.IsNullOrWhiteSpace(returnUrl))
+                {
+                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+                }
+
+                <div asp-validation-summary="ModelOnly" class="bw-validation-summary"></div>
+
+                <div class="bw-field-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="bw-input" autocomplete="username" />
+                    <span asp-validation-for="Email" class="bw-field-error"></span>
+                </div>
+
+                <div class="bw-field-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="bw-input" autocomplete="current-password" />
+                    <span asp-validation-for="Password" class="bw-field-error"></span>
+                </div>
+
+                <button type="submit" class="bw-login-btn">Sign In</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BreweryWarehouse.Model;
 using BreweryWarehouse.Web.Repositories;
 
 namespace BreweryWarehouse.Web;
 
+[Authorize]
 public class BeerStyleController : Controller
 {
     private readonly BeerStyleMockRepository repository;

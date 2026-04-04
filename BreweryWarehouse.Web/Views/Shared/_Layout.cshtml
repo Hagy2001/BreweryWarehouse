@@ -25,6 +25,19 @@
         </aside>
 
         <main class="bw-content" role="main">
+            <header class="bw-topbar">
+                <h2 class="bw-topbar__title">@ViewData["Title"]</h2>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <div class="bw-topbar__actions">
+                        <span class="bw-topbar__user">@User.Identity.Name</span>
+                        <form method="post" asp-controller="Auth" asp-action="Logout" class="bw-signout-form">
+                            <button type="submit" class="bw-signout-btn">Sign Out</button>
+                        </form>
+                    </div>
+                }
+            </header>
+
             <div class="bw-content-inner">
                 @RenderBody()
             </div>
