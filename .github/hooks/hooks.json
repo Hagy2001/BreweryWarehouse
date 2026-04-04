@@ -3,13 +3,13 @@
     "UserPromptSubmit": [
       {
         "type": "command",
-        "command": "bash -c \"(cat; echo) >> /home/$USER/AspNetProjects/BreweryWarehouse/lab-2/agent_log.txt\""
+        "command": "bash /home/$USER/AspNetProjects/BreweryWarehouse/.github/hooks/log_user_prompt.sh"
       }
     ],
     "preToolUse": [
       {
         "type": "command",
-        "command": "bash -c \"payload=\\\"$(cat)\\\"; if echo \\\"$payload\\\" | grep -q '\\\"tool_name\\\":\\\"runSubagent\\\"'; then echo \\\"$payload\\\" >> /home/$USER/AspNetProjects/BreweryWarehouse/lab-2/agent_log.txt; echo >> /home/$USER/AspNetProjects/BreweryWarehouse/lab-2/agent_log.txt; fi\""
+        "command": "bash /home/$USER/AspNetProjects/BreweryWarehouse/.github/hooks/log_pretool_subagent.sh"
       }
     ]
   }
