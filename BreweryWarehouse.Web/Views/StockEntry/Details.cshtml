@@ -1,0 +1,105 @@
+@using BreweryWarehouse.Model
+@model BreweryWarehouse.Model.StockEntry
+
+@{
+    ViewData["Title"] = $"Entry {Model.Id}";
+    bool isCan = Model.Container is Can;
+    string containerType = isCan ? "CAN" : "KEG";
+    string controllerName = isCan ? "Can" : "Keg";
+    BeerStyle? beerStyle = isCan
+        ? ((Can)Model.Container).BeerStyle
+        : ((Keg)Model.Container).BeerStyle;
+}
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li><a asp-controller="StockEntry" asp-action="Index">Stock</a></li>
+        <li aria-current="page">Entry @Model.Id</li>
+    </ol>
+</nav>
+
+<h1 class="bw-page-title">Entry Details</h1>
+
+<div class="detail-card">
+    <div class="detail-card__header">
+        <h2 class="detail-card__title">Stock Entry Info</h2>
+    </div>
+    <dl class="detail-grid">
+        <dt>Id</dt>
+        <dd>@Model.Id</dd>
+
+        <dt>Quantity</dt>
+        <dd>@Model.Quantity</dd>
+
+        <dt>Date Received</dt>
+        <dd>@Model.DateReceived.ToString("dd MMM yyyy")</dd>
+
+        <dt>Date Modified</dt>
+        <dd>@Model.DateModified.ToString("dd MMM yyyy")</dd>
+
+        <dt>Notes</dt>
+        <dd>@(string.IsNullOrWhiteSpace(Model.Notes) ? "-" : Model.Notes)</dd>
+    </dl>
+</div>
+
+<section class="subsection">
+    <h2 class="subsection__title">Container</h2>
+    <div class="detail-card">
+        <dl class="detail-grid">
+            <dt>Type</dt>
+            <dd><span class="bw-badge bw-badge--category">@containerType</span></dd>
+
+            <dt>SLCode</dt>
+            <dd>@Model.Container.SLCode</dd>
+
+            <dt>Best Before</dt>
+            <dd>@Model.Container.BestBefore.ToString("dd MMM yyyy")</dd>
+
+            <dt>Details</dt>
+            <dd><a asp-controller="@controllerName" asp-action="Details" asp-route-id="@Model.Container.Id">View Container</a></dd>
+        </dl>
+    </div>
+</section>
+
+<section class="subsection">
+    <h2 class="subsection__title">Beer Style</h2>
+    <div class="detail-card">
+        @if (beerStyle is not null)
+        {
+            <div class="detail-card__header">
+                <h3 class="detail-card__title">@beerStyle.Name</h3>
+                <span class="bw-badge bw-badge--category">@beerStyle.Category.GetDescription()</span>
+            </div>
+            <dl class="detail-grid">
+                <dt>ABV</dt>
+                <dd>@beerStyle.AlcoholPercentage.ToString("0.0")%</dd>
+
+                <dt>Details</dt>
+                <dd><a asp-controller="BeerStyle" asp-action="Details" asp-route-id="@beerStyle.Id">View Beer Style</a></dd>
+            </dl>
+        }
+        else
+        {
+            <p>No beer style associated.</p>
+        }
+    </div>
+</section>
+
+<section class="subsection">
+    <h2 class="subsection__title">Location</h2>
+    <div class="detail-card">
+        <dl class="detail-grid">
+            <dt>Location Code</dt>
+            <dd>@Model.Location.LocationCode</dd>
+
+            <dt>Aisle / Shelf</dt>
+            <dd>@Model.Location.Aisle / @Model.Location.Shelf</dd>
+
+            <dt>Details</dt>
+            <dd><a asp-controller="WarehouseLocation" asp-action="Details" asp-route-id="@Model.Location.Id">View Location</a></dd>
+        </dl>
+    </div>
+</section>
+
+<a asp-controller="StockEntry" asp-action="Index" class="bw-back-link">Back to Stock Entries</a>

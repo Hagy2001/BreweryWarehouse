@@ -1,0 +1,71 @@
+@using BreweryWarehouse.Model
+@model List<BreweryWarehouse.Model.StockEntry>
+
+@{
+    ViewData["Title"] = "Stock Entries";
+}
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li aria-current="page">Stock</li>
+    </ol>
+</nav>
+
+<h1 class="bw-page-title">Stock Entries</h1>
+
+<div class="bw-table-wrap">
+    <table class="bw-table">
+        <thead>
+            <tr>
+                <th>Entry ID</th>
+                <th>Container SLCode</th>
+                <th>Container Type</th>
+                <th>Beer Style</th>
+                <th>Location Code</th>
+                <th>Quantity</th>
+                <th>Date Received</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="8">No stock entries found.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Model)
+                {
+                    bool isCan = item.Container is Can;
+                    string badgeText = isCan ? "CAN" : "KEG";
+                    string beerStyleName = "-";
+
+                    if (isCan && ((Can)item.Container).BeerStyle is not null)
+                    {
+                        beerStyleName = ((Can)item.Container).BeerStyle.Name;
+                    }
+                    else if (!isCan && item.Container is Keg keg && keg.BeerStyle is not null)
+                    {
+                        beerStyleName = keg.BeerStyle.Name;
+                    }
+
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Container.SLCode</td>
+                        <td><span class="bw-badge bw-badge--category">@badgeText</span></td>
+                        <td>@beerStyleName</td>
+                        <td>@item.Location.LocationCode</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.DateReceived.ToString("dd MMM yyyy")</td>
+                        <td>
+                            <a asp-controller="StockEntry" asp-action="Details" asp-route-id="@item.Id" class="bw-pill-link">Details</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
