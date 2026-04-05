@@ -1,8 +1,215 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using System.Globalization
+@model BreweryWarehouse.Web.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+    DateTime today = DateTime.Today;
+    var expiringItems = Model.ExpiringCans
+        .Select(can => new
+        {
+            can.SLCode,
+            Type = "Can",
+            can.BestBefore,
+            BeerStyle = can.BeerStyle?.Name ?? "-"
+        })
+        .Concat(Model.ExpiringKegs.Select(keg => new
+        {
+            keg.SLCode,
+            Type = "Keg",
+            keg.BestBefore,
+            BeerStyle = keg.BeerStyle?.Name ?? "-"
+        }))
+        .OrderBy(item => item.BestBefore)
+        .ToList();
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<style>
+    .dashboard-kpi-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+        margin-bottom: 1.5rem;
+    }
+
+    .dashboard-kpi {
+        background: var(--bw-surface);
+        border: 1px solid var(--bw-border);
+        border-radius: 10px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+        padding: 1rem;
+    }
+
+    .dashboard-kpi__value {
+        color: var(--bw-accent);
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: clamp(2rem, 5vw, 2.8rem);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        margin: 0;
+    }
+
+    .dashboard-kpi__label {
+        color: var(--bw-text-muted);
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 0.85rem;
+        letter-spacing: 0.06em;
+        margin: 0.35rem 0 0;
+        text-transform: uppercase;
+    }
+
+    .dashboard-section {
+        margin-top: 1.5rem;
+    }
+
+    .dashboard-section__title {
+        color: var(--bw-text-muted);
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+        margin: 0 0 0.75rem;
+        text-transform: uppercase;
+    }
+
+    .dashboard-expired {
+        color: var(--bw-danger);
+    }
+
+    .dashboard-location-list {
+        display: grid;
+        gap: 0.8rem;
+    }
+
+    .dashboard-location {
+        background: var(--bw-surface);
+        border: 1px solid var(--bw-border);
+        border-radius: 8px;
+        padding: 0.75rem;
+    }
+
+    .dashboard-location__meta {
+        align-items: baseline;
+        display: flex;
+        gap: 0.5rem;
+        justify-content: space-between;
+        margin-bottom: 0.45rem;
+    }
+
+    .dashboard-location__code {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 1rem;
+        letter-spacing: 0.04em;
+    }
+
+    .dashboard-location__label,
+    .dashboard-location__qty {
+        color: var(--bw-text-muted);
+        font-size: 0.88rem;
+    }
+
+    .dashboard-location__track {
+        background: var(--bw-surface-2);
+        border-radius: 999px;
+        height: 10px;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .dashboard-location__fill {
+        background: var(--bw-accent);
+        height: 100%;
+    }
+</style>
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li aria-current="page">Home</li>
+    </ol>
+</nav>
+
+<h1 class="bw-page-title">Dashboard</h1>
+
+<section class="dashboard-kpi-grid" aria-label="Key metrics">
+    <article class="dashboard-kpi">
+        <p class="dashboard-kpi__value">@Model.TotalCans</p>
+        <p class="dashboard-kpi__label">Total Cans</p>
+    </article>
+    <article class="dashboard-kpi">
+        <p class="dashboard-kpi__value">@Model.TotalKegs</p>
+        <p class="dashboard-kpi__label">Total Kegs</p>
+    </article>
+    <article class="dashboard-kpi">
+        <p class="dashboard-kpi__value">@Model.TotalLocations</p>
+        <p class="dashboard-kpi__label">Locations</p>
+    </article>
+    <article class="dashboard-kpi">
+        <p class="dashboard-kpi__value">@Model.TotalBeerStyles</p>
+        <p class="dashboard-kpi__label">Beer Styles</p>
+    </article>
+</section>
+
+<section class="dashboard-section" aria-labelledby="expiring-title">
+    <h2 id="expiring-title" class="dashboard-section__title">Expiring Soon (&lt;= 30 days)</h2>
+
+    <div class="bw-table-wrap">
+        <table class="bw-table">
+            <thead>
+                <tr>
+                    <th>SLCode</th>
+                    <th>Type</th>
+                    <th>Best Before</th>
+                    <th>Beer Style</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (expiringItems.Count == 0)
+                {
+                    <tr>
+                        <td colspan="4">No cans or kegs are expiring in the selected window.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in expiringItems)
+                    {
+                        bool isExpired = item.BestBefore.Date < today;
+                        <tr class="@(isExpired ? "dashboard-expired" : string.Empty)">
+                            <td>@item.SLCode</td>
+                            <td>@item.Type</td>
+                            <td>@item.BestBefore.ToString("yyyy-MM-dd")</td>
+                            <td>@item.BeerStyle</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="dashboard-section" aria-labelledby="stock-location-title">
+    <h2 id="stock-location-title" class="dashboard-section__title">Stock by Location</h2>
+
+    <div class="dashboard-location-list">
+        @foreach (var location in Model.Locations)
+        {
+            int quantity = location.StockEntries.Sum(entry => entry.Quantity);
+            double utilizationPercent = location.MaxCapacity > 0
+                ? Math.Min((double)quantity / location.MaxCapacity * 100.0, 100.0)
+                : 0;
+            string barWidth = $"{utilizationPercent.ToString("0.#", CultureInfo.InvariantCulture)}%";
+
+            <article class="dashboard-location">
+                <div class="dashboard-location__meta">
+                    <div>
+                        <div class="dashboard-location__code">@location.LocationCode</div>
+                        <div class="dashboard-location__label">Aisle @location.Aisle / Shelf @location.Shelf</div>
+                    </div>
+                    <div class="dashboard-location__qty">@quantity / @location.MaxCapacity</div>
+                </div>
+                <div class="dashboard-location__track" role="img" aria-label="Stock utilization at @location.LocationCode">
+                    <div class="dashboard-location__fill" style="width: @barWidth;"></div>
+                </div>
+            </article>
+        }
+    </div>
+</section>

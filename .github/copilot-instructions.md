@@ -25,6 +25,8 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - BeerStyleMockRepository: Repositories/BeerStyleMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
 - BeerStyleController: Controllers/BeerStyleController.cs with Index() and Details(int id)
 - BeerStyle Views: Views/BeerStyle/Index.cshtml and Views/BeerStyle/Details.cshtml
+- HomeController: Controllers/HomeController.cs with [Authorize], BeerStyleMockRepository injection, dashboard Index() projection, Privacy(), Error()
+- Home Dashboard View: Views/Home/Index.cshtml with KPI cards, expiring combined table, and stock-by-location utilization bars
 - Shared Layout: Views/Shared/_Layout.cshtml uses brewery sidebar navigation and shared site.css theme
 - AuthService: Services/AuthService.cs with ValidateCredentials(email,password) and CreatePrincipal(email)
 - AuthController: Controllers/AuthController.cs with Login(GET/POST) and Logout(POST)
@@ -34,7 +36,6 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 ## Sub-Agent
 A UX sub-agent is defined at `.github/agents/ux-agent.agent.md` (model: gemini-3.1-pro).
 The main agent must hand off to it when generating any UI/View code by referencing it by name.
-Log of sub-agent calls is maintained in `lab-2/agent_log.txt` as proof.
 
 ## Self-Update Rule
 After completing any task that adds, removes or modifies classes, methods, 
@@ -53,6 +54,7 @@ the current state of the project. Keep entries concise, one line per item.
 - DataSeeder: static class with Seed(out List<BeerStyle>, out List<Can>, out List<Keg>, out List<WarehouseLocation>, out List<StockEntry>, out List<Employee>)
 - AuthService: mock credential validator and ClaimsPrincipal creator for admin@brewery.com
 - LoginViewModel: Email and Password with DataAnnotations validation
+- DashboardViewModel: TotalCans, TotalKegs, TotalLocations, TotalBeerStyles, ExpiringCans (List<Can>), ExpiringKegs (List<Keg>), Locations (List<WarehouseLocation>)
 
 ## Current Enums
 - BeerCategory: Lager, Ale, IPA, Stout, Wheat, Sour, Porter
