@@ -1,0 +1,72 @@
+@model BreweryWarehouse.Model.Employee
+@{
+    ViewData["Title"] = $"{Model.FirstName} {Model.LastName}";
+    int yearsWithBrewery = (DateTime.Today - Model.DateHired).Days / 365;
+}
+
+<style>
+    .employee-status-large {
+        border-radius: 4px;
+        color: #fff;
+        display: inline-block;
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 0.9rem;
+        letter-spacing: 0.05em;
+        padding: 5px 12px;
+        text-transform: uppercase;
+    }
+
+    .employee-status-large--active {
+        background-color: var(--bw-success);
+    }
+
+    .employee-status-large--inactive {
+        background-color: var(--bw-danger);
+    }
+</style>
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li><a asp-controller="Employee" asp-action="Index">Employees</a></li>
+        <li aria-current="page">@Model.FirstName @Model.LastName</li>
+    </ol>
+</nav>
+
+<h1 class="bw-page-title">Employee: @Model.FirstName @Model.LastName</h1>
+
+<div class="detail-card">
+    <div class="detail-card__header">
+        <h2 class="detail-card__title">@Model.FirstName @Model.LastName</h2>
+        @if (Model.IsActive)
+        {
+            <span class="employee-status-large employee-status-large--active">ACTIVE</span>
+        }
+        else
+        {
+            <span class="employee-status-large employee-status-large--inactive">INACTIVE</span>
+        }
+    </div>
+
+    <dl class="detail-grid">
+        <dt>First Name</dt>
+        <dd>@Model.FirstName</dd>
+
+        <dt>Last Name</dt>
+        <dd>@Model.LastName</dd>
+
+        <dt>Email</dt>
+        <dd>@Model.Email</dd>
+
+        <dt>Role</dt>
+        <dd>@Model.Role</dd>
+
+        <dt>Date Hired</dt>
+        <dd>@Model.DateHired.ToString("dd MMM yyyy")</dd>
+
+        <dt>Years with brewery</dt>
+        <dd>@yearsWithBrewery years</dd>
+    </dl>
+</div>
+
+<a asp-controller="Employee" asp-action="Index" class="bw-back-link">Back to Employees</a>

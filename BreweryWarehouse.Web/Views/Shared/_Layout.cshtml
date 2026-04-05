@@ -20,7 +20,7 @@
                 <a asp-controller="Keg" asp-action="Index">Kegs</a>
                 <a asp-controller="WarehouseLocation" asp-action="Index">Locations</a>
                 <a asp-controller="StockEntry" asp-action="Index">Stock</a>
-                <a asp-controller="Home" asp-action="Index" asp-fragment="employees">Employees</a>
+                <a asp-controller="Employee" asp-action="Index">Employees</a>
             </nav>
 
             @if (User.Identity?.IsAuthenticated == true)

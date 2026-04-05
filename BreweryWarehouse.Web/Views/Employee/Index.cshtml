@@ -1,0 +1,73 @@
+@model List<BreweryWarehouse.Model.Employee>
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<style>
+    .employee-status {
+        border-radius: 3px;
+        color: #fff;
+        display: inline-block;
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 0.76rem;
+        letter-spacing: 0.05em;
+        padding: 2px 8px;
+        text-transform: uppercase;
+    }
+
+    .employee-status--active {
+        background-color: var(--bw-success);
+    }
+
+    .employee-status--inactive {
+        background-color: var(--bw-danger);
+    }
+</style>
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li aria-current="page">Employees</li>
+    </ol>
+</nav>
+
+<h1 class="bw-page-title">Employees</h1>
+
+<div class="bw-table-wrap">
+    <table class="bw-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Date Hired</th>
+                <th>Status</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in Model)
+            {
+                <tr>
+                    <td>@emp.LastName, @emp.FirstName</td>
+                    <td>@emp.Email</td>
+                    <td>@emp.Role</td>
+                    <td>@emp.DateHired.ToString("dd MMM yyyy")</td>
+                    <td>
+                        @if (emp.IsActive)
+                        {
+                            <span class="employee-status employee-status--active">ACTIVE</span>
+                        }
+                        else
+                        {
+                            <span class="employee-status employee-status--inactive">INACTIVE</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-controller="Employee" asp-action="Details" asp-route-id="@emp.Id" class="bw-pill-link">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
