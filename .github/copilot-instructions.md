@@ -28,6 +28,9 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - CanMockRepository: Repositories/CanMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
 - CanController: Controllers/CanController.cs with [Authorize], Index(), and Details(int id)
 - Can Views: Views/Can/Index.cshtml and Views/Can/Details.cshtml
+- KegMockRepository: Repositories/KegMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
+- KegController: Controllers/KegController.cs with [Authorize], Index(), and Details(int id)
+- Keg Views: Views/Keg/Index.cshtml and Views/Keg/Details.cshtml
 - HomeController: Controllers/HomeController.cs with [Authorize], BeerStyleMockRepository injection, dashboard Index() projection, Privacy(), Error()
 - Home Dashboard View: Views/Home/Index.cshtml with KPI cards, expiring combined table, and stock-by-location utilization bars
 - Shared Layout: Views/Shared/_Layout.cshtml uses brewery sidebar navigation and shared site.css theme
@@ -59,6 +62,7 @@ the current state of the project. Keep entries concise, one line per item.
 - LoginViewModel: Email and Password with DataAnnotations validation
 - DashboardViewModel: TotalCans, TotalKegs, TotalLocations, TotalBeerStyles, ExpiringCans (List<Can>), ExpiringKegs (List<Keg>), Locations (List<WarehouseLocation>)
 - CanMockRepository: static seeded List<Can> with GetAll() and GetById(int id)
+- KegMockRepository: static seeded List<Keg> with GetAll() and GetById(int id)
 
 ## Current Enums
 - BeerCategory: Lager, Ale, IPA, Stout, Wheat, Sour, Porter

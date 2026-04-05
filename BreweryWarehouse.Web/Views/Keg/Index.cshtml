@@ -1,0 +1,57 @@
+@using BreweryWarehouse.Model
+@model List<BreweryWarehouse.Model.Keg>
+
+@{
+    ViewData["Title"] = "Kegs";
+    DateTime expiryThreshold = DateTime.Today.AddDays(30);
+}
+
+<style>
+    .row-expiring {
+        color: var(--bw-danger);
+    }
+</style>
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li aria-current="page">Kegs</li>
+    </ol>
+</nav>
+
+<h1 class="bw-page-title">Kegs</h1>
+
+<div class="bw-table-wrap">
+    <table class="bw-table">
+        <thead>
+            <tr>
+                <th>SLCode</th>
+                <th>Beer Style</th>
+                <th>Volume</th>
+                <th>Material</th>
+                <th>Head Type</th>
+                <th>Last Inspection</th>
+                <th>Best Before</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var keg in Model)
+            {
+                string rowClass = keg.BestBefore.Date <= expiryThreshold.Date ? "row-expiring" : string.Empty;
+                <tr class="@rowClass">
+                    <td>@keg.SLCode</td>
+                    <td>@(keg.BeerStyle?.Name ?? "-")</td>
+                    <td>@keg.VolumeInLitres L</td>
+                    <td>@keg.Material.GetDescription()</td>
+                    <td>@keg.HeadType.GetDescription()</td>
+                    <td>@keg.LastInspection.ToString("dd MMM yyyy")</td>
+                    <td>@keg.BestBefore.ToString("dd MMM yyyy")</td>
+                    <td>
+                        <a asp-controller="Keg" asp-action="Details" asp-route-id="@keg.Id" class="bw-pill-link">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
