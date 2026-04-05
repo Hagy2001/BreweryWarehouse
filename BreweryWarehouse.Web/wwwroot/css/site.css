@@ -100,7 +100,8 @@ a:hover {
 }
 
 .bw-nav a:hover,
-.bw-nav a:focus-visible {
+.bw-nav a:focus-visible,
+.bw-nav a.active {
   background: var(--bw-surface);
   border-left-color: var(--bw-accent);
   color: var(--bw-text);
@@ -116,37 +117,6 @@ a:hover {
   margin-inline: auto;
   max-width: 1100px;
   padding-top: 1.35rem;
-}
-
-.bw-topbar {
-  align-items: center;
-  background: var(--bw-surface);
-  border-bottom: 1px solid var(--bw-border);
-  display: flex;
-  justify-content: space-between;
-  margin-inline: auto;
-  max-width: 1100px;
-  min-height: 60px;
-  padding: 0.8rem 0;
-}
-
-.bw-topbar__title {
-  font-family: "Barlow Condensed", sans-serif;
-  font-size: 1.15rem;
-  letter-spacing: 0.04em;
-  margin: 0;
-  text-transform: uppercase;
-}
-
-.bw-topbar__actions {
-  align-items: center;
-  display: flex;
-  gap: 0.7rem;
-}
-
-.bw-topbar__user {
-  color: var(--bw-text-muted);
-  font-size: 0.9rem;
 }
 
 .bw-signout-form {
@@ -466,13 +436,6 @@ a:hover {
     margin-left: 0;
     padding-top: 0;
     width: 100%;
-  }
-
-  .bw-topbar {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 0.55rem;
-    padding: 0.75rem 0;
   }
 
   .bw-content-inner {

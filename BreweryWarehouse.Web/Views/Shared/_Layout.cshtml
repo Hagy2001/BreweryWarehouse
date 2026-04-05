@@ -10,17 +10,23 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
+    @{ 
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        string GetActive(string controller) => currentController == controller ? "active" : string.Empty;
+        string? GetAriaCurrent(string controller) => currentController == controller ? "page" : null;
+    }
+
     <div class="bw-shell">
         <aside class="bw-sidebar" aria-label="Primary">
             <a asp-controller="Home" asp-action="Index" class="bw-brand">BREWERYWAREHOUSE</a>
             <nav class="bw-nav">
-                <a asp-controller="Home" asp-action="Index">Home</a>
-                <a asp-controller="BeerStyle" asp-action="Index">Beer Styles</a>
-                <a asp-controller="Can" asp-action="Index">Cans</a>
-                <a asp-controller="Keg" asp-action="Index">Kegs</a>
-                <a asp-controller="WarehouseLocation" asp-action="Index">Locations</a>
-                <a asp-controller="StockEntry" asp-action="Index">Stock</a>
-                <a asp-controller="Employee" asp-action="Index">Employees</a>
+                <a asp-controller="Home" asp-action="Index" class="@GetActive("Home")" aria-current="@GetAriaCurrent("Home")">Home</a>
+                <a asp-controller="BeerStyle" asp-action="Index" class="@GetActive("BeerStyle")" aria-current="@GetAriaCurrent("BeerStyle")">Beer Styles</a>
+                <a asp-controller="Can" asp-action="Index" class="@GetActive("Can")" aria-current="@GetAriaCurrent("Can")">Cans</a>
+                <a asp-controller="Keg" asp-action="Index" class="@GetActive("Keg")" aria-current="@GetAriaCurrent("Keg")">Kegs</a>
+                <a asp-controller="WarehouseLocation" asp-action="Index" class="@GetActive("WarehouseLocation")" aria-current="@GetAriaCurrent("WarehouseLocation")">Locations</a>
+                <a asp-controller="StockEntry" asp-action="Index" class="@GetActive("StockEntry")" aria-current="@GetAriaCurrent("StockEntry")">Stock</a>
+                <a asp-controller="Employee" asp-action="Index" class="@GetActive("Employee")" aria-current="@GetAriaCurrent("Employee")">Employees</a>
             </nav>
 
             @if (User.Identity?.IsAuthenticated == true)
@@ -35,10 +41,6 @@
         </aside>
 
         <main class="bw-content" role="main">
-            <header class="bw-topbar">
-                <h2 class="bw-topbar__title">@ViewData["Title"]</h2>
-            </header>
-
             <div class="bw-content-inner">
                 @RenderBody()
             </div>
