@@ -1,0 +1,95 @@
+@model BreweryWarehouse.Model.Can
+
+@{
+    ViewData["Title"] = Model.SLCode;
+    string sizeDisplay = Model.Size switch
+    {
+        BreweryWarehouse.Model.CanSize.Can033 => "0.33 L",
+        BreweryWarehouse.Model.CanSize.Can044 => "0.44 L",
+        _ => Model.Size.ToString()
+    };
+}
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li><a asp-controller="Can" asp-action="Index">Cans</a></li>
+        <li aria-current="page">@Model.SLCode</li>
+    </ol>
+</nav>
+
+<h1 class="bw-page-title">@Model.SLCode</h1>
+
+<div class="detail-card">
+    <div class="detail-card__header">
+        <h2 class="detail-card__title">Can Details</h2>
+    </div>
+
+    <dl class="detail-grid">
+        <dt>SLCode</dt>
+        <dd>@Model.SLCode</dd>
+
+        <dt>Barcode</dt>
+        <dd>@Model.Barcode</dd>
+
+        <dt>Size</dt>
+        <dd>@sizeDisplay</dd>
+
+        <dt>Packaging Date</dt>
+        <dd>@Model.PackagingDate.ToString("dd MMM yyyy")</dd>
+
+        <dt>Best Before</dt>
+        <dd>@Model.BestBefore.ToString("dd MMM yyyy")</dd>
+
+        <dt>Beer Style</dt>
+        <dd>
+            @if (Model.BeerStyle is not null)
+            {
+                <a asp-controller="BeerStyle" asp-action="Details" asp-route-id="@Model.BeerStyle.Id">@Model.BeerStyle.Name</a>
+            }
+            else
+            {
+                <span>-</span>
+            }
+        </dd>
+    </dl>
+</div>
+
+<section class="subsection">
+    <h2 class="subsection__title">Stock Entries</h2>
+
+    <div class="bw-table-wrap bw-table-wrap--compact">
+        <table class="bw-table bw-table--compact">
+            <thead>
+                <tr>
+                    <th>Location Code</th>
+                    <th>Quantity</th>
+                    <th>Date Received</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.StockEntries.Count == 0)
+                {
+                    <tr>
+                        <td colspan="4">No stock entries found for this can.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var entry in Model.StockEntries)
+                    {
+                        <tr>
+                            <td>@entry.Location.LocationCode</td>
+                            <td>@entry.Quantity</td>
+                            <td>@entry.DateReceived.ToString("dd MMM yyyy")</td>
+                            <td>@entry.Notes</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<a asp-controller="Can" asp-action="Index" class="bw-back-link">Back to Cans</a>

@@ -1,0 +1,61 @@
+@model List<BreweryWarehouse.Model.Can>
+
+@{
+    ViewData["Title"] = "Cans";
+    DateTime expiryThreshold = DateTime.Today.AddDays(30);
+}
+
+<style>
+    .row-expiring {
+        color: var(--bw-danger);
+    }
+</style>
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li aria-current="page">Cans</li>
+    </ol>
+</nav>
+
+<h1 class="bw-page-title">Cans</h1>
+
+<div class="bw-table-wrap">
+    <table class="bw-table">
+        <thead>
+            <tr>
+                <th>SLCode</th>
+                <th>Beer Style</th>
+                <th>Size</th>
+                <th>Barcode</th>
+                <th>Packaging Date</th>
+                <th>Best Before</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var can in Model)
+            {
+                bool isExpiringSoon = can.BestBefore.Date <= expiryThreshold;
+                string sizeDisplay = can.Size switch
+                {
+                    BreweryWarehouse.Model.CanSize.Can033 => "0.33 L",
+                    BreweryWarehouse.Model.CanSize.Can044 => "0.44 L",
+                    _ => can.Size.ToString()
+                };
+
+                <tr class="@(isExpiringSoon ? "row-expiring" : string.Empty)">
+                    <td>@can.SLCode</td>
+                    <td>@can.BeerStyle?.Name</td>
+                    <td>@sizeDisplay</td>
+                    <td>@can.Barcode</td>
+                    <td>@can.PackagingDate.ToString("dd MMM yyyy")</td>
+                    <td>@can.BestBefore.ToString("dd MMM yyyy")</td>
+                    <td>
+                        <a asp-controller="Can" asp-action="Details" asp-route-id="@can.Id" class="bw-pill-link">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
