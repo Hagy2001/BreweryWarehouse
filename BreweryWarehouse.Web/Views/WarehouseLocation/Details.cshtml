@@ -1,0 +1,146 @@
+@model BreweryWarehouse.Model.WarehouseLocation
+
+@{
+    ViewData["Title"] = $"Location {Model.LocationCode}";
+    int used = Model.StockEntries.Sum(entry => entry.Quantity);
+    int max = Model.MaxCapacity;
+    double percentage = max > 0 ? Math.Min(100, (double)used / max * 100) : 0;
+}
+
+<style>
+    .location-track {
+        background: var(--bw-surface-2);
+        border-radius: 999px;
+        height: 8px;
+        margin-top: 0.5rem;
+        max-width: 300px;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .location-fill {
+        background: var(--bw-accent);
+        height: 100%;
+    }
+
+    .capacity-block {
+        border-top: 1px solid var(--bw-border);
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+
+    .capacity-text {
+        color: var(--bw-text);
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+    }
+</style>
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li><a asp-controller="WarehouseLocation" asp-action="Index">Locations</a></li>
+        <li aria-current="page">@Model.LocationCode</li>
+    </ol>
+</nav>
+
+<h1 class="bw-page-title">Location: @Model.LocationCode</h1>
+
+<div class="detail-card">
+    <div class="detail-card__header">
+        <h2 class="detail-card__title">Location Details</h2>
+    </div>
+
+    <dl class="detail-grid">
+        <dt>Location Code</dt>
+        <dd>@Model.LocationCode</dd>
+
+        <dt>Aisle</dt>
+        <dd>@Model.Aisle</dd>
+
+        <dt>Shelf</dt>
+        <dd>@Model.Shelf</dd>
+
+        <dt>Max Capacity</dt>
+        <dd>@Model.MaxCapacity</dd>
+
+        <dt>Description</dt>
+        <dd>@(string.IsNullOrWhiteSpace(Model.Description) ? "-" : Model.Description)</dd>
+    </dl>
+
+    <div class="capacity-block">
+        <div class="capacity-text">Capacity Used: @used / @max</div>
+        <div class="location-track" aria-label="@used out of @max used">
+            <div class="location-fill" style="width: @Math.Round(percentage)%"></div>
+        </div>
+    </div>
+</div>
+
+<section class="subsection">
+    <h2 class="subsection__title">Stock Entries</h2>
+
+    <div class="bw-table-wrap bw-table-wrap--compact">
+        <table class="bw-table bw-table--compact">
+            <thead>
+                <tr>
+                    <th>Container SLCode</th>
+                    <th>Container Type</th>
+                    <th>Beer Style</th>
+                    <th>Quantity</th>
+                    <th>Date Received</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.StockEntries.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6">No stock in this location.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var entry in Model.StockEntries.OrderByDescending(stockEntry => stockEntry.DateReceived))
+                    {
+                        bool isCan = entry.Container is BreweryWarehouse.Model.Can;
+                        bool isKeg = entry.Container is BreweryWarehouse.Model.Keg;
+                        string typeName = isCan ? "Can" : (isKeg ? "Keg" : "Unknown");
+                        string controller = isCan ? "Can" : (isKeg ? "Keg" : string.Empty);
+                        BreweryWarehouse.Model.BeerStyle? beerStyle = isCan
+                            ? ((BreweryWarehouse.Model.Can)entry.Container).BeerStyle
+                            : (isKeg ? ((BreweryWarehouse.Model.Keg)entry.Container).BeerStyle : null);
+
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(controller))
+                                {
+                                    <a asp-controller="@controller" asp-action="Details" asp-route-id="@entry.Container.Id">@entry.Container.SLCode</a>
+                                }
+                                else
+                                {
+                                    @entry.Container.SLCode
+                                }
+                            </td>
+                            <td>@typeName</td>
+                            <td>
+                                @if (beerStyle is not null)
+                                {
+                                    <a asp-controller="BeerStyle" asp-action="Details" asp-route-id="@beerStyle.Id">@beerStyle.Name</a>
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </td>
+                            <td>@entry.Quantity</td>
+                            <td>@entry.DateReceived.ToString("dd MMM yyyy")</td>
+                            <td>@(string.IsNullOrWhiteSpace(entry.Notes) ? "-" : entry.Notes)</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<a asp-controller="WarehouseLocation" asp-action="Index" class="bw-back-link">Back to Locations</a>

@@ -1,0 +1,68 @@
+@model List<BreweryWarehouse.Model.WarehouseLocation>
+
+@{
+    ViewData["Title"] = "Warehouse Locations";
+}
+
+<style>
+    .location-track {
+        background: var(--bw-surface-2);
+        border-radius: 999px;
+        height: 8px;
+        min-width: 80px;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .location-fill {
+        background: var(--bw-accent);
+        height: 100%;
+    }
+</style>
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li aria-current="page">Locations</li>
+    </ol>
+</nav>
+
+<h1 class="bw-page-title">Warehouse Locations</h1>
+
+<div class="bw-table-wrap">
+    <table class="bw-table">
+        <thead>
+            <tr>
+                <th>Location Code</th>
+                <th>Aisle</th>
+                <th>Shelf</th>
+                <th>Capacity Used</th>
+                <th>Fill % bar</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var location in Model)
+            {
+                int used = location.StockEntries.Sum(entry => entry.Quantity);
+                int max = location.MaxCapacity;
+                double percentage = max > 0 ? Math.Min(100, (double)used / max * 100) : 0;
+
+                <tr>
+                    <td>@location.LocationCode</td>
+                    <td>@location.Aisle</td>
+                    <td>@location.Shelf</td>
+                    <td>@used / @max</td>
+                    <td>
+                        <div class="location-track" aria-label="@used out of @max used">
+                            <div class="location-fill" style="width: @Math.Round(percentage)%"></div>
+                        </div>
+                    </td>
+                    <td>
+                        <a asp-controller="WarehouseLocation" asp-action="Details" asp-route-id="@location.Id" class="bw-pill-link">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -31,6 +31,9 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - KegMockRepository: Repositories/KegMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
 - KegController: Controllers/KegController.cs with [Authorize], Index(), and Details(int id)
 - Keg Views: Views/Keg/Index.cshtml and Views/Keg/Details.cshtml
+- WarehouseLocationMockRepository: Repositories/WarehouseLocationMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
+- WarehouseLocationController: Controllers/WarehouseLocationController.cs with [Authorize], Index(), and Details(int id)
+- WarehouseLocation Views: Views/WarehouseLocation/Index.cshtml and Views/WarehouseLocation/Details.cshtml
 - HomeController: Controllers/HomeController.cs with [Authorize], BeerStyleMockRepository injection, dashboard Index() projection, Privacy(), Error()
 - Home Dashboard View: Views/Home/Index.cshtml with KPI cards, expiring combined table, and stock-by-location utilization bars
 - Shared Layout: Views/Shared/_Layout.cshtml uses brewery sidebar navigation and shared site.css theme
@@ -63,6 +66,7 @@ the current state of the project. Keep entries concise, one line per item.
 - DashboardViewModel: TotalCans, TotalKegs, TotalLocations, TotalBeerStyles, ExpiringCans (List<Can>), ExpiringKegs (List<Keg>), Locations (List<WarehouseLocation>)
 - CanMockRepository: static seeded List<Can> with GetAll() and GetById(int id)
 - KegMockRepository: static seeded List<Keg> with GetAll() and GetById(int id)
+- WarehouseLocationMockRepository: static seeded List<WarehouseLocation> with GetAll() and GetById(int id)
 
 ## Current Enums
 - BeerCategory: Lager, Ale, IPA, Stout, Wheat, Sour, Porter
