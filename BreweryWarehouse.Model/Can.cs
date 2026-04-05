@@ -16,4 +16,6 @@ public class Can : Container
 	{
 		StockEntries = new List<StockEntry>();
 	}
+
+	
 }

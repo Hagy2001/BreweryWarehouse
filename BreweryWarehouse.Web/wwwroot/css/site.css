@@ -47,6 +47,8 @@ a:hover {
 .bw-sidebar {
   background: var(--bw-bg);
   border-right: 1px solid var(--bw-border);
+  display: flex;
+  flex-direction: column;
   left: 0;
   padding: 1.5rem 1rem;
   position: fixed;
@@ -70,6 +72,19 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+}
+
+.bw-sidebar-footer {
+  border-top: 1px solid var(--bw-border);
+  margin-top: auto;
+  padding-top: 0.9rem;
+}
+
+.bw-sidebar-footer__user {
+  color: var(--bw-text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  word-break: break-word;
 }
 
 .bw-nav a {
@@ -154,6 +169,10 @@ a:hover {
 .bw-signout-btn:hover {
   border-color: var(--bw-accent-hover);
   color: var(--bw-text);
+}
+
+.bw-signout-btn--full {
+  width: 100%;
 }
 
 .bw-footer {

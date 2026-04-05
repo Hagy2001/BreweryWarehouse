@@ -22,20 +22,21 @@
                 <a asp-controller="Home" asp-action="Index" asp-fragment="stock">Stock</a>
                 <a asp-controller="Home" asp-action="Index" asp-fragment="employees">Employees</a>
             </nav>
+
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="bw-sidebar-footer" aria-label="Active user">
+                    <div class="bw-sidebar-footer__user">@User.Identity.Name</div>
+                    <form method="post" asp-controller="Auth" asp-action="Logout" class="bw-signout-form">
+                        <button type="submit" class="bw-signout-btn bw-signout-btn--full">Sign Out</button>
+                    </form>
+                </div>
+            }
         </aside>
 
         <main class="bw-content" role="main">
             <header class="bw-topbar">
                 <h2 class="bw-topbar__title">@ViewData["Title"]</h2>
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    <div class="bw-topbar__actions">
-                        <span class="bw-topbar__user">@User.Identity.Name</span>
-                        <form method="post" asp-controller="Auth" asp-action="Logout" class="bw-signout-form">
-                            <button type="submit" class="bw-signout-btn">Sign Out</button>
-                        </form>
-                    </div>
-                }
             </header>
 
             <div class="bw-content-inner">
