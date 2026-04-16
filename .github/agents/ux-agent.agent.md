@@ -3,9 +3,9 @@ name: UX Agent
 description: 'Brewery-themed UI/UX specialist. Generates and refines Razor views for BreweryWarehouse.Web using the brewery industrial design system.'
 model: Gemini 3.1 Pro (Preview) (copilot)
 tools:
-  - codebase
-  - editFiles
-  - problems
+  - search/codebase
+  - edit/editFiles
+  - read/problems
 target: vscode
 ---
 
