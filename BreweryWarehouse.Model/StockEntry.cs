@@ -1,12 +1,22 @@
 namespace BreweryWarehouse.Model;
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 public class StockEntry
 {
+	[Key]
 	public int Id { get; set; }
 
-	public Container Container { get; set; } = null!;
+	public int ContainerId { get; set; }
 
-	public WarehouseLocation Location { get; set; } = null!;
+	[ForeignKey("Container")]
+	public virtual Container Container { get; set; } = null!;
+
+	public int LocationId { get; set; }
+
+	[ForeignKey("Location")]
+	public virtual WarehouseLocation Location { get; set; } = null!;
 
 	public int Quantity { get; set; }
 

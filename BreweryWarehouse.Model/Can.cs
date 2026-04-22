@@ -1,5 +1,8 @@
 namespace BreweryWarehouse.Model;
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 public class Can : Container
 {
 	public CanSize Size { get; set; }
@@ -8,9 +11,12 @@ public class Can : Container
 
 	public DateTime PackagingDate { get; set; }
 
-	public List<StockEntry> StockEntries { get; set; }
+	public virtual ICollection<StockEntry> StockEntries { get; set; }
 
-	public BeerStyle BeerStyle { get; set; } = null!;
+	public int BeerStyleId { get; set; }
+
+	[ForeignKey("BeerStyle")]
+	public virtual BeerStyle BeerStyle { get; set; } = null!;
 
 	public Can()
 	{

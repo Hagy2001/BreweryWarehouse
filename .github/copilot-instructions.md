@@ -58,12 +58,12 @@ or project structure — update this file under the relevant section to reflect
 the current state of the project. Keep entries concise, one line per item.
 
 ## Current Classes
-- Container: Id (int), SLCode (string), BestBefore (DateTime)
-- BeerStyle: Id (int), Name (string), Description (string), AlcoholPercentage (double), IBU (int), ColorEBC (double), Category (BeerCategory), Cans (List<Can>), Kegs (List<Keg>)
-- Can: inherits Container (Id, SLCode, BestBefore), Size (CanSize), Barcode (string), PackagingDate (DateTime), StockEntries (List<StockEntry>), BeerStyle (BeerStyle)
-- Keg: inherits Container (Id, SLCode, BestBefore), Material (KegMaterial), HeadType (KegHeadType), VolumeInLitres (int: 20 or 30), SerialNumber (string), LastInspection (DateTime), StockEntries (List<StockEntry>), BeerStyle (BeerStyle)
-- StockEntry: Id (int), Container (Container), Location (WarehouseLocation), Quantity (int), DateReceived (DateTime), DateModified (DateTime), Notes (string)
-- WarehouseLocation: Id (int), LocationCode (string), Aisle (string), Shelf (int), MaxCapacity (int), Description (string), StockEntries (List<StockEntry>)
+- Container: Id (int, [Key]), SLCode (string), BestBefore (DateTime)
+- BeerStyle: Id (int, [Key]), Name (string), Description (string), AlcoholPercentage (double), IBU (int), ColorEBC (double), Category (BeerCategory), Cans (virtual ICollection<Can>), Kegs (virtual ICollection<Keg>)
+- Can: inherits Container (Id, SLCode, BestBefore), Size (CanSize), Barcode (string), PackagingDate (DateTime), StockEntries (virtual ICollection<StockEntry>), BeerStyleId (int), BeerStyle (virtual BeerStyle, [ForeignKey("BeerStyle")])
+- Keg: inherits Container (Id, SLCode, BestBefore), Material (KegMaterial), HeadType (KegHeadType), VolumeInLitres (int: 20 or 30), SerialNumber (string), LastInspection (DateTime), StockEntries (virtual ICollection<StockEntry>), BeerStyleId (int), BeerStyle (virtual BeerStyle, [ForeignKey("BeerStyle")])
+- StockEntry: Id (int, [Key]), ContainerId (int), Container (virtual Container, [ForeignKey("Container")]), LocationId (int), Location (virtual WarehouseLocation, [ForeignKey("Location")]), Quantity (int), DateReceived (DateTime), DateModified (DateTime), Notes (string)
+- WarehouseLocation: Id (int, [Key]), LocationCode (string), Aisle (string), Shelf (int), MaxCapacity (int), Description (string), StockEntries (virtual ICollection<StockEntry>)
 - Employee: Id (int), FirstName (string), LastName (string), Email (string), Role (string), DateHired (DateTime), IsActive (bool)
 - EnumExtensions: GetDescription(this Enum) helper for enum DescriptionAttribute labels
 - DataSeeder: static class with Seed(out List<BeerStyle>, out List<Can>, out List<Keg>, out List<WarehouseLocation>, out List<StockEntry>, out List<Employee>) using expanded, edge-case-heavy sample data for UI inspection

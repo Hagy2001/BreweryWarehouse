@@ -1,7 +1,11 @@
 namespace BreweryWarehouse.Model;
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 public class BeerStyle
 {
+    [Key]
     public int Id { get; set; }
 
     public string Name { get; set; } = string.Empty;
@@ -16,9 +20,9 @@ public class BeerStyle
 
     public BeerCategory Category { get; set; }
 
-    public List<Can> Cans { get; set; }
+    public virtual ICollection<Can> Cans { get; set; }
 
-    public List<Keg> Kegs { get; set; }
+    public virtual ICollection<Keg> Kegs { get; set; }
 
     public BeerStyle()
     {

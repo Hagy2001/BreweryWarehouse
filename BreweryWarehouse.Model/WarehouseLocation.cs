@@ -1,7 +1,11 @@
 namespace BreweryWarehouse.Model;
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 public class WarehouseLocation
 {
+    [Key]
     public int Id { get; set; }
 
     public string LocationCode { get; set; } = string.Empty;
@@ -14,7 +18,7 @@ public class WarehouseLocation
 
     public string Description { get; set; } = string.Empty;
 
-    public List<StockEntry> StockEntries { get; set; }
+    public virtual ICollection<StockEntry> StockEntries { get; set; }
 
     public WarehouseLocation()
     {

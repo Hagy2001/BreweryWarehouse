@@ -1,7 +1,10 @@
 namespace BreweryWarehouse.Model;
 
+using System.ComponentModel.DataAnnotations;
+
 public class Employee
 {
+    [Key]
     public int Id { get; set; }
 
     public string FirstName { get; set; } = string.Empty;

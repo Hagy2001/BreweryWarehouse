@@ -1,5 +1,8 @@
 namespace BreweryWarehouse.Model;
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 public class Keg : Container
 {
 	private int _volumeInLitres;
@@ -26,9 +29,12 @@ public class Keg : Container
 
 	public DateTime LastInspection { get; set; }
 
-	public List<StockEntry> StockEntries { get; set; }
+	public virtual ICollection<StockEntry> StockEntries { get; set; }
 
-	public BeerStyle BeerStyle { get; set; } = null!;
+	public int BeerStyleId { get; set; }
+
+	[ForeignKey("BeerStyle")]
+	public virtual BeerStyle BeerStyle { get; set; } = null!;
 
 	public Keg()
 	{
