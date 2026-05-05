@@ -303,6 +303,16 @@ a:hover {
   color: var(--bw-bg);
 }
 
+.bw-badge--active {
+  background: var(--bw-success);
+  color: var(--bw-text);
+}
+
+.bw-badge--inactive {
+  background: var(--bw-danger);
+  color: var(--bw-text);
+}
+
 .bw-pill-link,
 .bw-back-link {
   background: var(--bw-accent);

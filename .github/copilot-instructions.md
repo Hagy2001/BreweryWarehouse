@@ -50,7 +50,7 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - StockEntry Views: Views/StockEntry/Index.cshtml and Views/StockEntry/Details.cshtml
 - EmployeeMockRepository: Repositories/EmployeeMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
 - EmployeeController: Controllers/EmployeeController.cs with [Authorize], Index(), and Details(int id)
-- Employee Views: Views/Employee/Index.cshtml and Views/Employee/Details.cshtml
+- Employee Views: Views/Employee/Index.cshtml (rebuilt with list-page-skill; bw-badge--active/inactive status badges in site.css) and Views/Employee/Details.cshtml
 - HomeController: Controllers/HomeController.cs with [Authorize], BeerStyleRepository, CanRepository, KegRepository, WarehouseLocationRepository injection, dashboard Index() projection, Privacy(), Error()
 - Home Dashboard View: Views/Home/Index.cshtml with KPI cards, expiring combined table, and stock-by-location utilization bars
 - Shared Layout: Views/Shared/_Layout.cshtml uses brewery sidebar navigation and shared site.css theme
