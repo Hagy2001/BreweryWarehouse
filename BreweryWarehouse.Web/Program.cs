@@ -1,6 +1,8 @@
+using BreweryWarehouse.Web.Data;
 using BreweryWarehouse.Web.Repositories;
 using BreweryWarehouse.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,8 @@ builder.Services.AddSingleton<WarehouseLocationMockRepository>();
 builder.Services.AddSingleton<StockEntryMockRepository>();
 builder.Services.AddSingleton<EmployeeMockRepository>();
 builder.Services.AddSingleton<AuthService>();
+builder.Services.AddDbContext<BreweryWarehouseDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BreweryWarehouseDbContext")));
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {

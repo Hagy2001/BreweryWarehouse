@@ -49,7 +49,7 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - Login View: Views/Auth/Login.cshtml standalone login page without shared layout
 
 ## EF Configuration
-- BreweryWarehouseDbContext: Data/BreweryWarehouseDbContext.cs with DbSets for BeerStyle, Can, Keg, StockEntry, WarehouseLocation, Employee and TPH mapping for Container hierarchy
+- BreweryWarehouseDbContext: Data/BreweryWarehouseDbContext.cs with DbSets for BeerStyle, Can, Keg, StockEntry, WarehouseLocation, Employee, TPH mapping for Container hierarchy, and DI registration using SqlServer
 
 ## Sub-Agent
 A UX sub-agent is defined at `.github/agents/ux-agent.agent.md` (model: gemini-3.1-pro).
