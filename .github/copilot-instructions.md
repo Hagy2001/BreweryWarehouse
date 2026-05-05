@@ -59,6 +59,12 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - BreweryWarehouseDbContext: Data/BreweryWarehouseDbContext.cs with DbSets for BeerStyle, Can, Keg, StockEntry, WarehouseLocation, Employee, TPH mapping for Container hierarchy, and DI registration using SqlServer
 - EF migrations: stored in BreweryWarehouse.Web/Migrations/ with InitialCreate as the first migration
 
+## Routing
+- BeerStyleController: /beer-styles and /beer-styles/{id:int}/detail
+- CanController: /cans and /cans/{id:int}/info
+- KegController: /kegs and /kegs/{id:int}/info
+- WarehouseLocationController: /locations and /locations/{id:int}/view
+
 ## Sub-Agent
 A UX sub-agent is defined at `.github/agents/ux-agent.agent.md` (model: gemini-3.1-pro).
 The main agent must hand off to it when generating any UI/View code by referencing it by name.

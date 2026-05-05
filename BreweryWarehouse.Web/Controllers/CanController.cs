@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BreweryWarehouse.Web.Controllers;
 
 [Authorize]
+[Route("cans")]
 public class CanController : Controller
 {
     private readonly CanRepository repository;
@@ -15,11 +16,13 @@ public class CanController : Controller
         this.repository = repository;
     }
 
+    [Route("")]
     public IActionResult Index()
     {
         return View(repository.GetAll());
     }
 
+    [Route("{id:int}/info")]
     public IActionResult Details(int id)
     {
         Can? can = repository.GetById(id);

@@ -6,6 +6,7 @@ using BreweryWarehouse.Web.Repositories;
 namespace BreweryWarehouse.Web;
 
 [Authorize]
+[Route("beer-styles")]
 public class BeerStyleController : Controller
 {
     private readonly BeerStyleRepository repository;
@@ -15,11 +16,13 @@ public class BeerStyleController : Controller
         this.repository = repository;
     }
 
+    [Route("")]
     public IActionResult Index()
     {
         return View(repository.GetAll());
     }
 
+    [Route("{id:int}/detail")]
     public IActionResult Details(int id)
     {
         BeerStyle? beerStyle = repository.GetById(id);
