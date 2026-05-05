@@ -25,7 +25,16 @@ public class BreweryWarehouseDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Can>();
-        modelBuilder.Entity<Keg>();
+        modelBuilder.Entity<Can>()
+            .HasOne(can => can.BeerStyle)
+            .WithMany(beerStyle => beerStyle.Cans)
+            .HasForeignKey(can => can.BeerStyleId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Keg>()
+            .HasOne(keg => keg.BeerStyle)
+            .WithMany(beerStyle => beerStyle.Kegs)
+            .HasForeignKey(keg => keg.BeerStyleId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

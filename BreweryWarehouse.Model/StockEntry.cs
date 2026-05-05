@@ -10,12 +10,12 @@ public class StockEntry
 
 	public int ContainerId { get; set; }
 
-	[ForeignKey("Container")]
+	[ForeignKey(nameof(ContainerId))]
 	public virtual Container Container { get; set; } = null!;
 
 	public int LocationId { get; set; }
 
-	[ForeignKey("Location")]
+	[ForeignKey(nameof(LocationId))]
 	public virtual WarehouseLocation Location { get; set; } = null!;
 
 	public int Quantity { get; set; }

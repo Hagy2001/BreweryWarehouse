@@ -33,7 +33,7 @@ public class Keg : Container
 
 	public int BeerStyleId { get; set; }
 
-	[ForeignKey("BeerStyle")]
+	[ForeignKey(nameof(BeerStyleId))]
 	public virtual BeerStyle BeerStyle { get; set; } = null!;
 
 	public Keg()
