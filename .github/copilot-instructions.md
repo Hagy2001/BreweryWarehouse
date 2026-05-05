@@ -8,6 +8,7 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - `semantic-model.md` — AI context document for the database/domain model
 - `.github/sitemap.md` — AI routing sitemap for app URLs
 - `.github/agents/ef-skill.md` — EF Core workflow skill for BreweryWarehouse
+- `.github/agents/list-page-skill.md` — list page workflow skill for BreweryWarehouse.Web
 
 ## Conventions
 - Namespace: BreweryWarehouse.Model for all model classes
