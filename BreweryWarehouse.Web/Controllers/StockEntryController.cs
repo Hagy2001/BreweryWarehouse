@@ -8,9 +8,9 @@ namespace BreweryWarehouse.Web.Controllers;
 [Authorize]
 public class StockEntryController : Controller
 {
-    private readonly StockEntryMockRepository repository;
+    private readonly StockEntryRepository repository;
 
-    public StockEntryController(StockEntryMockRepository repository)
+    public StockEntryController(StockEntryRepository repository)
     {
         this.repository = repository;
     }

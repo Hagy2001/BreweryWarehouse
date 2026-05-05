@@ -8,9 +8,9 @@ namespace BreweryWarehouse.Web.Controllers;
 [Authorize]
 public class KegController : Controller
 {
-    private readonly KegMockRepository repository;
+    private readonly KegRepository repository;
 
-    public KegController(KegMockRepository repository)
+    public KegController(KegRepository repository)
     {
         this.repository = repository;
     }

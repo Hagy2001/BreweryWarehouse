@@ -8,9 +8,9 @@ namespace BreweryWarehouse.Web.Controllers;
 [Authorize]
 public class CanController : Controller
 {
-    private readonly CanMockRepository repository;
+    private readonly CanRepository repository;
 
-    public CanController(CanMockRepository repository)
+    public CanController(CanRepository repository)
     {
         this.repository = repository;
     }

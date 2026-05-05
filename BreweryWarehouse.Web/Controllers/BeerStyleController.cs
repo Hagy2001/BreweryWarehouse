@@ -8,9 +8,9 @@ namespace BreweryWarehouse.Web;
 [Authorize]
 public class BeerStyleController : Controller
 {
-    private readonly BeerStyleMockRepository repository;
+    private readonly BeerStyleRepository repository;
 
-    public BeerStyleController(BeerStyleMockRepository repository)
+    public BeerStyleController(BeerStyleRepository repository)
     {
         this.repository = repository;
     }

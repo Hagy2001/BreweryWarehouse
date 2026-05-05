@@ -8,9 +8,9 @@ namespace BreweryWarehouse.Web.Controllers;
 [Authorize]
 public class WarehouseLocationController : Controller
 {
-    private readonly WarehouseLocationMockRepository repository;
+    private readonly WarehouseLocationRepository repository;
 
-    public WarehouseLocationController(WarehouseLocationMockRepository repository)
+    public WarehouseLocationController(WarehouseLocationRepository repository)
     {
         this.repository = repository;
     }

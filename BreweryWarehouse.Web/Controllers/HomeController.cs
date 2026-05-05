@@ -9,9 +9,9 @@ namespace BreweryWarehouse.Web.Controllers;
 [Authorize]
 public class HomeController : Controller
 {
-    private readonly BeerStyleMockRepository _beerStyleRepository;
+    private readonly BeerStyleRepository _beerStyleRepository;
 
-    public HomeController(BeerStyleMockRepository beerStyleRepository)
+    public HomeController(BeerStyleRepository beerStyleRepository)
     {
         _beerStyleRepository = beerStyleRepository;
     }

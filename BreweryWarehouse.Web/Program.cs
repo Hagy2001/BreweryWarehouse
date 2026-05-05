@@ -8,12 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<BeerStyleMockRepository>();
-builder.Services.AddSingleton<CanMockRepository>();
-builder.Services.AddSingleton<KegMockRepository>();
-builder.Services.AddSingleton<WarehouseLocationMockRepository>();
-builder.Services.AddSingleton<StockEntryMockRepository>();
-builder.Services.AddSingleton<EmployeeMockRepository>();
+builder.Services.AddScoped<BeerStyleRepository>();
+builder.Services.AddScoped<CanRepository>();
+builder.Services.AddScoped<KegRepository>();
+builder.Services.AddScoped<WarehouseLocationRepository>();
+builder.Services.AddScoped<StockEntryRepository>();
+builder.Services.AddScoped<EmployeeRepository>();
 builder.Services.AddSingleton<AuthService>();
 builder.Services.AddDbContext<BreweryWarehouseDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BreweryWarehouseDbContext")));

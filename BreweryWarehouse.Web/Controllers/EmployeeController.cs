@@ -8,9 +8,9 @@ namespace BreweryWarehouse.Web.Controllers;
 [Authorize]
 public class EmployeeController : Controller
 {
-    private readonly EmployeeMockRepository repository;
+    private readonly EmployeeRepository repository;
 
-    public EmployeeController(EmployeeMockRepository repository)
+    public EmployeeController(EmployeeRepository repository)
     {
         this.repository = repository;
     }

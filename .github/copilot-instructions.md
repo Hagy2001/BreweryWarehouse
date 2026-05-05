@@ -28,6 +28,7 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - WarehouseLocationRepository: Repositories/WarehouseLocationRepository.cs with EF Core GetAll() and GetById(int id)
 - StockEntryRepository: Repositories/StockEntryRepository.cs with EF Core GetAll() and GetById(int id)
 - EmployeeRepository: Repositories/EmployeeRepository.cs with EF Core GetAll() and GetById(int id)
+- Controllers: all controllers now inject EF repositories instead of mock repositories
 - BeerStyleMockRepository: Repositories/BeerStyleMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
 - BeerStyleController: Controllers/BeerStyleController.cs with Index() and Details(int id)
 - BeerStyle Views: Views/BeerStyle/Index.cshtml and Views/BeerStyle/Details.cshtml
