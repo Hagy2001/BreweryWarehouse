@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Linq;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BreweryWarehouse.Web.Models;
@@ -10,32 +12,28 @@ namespace BreweryWarehouse.Web.Controllers;
 public class HomeController : Controller
 {
     private readonly BeerStyleRepository _beerStyleRepository;
+    private readonly CanRepository _canRepository;
+    private readonly KegRepository _kegRepository;
+    private readonly WarehouseLocationRepository _warehouseLocationRepository;
 
-    public HomeController(BeerStyleRepository beerStyleRepository)
+    public HomeController(
+        BeerStyleRepository beerStyleRepository,
+        CanRepository canRepository,
+        KegRepository kegRepository,
+        WarehouseLocationRepository warehouseLocationRepository)
     {
         _beerStyleRepository = beerStyleRepository;
+        _canRepository = canRepository;
+        _kegRepository = kegRepository;
+        _warehouseLocationRepository = warehouseLocationRepository;
     }
 
     public IActionResult Index()
     {
         List<Model.BeerStyle> beerStyles = _beerStyleRepository.GetAll();
-        List<Model.Can> cans = beerStyles
-            .SelectMany(beerStyle => beerStyle.Cans)
-            .ToList();
-        List<Model.Keg> kegs = beerStyles
-            .SelectMany(beerStyle => beerStyle.Kegs)
-            .ToList();
-
-        List<Model.WarehouseLocation> locations = cans
-            .SelectMany(can => can.StockEntries)
-            .Select(stockEntry => stockEntry.Location)
-            .Concat(
-                kegs
-                    .SelectMany(keg => keg.StockEntries)
-                    .Select(stockEntry => stockEntry.Location))
-            .DistinctBy(location => location.Id)
-            .OrderBy(location => location.LocationCode)
-            .ToList();
+        List<Model.Can> cans = _canRepository.GetAll();
+        List<Model.Keg> kegs = _kegRepository.GetAll();
+        List<Model.WarehouseLocation> locations = _warehouseLocationRepository.GetAll();
 
         DateTime cutoffDate = DateTime.Today.AddDays(30);
 

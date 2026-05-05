@@ -17,6 +17,8 @@ public class CanRepository
     {
         return _context.Cans
             .Include(can => can.BeerStyle)
+            .Include(can => can.StockEntries)
+            .ThenInclude(stockEntry => stockEntry.Location)
             .ToList();
     }
 
@@ -24,6 +26,8 @@ public class CanRepository
     {
         return _context.Cans
             .Include(can => can.BeerStyle)
+            .Include(can => can.StockEntries)
+            .ThenInclude(stockEntry => stockEntry.Location)
             .FirstOrDefault(can => can.Id == id);
     }
 }

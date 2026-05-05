@@ -15,11 +15,19 @@ public class WarehouseLocationRepository
 
     public List<WarehouseLocation> GetAll()
     {
-        return _context.WarehouseLocations.ToList();
+        return _context.WarehouseLocations
+            .Include(location => location.StockEntries)
+            .ThenInclude(stockEntry => stockEntry.Container)
+            .Include("StockEntries.Container.BeerStyle")
+            .ToList();
     }
 
     public WarehouseLocation? GetById(int id)
     {
-        return _context.WarehouseLocations.FirstOrDefault(location => location.Id == id);
+        return _context.WarehouseLocations
+            .Include(location => location.StockEntries)
+            .ThenInclude(stockEntry => stockEntry.Container)
+            .Include("StockEntries.Container.BeerStyle")
+            .FirstOrDefault(location => location.Id == id);
     }
 }

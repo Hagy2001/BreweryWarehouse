@@ -26,11 +26,11 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - No logic in views except simple if/foreach and TagHelpers
 
 ## Current Web Artifacts
-- BeerStyleRepository: Repositories/BeerStyleRepository.cs with EF Core GetAll() and GetById(int id)
-- CanRepository: Repositories/CanRepository.cs with EF Core GetAll() and GetById(int id)
-- KegRepository: Repositories/KegRepository.cs with EF Core GetAll() and GetById(int id)
-- WarehouseLocationRepository: Repositories/WarehouseLocationRepository.cs with EF Core GetAll() and GetById(int id)
-- StockEntryRepository: Repositories/StockEntryRepository.cs with EF Core GetAll() and GetById(int id)
+- BeerStyleRepository: Repositories/BeerStyleRepository.cs with EF Core GetAll()/GetById() including Cans and Kegs
+- CanRepository: Repositories/CanRepository.cs with EF Core GetAll()/GetById() including BeerStyle and StockEntries
+- KegRepository: Repositories/KegRepository.cs with EF Core GetAll()/GetById() including BeerStyle and StockEntries
+- WarehouseLocationRepository: Repositories/WarehouseLocationRepository.cs with EF Core GetAll()/GetById() including StockEntries and Container BeerStyle
+- StockEntryRepository: Repositories/StockEntryRepository.cs with EF Core GetAll()/GetById() including Container BeerStyle and Location
 - EmployeeRepository: Repositories/EmployeeRepository.cs with EF Core GetAll() and GetById(int id)
 - Controllers: all controllers now inject EF repositories instead of mock repositories
 - BeerStyleMockRepository: Repositories/BeerStyleMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
@@ -51,7 +51,7 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - EmployeeMockRepository: Repositories/EmployeeMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
 - EmployeeController: Controllers/EmployeeController.cs with [Authorize], Index(), and Details(int id)
 - Employee Views: Views/Employee/Index.cshtml and Views/Employee/Details.cshtml
-- HomeController: Controllers/HomeController.cs with [Authorize], BeerStyleMockRepository injection, dashboard Index() projection, Privacy(), Error()
+- HomeController: Controllers/HomeController.cs with [Authorize], BeerStyleRepository, CanRepository, KegRepository, WarehouseLocationRepository injection, dashboard Index() projection, Privacy(), Error()
 - Home Dashboard View: Views/Home/Index.cshtml with KPI cards, expiring combined table, and stock-by-location utilization bars
 - Shared Layout: Views/Shared/_Layout.cshtml uses brewery sidebar navigation and shared site.css theme
 - AuthService: Services/AuthService.cs with ValidateCredentials(email,password) and CreatePrincipal(email)

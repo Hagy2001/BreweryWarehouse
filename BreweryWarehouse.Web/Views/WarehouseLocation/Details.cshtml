@@ -4,37 +4,10 @@
     ViewData["Title"] = $"Location {Model.LocationCode}";
     int used = Model.StockEntries.Sum(entry => entry.Quantity);
     int max = Model.MaxCapacity;
-    double percentage = max > 0 ? Math.Min(100, (double)used / max * 100) : 0;
+    bool isOverfill = max > 0 && used > max;
+    double percentage = max > 0 ? (double)used / max * 100 : 0;
+    int bucketedPercentage = (int)(Math.Round(Math.Min(100.0, percentage) / 5.0) * 5);
 }
-
-<style>
-    .location-track {
-        background: var(--bw-surface-2);
-        border-radius: 999px;
-        height: 8px;
-        margin-top: 0.5rem;
-        max-width: 300px;
-        overflow: hidden;
-        width: 100%;
-    }
-
-    .location-fill {
-        background: var(--bw-accent);
-        height: 100%;
-    }
-
-    .capacity-block {
-        border-top: 1px solid var(--bw-border);
-        margin-top: 1rem;
-        padding-top: 1rem;
-    }
-
-    .capacity-text {
-        color: var(--bw-text);
-        font-weight: 500;
-        margin-bottom: 0.25rem;
-    }
-</style>
 
 <nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
     <ol class="bw-breadcrumb">
@@ -70,8 +43,8 @@
 
     <div class="capacity-block">
         <div class="capacity-text">Capacity Used: @used / @max</div>
-        <div class="location-track" aria-label="@used out of @max used">
-            <div class="location-fill" style="width: @Math.Round(percentage)%"></div>
+        <div class="location-track location-track--details" aria-label="@used out of @max used">
+            <div class="location-fill @(isOverfill ? "location-fill--overfill" : "") bw-w-@bucketedPercentage"></div>
         </div>
     </div>
 </div>

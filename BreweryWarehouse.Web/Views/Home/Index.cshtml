@@ -108,16 +108,11 @@
     }
 
     .dashboard-location__track {
-        background: var(--bw-surface-2);
+        background: var(--bw-bg);
         border-radius: 999px;
         height: 10px;
         overflow: hidden;
         width: 100%;
-    }
-
-    .dashboard-location__fill {
-        background: var(--bw-accent);
-        height: 100%;
     }
 </style>
 
@@ -193,10 +188,9 @@
         @foreach (var location in Model.Locations)
         {
             int quantity = location.StockEntries.Sum(entry => entry.Quantity);
-            double utilizationPercent = location.MaxCapacity > 0
-                ? Math.Min((double)quantity / location.MaxCapacity * 100.0, 100.0)
-                : 0;
-            string barWidth = $"{utilizationPercent.ToString("0.#", CultureInfo.InvariantCulture)}%";
+            bool dashIsOverfill = location.MaxCapacity > 0 && quantity > location.MaxCapacity;
+            double utilizationPercent = location.MaxCapacity > 0 ? (double)quantity / location.MaxCapacity * 100.0 : 0;
+            int dashBucketed = (int)(Math.Round(Math.Min(100.0, utilizationPercent) / 5.0) * 5);
 
             <article class="dashboard-location">
                 <div class="dashboard-location__meta">
@@ -207,7 +201,7 @@
                     <div class="dashboard-location__qty">@quantity / @location.MaxCapacity</div>
                 </div>
                 <div class="dashboard-location__track" role="img" aria-label="Stock utilization at @location.LocationCode">
-                    <div class="dashboard-location__fill" style="width: @barWidth;"></div>
+                    <div class="location-fill @(dashIsOverfill ? "location-fill--overfill" : "") bw-w-@dashBucketed"></div>
                 </div>
             </article>
         }

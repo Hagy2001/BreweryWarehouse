@@ -17,6 +17,8 @@ public class KegRepository
     {
         return _context.Kegs
             .Include(keg => keg.BeerStyle)
+            .Include(keg => keg.StockEntries)
+            .ThenInclude(stockEntry => stockEntry.Location)
             .ToList();
     }
 
@@ -24,6 +26,8 @@ public class KegRepository
     {
         return _context.Kegs
             .Include(keg => keg.BeerStyle)
+            .Include(keg => keg.StockEntries)
+            .ThenInclude(stockEntry => stockEntry.Location)
             .FirstOrDefault(keg => keg.Id == id);
     }
 }

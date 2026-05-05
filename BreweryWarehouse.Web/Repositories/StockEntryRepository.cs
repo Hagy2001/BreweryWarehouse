@@ -18,6 +18,7 @@ public class StockEntryRepository
         return _context.StockEntries
             .Include(stockEntry => stockEntry.Container)
             .Include(stockEntry => stockEntry.Location)
+            .Include("Container.BeerStyle")
             .ToList();
     }
 
@@ -26,6 +27,7 @@ public class StockEntryRepository
         return _context.StockEntries
             .Include(stockEntry => stockEntry.Container)
             .Include(stockEntry => stockEntry.Location)
+            .Include("Container.BeerStyle")
             .FirstOrDefault(stockEntry => stockEntry.Id == id);
     }
 }

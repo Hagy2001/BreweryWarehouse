@@ -15,11 +15,17 @@ public class BeerStyleRepository
 
     public List<BeerStyle> GetAll()
     {
-        return _context.BeerStyles.ToList();
+        return _context.BeerStyles
+            .Include(beerStyle => beerStyle.Cans)
+            .Include(beerStyle => beerStyle.Kegs)
+            .ToList();
     }
 
     public BeerStyle? GetById(int id)
     {
-        return _context.BeerStyles.FirstOrDefault(beerStyle => beerStyle.Id == id);
+        return _context.BeerStyles
+            .Include(beerStyle => beerStyle.Cans)
+            .Include(beerStyle => beerStyle.Kegs)
+            .FirstOrDefault(beerStyle => beerStyle.Id == id);
     }
 }

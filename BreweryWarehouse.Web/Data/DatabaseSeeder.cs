@@ -10,7 +10,25 @@ public static class DatabaseSeeder
     public static async Task SeedAsync(BreweryWarehouseDbContext context)
     {
         if (context.BeerStyles.Any())
+        {
+            if (!context.Employees.Any())
+            {
+                DataSeeder.Seed(
+                    out _,
+                    out _,
+                    out _,
+                    out _,
+                    out _,
+                    out List<Employee> seedEmployees);
+
+                foreach (var employee in seedEmployees) employee.Id = 0;
+
+                context.Employees.AddRange(seedEmployees);
+                await context.SaveChangesAsync();
+            }
+
             return;
+        }
 
         DataSeeder.Seed(
             out List<BeerStyle> beerStyles,

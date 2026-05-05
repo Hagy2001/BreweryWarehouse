@@ -221,6 +221,68 @@ a:hover {
   filter: brightness(1.08);
 }
 
+.location-track {
+  background: var(--bw-bg);
+  border-radius: 999px;
+  height: 8px;
+  min-width: 80px;
+  max-width: 300px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.location-track--index {
+  margin-top: 0;
+  max-width: none;
+}
+
+.location-track--details {
+  margin-top: 0.5rem;
+}
+
+.location-fill {
+  background: var(--bw-accent);
+  height: 100%;
+}
+
+.location-fill--overfill {
+  background: var(--bw-danger);
+}
+
+.capacity-block {
+  border-top: 1px solid var(--bw-border);
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.capacity-text {
+  color: var(--bw-text);
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.bw-w-0 { width: 0%; }
+.bw-w-5 { width: 5%; }
+.bw-w-10 { width: 10%; }
+.bw-w-15 { width: 15%; }
+.bw-w-20 { width: 20%; }
+.bw-w-25 { width: 25%; }
+.bw-w-30 { width: 30%; }
+.bw-w-35 { width: 35%; }
+.bw-w-40 { width: 40%; }
+.bw-w-45 { width: 45%; }
+.bw-w-50 { width: 50%; }
+.bw-w-55 { width: 55%; }
+.bw-w-60 { width: 60%; }
+.bw-w-65 { width: 65%; }
+.bw-w-70 { width: 70%; }
+.bw-w-75 { width: 75%; }
+.bw-w-80 { width: 80%; }
+.bw-w-85 { width: 85%; }
+.bw-w-90 { width: 90%; }
+.bw-w-95 { width: 95%; }
+.bw-w-100 { width: 100%; }
+
 .bw-table--compact th,
 .bw-table--compact td {
   padding: 0.5rem 0.65rem;

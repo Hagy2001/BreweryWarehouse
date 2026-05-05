@@ -4,22 +4,6 @@
     ViewData["Title"] = "Warehouse Locations";
 }
 
-<style>
-    .location-track {
-        background: var(--bw-surface-2);
-        border-radius: 999px;
-        height: 8px;
-        min-width: 80px;
-        overflow: hidden;
-        width: 100%;
-    }
-
-    .location-fill {
-        background: var(--bw-accent);
-        height: 100%;
-    }
-</style>
-
 <nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
     <ol class="bw-breadcrumb">
         <li><a asp-controller="Home" asp-action="Index">Home</a></li>
@@ -46,7 +30,9 @@
             {
                 int used = location.StockEntries.Sum(entry => entry.Quantity);
                 int max = location.MaxCapacity;
-                double percentage = max > 0 ? Math.Min(100, (double)used / max * 100) : 0;
+                bool isOverfill = max > 0 && used > max;
+                double percentage = max > 0 ? (double)used / max * 100 : 0;
+                int bucketedPercentage = (int)(Math.Round(Math.Min(100.0, percentage) / 5.0) * 5);
 
                 <tr>
                     <td>@location.LocationCode</td>
@@ -54,8 +40,8 @@
                     <td>@location.Shelf</td>
                     <td>@used / @max</td>
                     <td>
-                        <div class="location-track" aria-label="@used out of @max used">
-                            <div class="location-fill" style="width: @Math.Round(percentage)%"></div>
+                        <div class="location-track location-track--index" aria-label="@used out of @max used">
+                            <div class="location-fill @(isOverfill ? "location-fill--overfill" : "") bw-w-@bucketedPercentage"></div>
                         </div>
                     </td>
                     <td>
