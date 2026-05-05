@@ -1,0 +1,19 @@
+| URL | Method | Controller | Action | View | Auth Required |
+| --- | --- | --- | --- | --- | --- |
+| /Auth/Login | GET | Auth | Login | Views/Auth/Login.cshtml | No |
+| /Auth/Login | POST | Auth | Login | Views/Auth/Login.cshtml | No |
+| /Auth/Logout | POST | Auth | Logout | None | Yes |
+| / | GET | Home | Index | Views/Home/Index.cshtml | Yes |
+| /Home/Privacy | GET | Home | Privacy | Views/Home/Privacy.cshtml | Yes |
+| /beer-styles | GET | BeerStyle | Index | Views/BeerStyle/Index.cshtml | No |
+| /beer-styles/{id}/detail | GET | BeerStyle | Details | Views/BeerStyle/Details.cshtml | No |
+| /cans | GET | Can | Index | Views/Can/Index.cshtml | Yes |
+| /cans/{id}/info | GET | Can | Details | Views/Can/Details.cshtml | Yes |
+| /kegs | GET | Keg | Index | Views/Keg/Index.cshtml | Yes |
+| /kegs/{id}/info | GET | Keg | Details | Views/Keg/Details.cshtml | Yes |
+| /locations | GET | WarehouseLocation | Index | Views/WarehouseLocation/Index.cshtml | Yes |
+| /locations/{id}/view | GET | WarehouseLocation | Details | Views/WarehouseLocation/Details.cshtml | Yes |
+| /StockEntry | GET | StockEntry | Index | Views/StockEntry/Index.cshtml | Yes |
+| /StockEntry/{id} | GET | StockEntry | Details | Views/StockEntry/Details.cshtml | Yes |
+| /Employee | GET | Employee | Index | Views/Employee/Index.cshtml | Yes |
+| /Employee/{id} | GET | Employee | Details | Views/Employee/Details.cshtml | Yes |
