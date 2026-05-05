@@ -61,6 +61,7 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 
 ## EF Configuration
 - BreweryWarehouseDbContext: Data/BreweryWarehouseDbContext.cs with DbSets for BeerStyle, Can, Keg, StockEntry, WarehouseLocation, Employee, TPH mapping for Container hierarchy, and DI registration using SqlServer
+- DatabaseSeeder: Data/DatabaseSeeder.cs seeds sample data on startup
 - EF migrations: stored in BreweryWarehouse.Web/Migrations/ with InitialCreate as the first migration
 
 ## Routing
