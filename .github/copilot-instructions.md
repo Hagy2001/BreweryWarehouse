@@ -48,6 +48,9 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - LoginViewModel: Models/LoginViewModel.cs with Required/EmailAddress validation
 - Login View: Views/Auth/Login.cshtml standalone login page without shared layout
 
+## EF Configuration
+- BreweryWarehouseDbContext: Data/BreweryWarehouseDbContext.cs with DbSets for BeerStyle, Can, Keg, StockEntry, WarehouseLocation, Employee and TPH mapping for Container hierarchy
+
 ## Sub-Agent
 A UX sub-agent is defined at `.github/agents/ux-agent.agent.md` (model: gemini-3.1-pro).
 The main agent must hand off to it when generating any UI/View code by referencing it by name.
@@ -64,7 +67,7 @@ the current state of the project. Keep entries concise, one line per item.
 - Keg: inherits Container (Id, SLCode, BestBefore), Material (KegMaterial), HeadType (KegHeadType), VolumeInLitres (int: 20 or 30), SerialNumber (string), LastInspection (DateTime), StockEntries (virtual ICollection<StockEntry>), BeerStyleId (int), BeerStyle (virtual BeerStyle, [ForeignKey("BeerStyle")])
 - StockEntry: Id (int, [Key]), ContainerId (int), Container (virtual Container, [ForeignKey("Container")]), LocationId (int), Location (virtual WarehouseLocation, [ForeignKey("Location")]), Quantity (int), DateReceived (DateTime), DateModified (DateTime), Notes (string)
 - WarehouseLocation: Id (int, [Key]), LocationCode (string), Aisle (string), Shelf (int), MaxCapacity (int), Description (string), StockEntries (virtual ICollection<StockEntry>)
-- Employee: Id (int), FirstName (string), LastName (string), Email (string), Role (string), DateHired (DateTime), IsActive (bool)
+- Employee: Id (int, [Key]), FirstName (string), LastName (string), Email (string), Role (string), DateHired (DateTime), IsActive (bool)
 - EnumExtensions: GetDescription(this Enum) helper for enum DescriptionAttribute labels
 - DataSeeder: static class with Seed(out List<BeerStyle>, out List<Can>, out List<Keg>, out List<WarehouseLocation>, out List<StockEntry>, out List<Employee>) using expanded, edge-case-heavy sample data for UI inspection
 - AuthService: mock credential validator and ClaimsPrincipal creator for admin@brewery.com
