@@ -5,6 +5,7 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - `BreweryWarehouse.Model` — class library, all domain classes
 - `BreweryWarehouse.Console` — LINQ queries and seed data (Lab 1)
 - `BreweryWarehouse.Web` — ASP.NET Core MVC web app (active from Lab 2)
+- `semantic-model.md` — AI context document for the database/domain model
 
 ## Conventions
 - Namespace: BreweryWarehouse.Model for all model classes
