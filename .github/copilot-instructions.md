@@ -22,6 +22,12 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - No logic in views except simple if/foreach and TagHelpers
 
 ## Current Web Artifacts
+- BeerStyleRepository: Repositories/BeerStyleRepository.cs with EF Core GetAll() and GetById(int id)
+- CanRepository: Repositories/CanRepository.cs with EF Core GetAll() and GetById(int id)
+- KegRepository: Repositories/KegRepository.cs with EF Core GetAll() and GetById(int id)
+- WarehouseLocationRepository: Repositories/WarehouseLocationRepository.cs with EF Core GetAll() and GetById(int id)
+- StockEntryRepository: Repositories/StockEntryRepository.cs with EF Core GetAll() and GetById(int id)
+- EmployeeRepository: Repositories/EmployeeRepository.cs with EF Core GetAll() and GetById(int id)
 - BeerStyleMockRepository: Repositories/BeerStyleMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
 - BeerStyleController: Controllers/BeerStyleController.cs with Index() and Details(int id)
 - BeerStyle Views: Views/BeerStyle/Index.cshtml and Views/BeerStyle/Details.cshtml
