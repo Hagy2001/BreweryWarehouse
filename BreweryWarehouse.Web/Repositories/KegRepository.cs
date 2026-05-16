@@ -16,6 +16,7 @@ public class KegRepository
     public List<Keg> GetAll()
     {
         return _context.Kegs
+            .Where(keg => keg.DeletedAt == null)
             .Include(keg => keg.BeerStyle)
             .Include(keg => keg.StockEntries)
             .ThenInclude(stockEntry => stockEntry.Location)
@@ -29,5 +30,22 @@ public class KegRepository
             .Include(keg => keg.StockEntries)
             .ThenInclude(stockEntry => stockEntry.Location)
             .FirstOrDefault(keg => keg.Id == id);
+    }
+
+    public void Add(Keg keg)
+    {
+        _context.Kegs.Add(keg);
+        _context.SaveChanges();
+    }
+
+    public void Update()
+    {
+        _context.SaveChanges();
+    }
+
+    public void SoftDelete(Keg keg)
+    {
+        keg.DeletedAt = DateTime.UtcNow;
+        _context.SaveChanges();
     }
 }

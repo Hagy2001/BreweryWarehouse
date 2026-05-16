@@ -10,4 +10,6 @@ public abstract class Container
     public string SLCode { get; set; } = string.Empty;
 
     public DateTime BestBefore { get; set; }
+
+    public DateTime? DeletedAt { get; set; }
 }

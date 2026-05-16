@@ -26,30 +26,30 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - No logic in views except simple if/foreach and TagHelpers
 
 ## Current Web Artifacts
-- BeerStyleRepository: Repositories/BeerStyleRepository.cs with EF Core GetAll()/GetById() including Cans and Kegs
-- CanRepository: Repositories/CanRepository.cs with EF Core GetAll()/GetById() including BeerStyle and StockEntries
-- KegRepository: Repositories/KegRepository.cs with EF Core GetAll()/GetById() including BeerStyle and StockEntries
-- WarehouseLocationRepository: Repositories/WarehouseLocationRepository.cs with EF Core GetAll()/GetById() including StockEntries and Container BeerStyle
-- StockEntryRepository: Repositories/StockEntryRepository.cs with EF Core GetAll()/GetById() including Container BeerStyle and Location
-- EmployeeRepository: Repositories/EmployeeRepository.cs with EF Core GetAll() and GetById(int id)
+- BeerStyleRepository: Repositories/BeerStyleRepository.cs with EF Core GetAll()/GetById() including Cans and Kegs plus Add/Update/SoftDelete
+- CanRepository: Repositories/CanRepository.cs with EF Core GetAll()/GetById() including BeerStyle and StockEntries plus Add/Update/SoftDelete
+- KegRepository: Repositories/KegRepository.cs with EF Core GetAll()/GetById() including BeerStyle and StockEntries plus Add/Update/SoftDelete
+- WarehouseLocationRepository: Repositories/WarehouseLocationRepository.cs with EF Core GetAll()/GetById() including StockEntries and Container BeerStyle plus Add/Update/Delete
+- StockEntryRepository: Repositories/StockEntryRepository.cs with EF Core GetAll()/GetById() including Container BeerStyle and Location plus Add/Update/Delete
+- EmployeeRepository: Repositories/EmployeeRepository.cs with EF Core GetAll() and GetById(int id) plus Add/Update/Delete
 - Controllers: all controllers now inject EF repositories instead of mock repositories
 - BeerStyleMockRepository: Repositories/BeerStyleMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
-- BeerStyleController: Controllers/BeerStyleController.cs with Index() and Details(int id)
+- BeerStyleController: Controllers/BeerStyleController.cs with Index(), Details(int id), Create, Edit, Delete
 - BeerStyle Views: Views/BeerStyle/Index.cshtml and Views/BeerStyle/Details.cshtml
 - CanMockRepository: Repositories/CanMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
-- CanController: Controllers/CanController.cs with [Authorize], Index(), and Details(int id)
+- CanController: Controllers/CanController.cs with [Authorize], Index(), Details(int id), Create, Edit, Delete
 - Can Views: Views/Can/Index.cshtml and Views/Can/Details.cshtml
 - KegMockRepository: Repositories/KegMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
-- KegController: Controllers/KegController.cs with [Authorize], Index(), and Details(int id)
+- KegController: Controllers/KegController.cs with [Authorize], Index(), Details(int id), Create, Edit, Delete
 - Keg Views: Views/Keg/Index.cshtml and Views/Keg/Details.cshtml
 - WarehouseLocationMockRepository: Repositories/WarehouseLocationMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
-- WarehouseLocationController: Controllers/WarehouseLocationController.cs with [Authorize], Index(), and Details(int id)
+- WarehouseLocationController: Controllers/WarehouseLocationController.cs with [Authorize], Index(), Details(int id), Create, Edit, Delete
 - WarehouseLocation Views: Views/WarehouseLocation/Index.cshtml and Views/WarehouseLocation/Details.cshtml
 - StockEntryMockRepository: Repositories/StockEntryMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
-- StockEntryController: Controllers/StockEntryController.cs with [Authorize], Index(), and Details(int id)
+- StockEntryController: Controllers/StockEntryController.cs with [Authorize], Index(), Details(int id), Create, Edit, Delete
 - StockEntry Views: Views/StockEntry/Index.cshtml and Views/StockEntry/Details.cshtml
 - EmployeeMockRepository: Repositories/EmployeeMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
-- EmployeeController: Controllers/EmployeeController.cs with [Authorize], Index(), and Details(int id)
+- EmployeeController: Controllers/EmployeeController.cs with [Authorize], Index(), Details(int id), Create, Edit, Delete
 - Employee Views: Views/Employee/Index.cshtml (rebuilt with list-page-skill; bw-badge--active/inactive status badges in site.css) and Views/Employee/Details.cshtml
 - HomeController: Controllers/HomeController.cs with [Authorize], BeerStyleRepository, CanRepository, KegRepository, WarehouseLocationRepository injection, dashboard Index() projection, Privacy(), Error()
 - Home Dashboard View: Views/Home/Index.cshtml with KPI cards, expiring combined table, and stock-by-location utilization bars
@@ -61,6 +61,7 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 
 ## EF Configuration
 - BreweryWarehouseDbContext: Data/BreweryWarehouseDbContext.cs with DbSets for BeerStyle, Can, Keg, StockEntry, WarehouseLocation, Employee, TPH mapping for Container hierarchy, and DI registration using SqlServer
+- Soft delete: Container and BeerStyle use DeletedAt (DateTime?) for soft deletion
 - DatabaseSeeder: Data/DatabaseSeeder.cs seeds sample data on startup
 - EF migrations: stored in BreweryWarehouse.Web/Migrations/ with InitialCreate as the first migration
 
@@ -80,8 +81,8 @@ or project structure — update this file under the relevant section to reflect
 the current state of the project. Keep entries concise, one line per item.
 
 ## Current Classes
-- Container: Id (int, [Key]), SLCode (string), BestBefore (DateTime)
-- BeerStyle: Id (int, [Key]), Name (string), Description (string), AlcoholPercentage (double), IBU (int), ColorEBC (double), Category (BeerCategory), Cans (virtual ICollection<Can>), Kegs (virtual ICollection<Keg>)
+- Container: Id (int, [Key]), SLCode (string), BestBefore (DateTime), DeletedAt (DateTime?)
+- BeerStyle: Id (int, [Key]), Name (string), Description (string), AlcoholPercentage (double), IBU (int), ColorEBC (double), Category (BeerCategory), DeletedAt (DateTime?), Cans (virtual ICollection<Can>), Kegs (virtual ICollection<Keg>)
 - Can: inherits Container (Id, SLCode, BestBefore), Size (CanSize), Barcode (string), PackagingDate (DateTime), StockEntries (virtual ICollection<StockEntry>), BeerStyleId (int), BeerStyle (virtual BeerStyle, [ForeignKey("BeerStyleId")])
 - Keg: inherits Container (Id, SLCode, BestBefore), Material (KegMaterial), HeadType (KegHeadType), VolumeInLitres (int: 20 or 30), SerialNumber (string), LastInspection (DateTime), StockEntries (virtual ICollection<StockEntry>), BeerStyleId (int), BeerStyle (virtual BeerStyle, [ForeignKey("BeerStyleId")])
 - StockEntry: Id (int, [Key]), ContainerId (int), Container (virtual Container, [ForeignKey("ContainerId")]), LocationId (int), Location (virtual WarehouseLocation, [ForeignKey("LocationId")]), Quantity (int), DateReceived (DateTime), DateModified (DateTime), Notes (string)

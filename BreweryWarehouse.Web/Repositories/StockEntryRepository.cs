@@ -30,4 +30,21 @@ public class StockEntryRepository
             .Include("Container.BeerStyle")
             .FirstOrDefault(stockEntry => stockEntry.Id == id);
     }
+
+    public void Add(StockEntry stockEntry)
+    {
+        _context.StockEntries.Add(stockEntry);
+        _context.SaveChanges();
+    }
+
+    public void Update()
+    {
+        _context.SaveChanges();
+    }
+
+    public void Delete(StockEntry stockEntry)
+    {
+        _context.StockEntries.Remove(stockEntry);
+        _context.SaveChanges();
+    }
 }

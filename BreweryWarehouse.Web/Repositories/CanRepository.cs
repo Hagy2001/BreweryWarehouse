@@ -16,6 +16,7 @@ public class CanRepository
     public List<Can> GetAll()
     {
         return _context.Cans
+            .Where(can => can.DeletedAt == null)
             .Include(can => can.BeerStyle)
             .Include(can => can.StockEntries)
             .ThenInclude(stockEntry => stockEntry.Location)
@@ -29,5 +30,22 @@ public class CanRepository
             .Include(can => can.StockEntries)
             .ThenInclude(stockEntry => stockEntry.Location)
             .FirstOrDefault(can => can.Id == id);
+    }
+
+    public void Add(Can can)
+    {
+        _context.Cans.Add(can);
+        _context.SaveChanges();
+    }
+
+    public void Update()
+    {
+        _context.SaveChanges();
+    }
+
+    public void SoftDelete(Can can)
+    {
+        can.DeletedAt = DateTime.UtcNow;
+        _context.SaveChanges();
     }
 }

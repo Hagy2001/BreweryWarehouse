@@ -30,4 +30,21 @@ public class WarehouseLocationRepository
             .Include("StockEntries.Container.BeerStyle")
             .FirstOrDefault(location => location.Id == id);
     }
+
+    public void Add(WarehouseLocation location)
+    {
+        _context.WarehouseLocations.Add(location);
+        _context.SaveChanges();
+    }
+
+    public void Update()
+    {
+        _context.SaveChanges();
+    }
+
+    public void Delete(WarehouseLocation location)
+    {
+        _context.WarehouseLocations.Remove(location);
+        _context.SaveChanges();
+    }
 }

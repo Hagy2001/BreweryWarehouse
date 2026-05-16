@@ -22,4 +22,21 @@ public class EmployeeRepository
     {
         return _context.Employees.FirstOrDefault(employee => employee.Id == id);
     }
+
+    public void Add(Employee employee)
+    {
+        _context.Employees.Add(employee);
+        _context.SaveChanges();
+    }
+
+    public void Update()
+    {
+        _context.SaveChanges();
+    }
+
+    public void Delete(Employee employee)
+    {
+        _context.Employees.Remove(employee);
+        _context.SaveChanges();
+    }
 }

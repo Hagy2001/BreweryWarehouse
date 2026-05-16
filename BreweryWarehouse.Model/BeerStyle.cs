@@ -20,6 +20,8 @@ public class BeerStyle
 
     public BeerCategory Category { get; set; }
 
+    public DateTime? DeletedAt { get; set; }
+
     public virtual ICollection<Can> Cans { get; set; }
 
     public virtual ICollection<Keg> Kegs { get; set; }
