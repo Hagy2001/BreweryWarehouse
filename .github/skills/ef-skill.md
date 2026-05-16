@@ -27,6 +27,6 @@ After any model change, run these commands from BreweryWarehouse.Web/:
 
 ## Post-Task Rules
 - Always update copilot-instructions.md to reflect any structural changes
-- Always update semantic-model.md if any entity, property, or relationship changes
+- Always update docs/semantic-model.md if any entity, property, or relationship changes
 - Never manually edit generated migration files in Migrations/
 - Never modify Mock repositories

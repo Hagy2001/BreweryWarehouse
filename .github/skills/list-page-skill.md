@@ -22,4 +22,4 @@ description: Use this skill when creating a new Index/list view and its supporti
 
 ## Post-Task Rules
 - Always update copilot-instructions.md after adding a new page
-- Always update sitemap.md with the new route
+- Always update docs/sitemap.md with the new route

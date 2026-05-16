@@ -5,10 +5,10 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - `BreweryWarehouse.Model` — class library, all domain classes
 - `BreweryWarehouse.Console` — LINQ queries and seed data (Lab 1)
 - `BreweryWarehouse.Web` — ASP.NET Core MVC web app (active from Lab 2)
-- `semantic-model.md` — AI context document for the database/domain model
-- `.github/sitemap.md` — AI routing sitemap for app URLs
-- `.github/agents/ef-skill.md` — EF Core workflow skill for BreweryWarehouse
-- `.github/agents/list-page-skill.md` — list page workflow skill for BreweryWarehouse.Web
+- `docs/semantic-model.md` — AI context document for the database/domain model
+- `docs/sitemap.md` — AI routing sitemap for app URLs
+- `.github/skills/ef-skill.md` — EF Core workflow skill for BreweryWarehouse
+- `.github/skills/list-page-skill.md` — list page workflow skill for BreweryWarehouse.Web
 
 ## Conventions
 - Namespace: BreweryWarehouse.Model for all model classes
@@ -92,6 +92,18 @@ the current state of the project. Keep entries concise, one line per item.
 - AuthService: mock credential validator and ClaimsPrincipal creator for admin@brewery.com
 - LoginViewModel: Email and Password with DataAnnotations validation
 - DashboardViewModel: TotalCans, TotalKegs, TotalLocations, TotalBeerStyles, ExpiringCans (List<Can>), ExpiringKegs (List<Keg>), Locations (List<WarehouseLocation>)
+- BeerStyleCreateModel: Models/BeerStyleCreateModel.cs — Name, Description, AlcoholPercentage, IBU, ColorEBC, Category with DataAnnotations
+- BeerStyleEditModel: Models/BeerStyleEditModel.cs — Id, Name, Description, AlcoholPercentage, IBU, ColorEBC, Category with DataAnnotations
+- CanCreateModel: Models/CanCreateModel.cs — SLCode, BestBefore, Size, Barcode, PackagingDate, BeerStyleId, BeerStyleName with DataAnnotations
+- CanEditModel: Models/CanEditModel.cs — Id, SLCode, BestBefore, Size, Barcode, PackagingDate, BeerStyleId, BeerStyleName with DataAnnotations
+- KegCreateModel: Models/KegCreateModel.cs — SLCode, BestBefore, Material, HeadType, VolumeInLitres, SerialNumber, LastInspection, BeerStyleId, BeerStyleName with DataAnnotations
+- KegEditModel: Models/KegEditModel.cs — Id, SLCode, BestBefore, Material, HeadType, VolumeInLitres, SerialNumber, LastInspection, BeerStyleId, BeerStyleName with DataAnnotations
+- WarehouseLocationCreateModel: Models/WarehouseLocationCreateModel.cs — LocationCode, Aisle, Shelf, MaxCapacity, Description with DataAnnotations
+- WarehouseLocationEditModel: Models/WarehouseLocationEditModel.cs — Id, LocationCode, Aisle, Shelf, MaxCapacity, Description with DataAnnotations
+- StockEntryCreateModel: Models/StockEntryCreateModel.cs — ContainerId, LocationId, Quantity, DateReceived, Notes with DataAnnotations
+- StockEntryEditModel: Models/StockEntryEditModel.cs — Id, ContainerId, LocationId, Quantity, DateReceived, Notes with DataAnnotations
+- EmployeeCreateModel: Models/EmployeeCreateModel.cs — FirstName, LastName, Email, Role, DateHired, IsActive with DataAnnotations
+- EmployeeEditModel: Models/EmployeeEditModel.cs — Id, FirstName, LastName, Email, Role, DateHired, IsActive with DataAnnotations
 - CanMockRepository: static seeded List<Can> with GetAll() and GetById(int id)
 - KegMockRepository: static seeded List<Keg> with GetAll() and GetById(int id)
 - WarehouseLocationMockRepository: static seeded List<WarehouseLocation> with GetAll() and GetById(int id)
