@@ -1,0 +1,41 @@
+@model BreweryWarehouse.Web.Models.EmployeeCreateModel
+
+<div class="bw-validation-summary" asp-validation-summary="ModelOnly"></div>
+
+<div class="bw-field-group">
+    <label asp-for="FirstName" class="bw-form-label"></label>
+    <input asp-for="FirstName" class="bw-input" />
+    <span asp-validation-for="FirstName" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="LastName" class="bw-form-label"></label>
+    <input asp-for="LastName" class="bw-input" />
+    <span asp-validation-for="LastName" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="Email" class="bw-form-label"></label>
+    <input asp-for="Email" class="bw-input" />
+    <span asp-validation-for="Email" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="Role" class="bw-form-label"></label>
+    <input asp-for="Role" class="bw-input" />
+    <span asp-validation-for="Role" class="bw-field-error"></span>
+</div>
+
+@await Html.PartialAsync("_DatePicker", new BreweryWarehouse.Web.Models.DatePickerModel { FieldName = "DateHired", Value = Model?.DateHired, Label = "Date Hired", IsRequired = true })
+
+<div class="bw-field-group bw-field-group--checkbox">
+    <label class="bw-checkbox-label">
+        <input asp-for="IsActive" class="bw-checkbox" />
+        <span>Active</span>
+    </label>
+</div>
+
+<div class="detail-actions">
+    <button type="submit" class="bw-btn bw-btn-primary">Save Employee</button>
+    <a asp-action="Index" class="bw-btn bw-btn-ghost">Cancel</a>
+</div>

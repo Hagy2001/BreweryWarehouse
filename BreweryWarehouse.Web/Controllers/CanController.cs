@@ -3,6 +3,7 @@ using BreweryWarehouse.Web.Models;
 using BreweryWarehouse.Web.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BreweryWarehouse.Web.Controllers;
 
@@ -11,10 +12,12 @@ namespace BreweryWarehouse.Web.Controllers;
 public class CanController : Controller
 {
     private readonly CanRepository repository;
+    private readonly BeerStyleRepository beerStyleRepository;
 
-    public CanController(CanRepository repository)
+    public CanController(CanRepository repository, BeerStyleRepository beerStyleRepository)
     {
         this.repository = repository;
+        this.beerStyleRepository = beerStyleRepository;
     }
 
     [Route("")]
@@ -39,6 +42,7 @@ public class CanController : Controller
     [Route("create")]
     public IActionResult Create()
     {
+        PopulateBeerStyles();
         return View(new CanCreateModel());
     }
 
@@ -50,16 +54,17 @@ public class CanController : Controller
     {
         if (!ModelState.IsValid)
         {
+            PopulateBeerStyles();
             return View(model);
         }
 
         Can can = new Can
         {
             SLCode = model.SLCode,
-            BestBefore = model.BestBefore,
+            BestBefore = model.BestBefore!.Value,
             Size = model.Size,
             Barcode = model.Barcode,
-            PackagingDate = model.PackagingDate,
+            PackagingDate = model.PackagingDate!.Value,
             BeerStyleId = model.BeerStyleId
         };
 
@@ -90,6 +95,7 @@ public class CanController : Controller
             BeerStyleName = can.BeerStyle?.Name
         };
 
+        PopulateBeerStyles();
         return View(model);
     }
 
@@ -101,6 +107,7 @@ public class CanController : Controller
     {
         if (!ModelState.IsValid)
         {
+            PopulateBeerStyles();
             return View(model);
         }
 
@@ -112,10 +119,10 @@ public class CanController : Controller
         }
 
         can.SLCode = model.SLCode;
-        can.BestBefore = model.BestBefore;
+        can.BestBefore = model.BestBefore!.Value;
         can.Size = model.Size;
         can.Barcode = model.Barcode;
-        can.PackagingDate = model.PackagingDate;
+        can.PackagingDate = model.PackagingDate!.Value;
         can.BeerStyleId = model.BeerStyleId;
 
         repository.Update();
@@ -138,5 +145,13 @@ public class CanController : Controller
         repository.SoftDelete(can);
 
         return RedirectToAction("Index");
+    }
+
+    private void PopulateBeerStyles()
+    {
+        ViewBag.BeerStyles = new SelectList(
+            beerStyleRepository.GetAll().OrderBy(bs => bs.Name),
+            "Id",
+            "Name");
     }
 }

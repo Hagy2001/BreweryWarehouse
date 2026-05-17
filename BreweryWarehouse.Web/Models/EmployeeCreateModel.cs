@@ -27,7 +27,7 @@ public class EmployeeCreateModel
 
     [Required]
     [Display(Name = "Date Hired")]
-    public DateTime DateHired { get; set; }
+    public DateTime? DateHired { get; set; }
 
     [Display(Name = "Active")]
     public bool IsActive { get; set; } = true;

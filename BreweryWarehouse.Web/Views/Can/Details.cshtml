@@ -18,7 +18,16 @@
     </ol>
 </nav>
 
-<h1 class="bw-page-title">@Model.SLCode</h1>
+<div class="bw-page-header">
+    <h1 class="bw-page-title">@Model.SLCode</h1>
+    <div class="bw-page-actions">
+        <a asp-controller="Can" asp-action="Edit" asp-route-id="@Model.Id" class="bw-btn bw-btn-primary">Edit</a>
+        <form asp-controller="Can" asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this can?');">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="bw-btn bw-btn-danger">Delete</button>
+        </form>
+    </div>
+</div>
 
 <div class="detail-card">
     <div class="detail-card__header">

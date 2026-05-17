@@ -1,0 +1,25 @@
+@model BreweryWarehouse.Web.Models.EmployeeCreateModel
+
+@{
+    ViewData["Title"] = "New Employee";
+    ViewData["Culture"] = "hr";
+}
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li><a asp-controller="Employee" asp-action="Index">Employees</a></li>
+        <li aria-current="page">New Employee</li>
+    </ol>
+</nav>
+
+<div class="bw-page-header">
+    <h1 class="bw-page-title">New Employee</h1>
+</div>
+
+<div class="detail-card">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <partial name="_CreateOrEdit" model="Model" />
+    </form>
+</div>

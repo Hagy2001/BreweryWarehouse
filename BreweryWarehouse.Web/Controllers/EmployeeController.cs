@@ -54,7 +54,7 @@ public class EmployeeController : Controller
             LastName = model.LastName,
             Email = model.Email,
             Role = model.Role,
-            DateHired = model.DateHired,
+            DateHired = model.DateHired!.Value,
             IsActive = model.IsActive
         };
 
@@ -107,7 +107,7 @@ public class EmployeeController : Controller
         employee.LastName = model.LastName;
         employee.Email = model.Email;
         employee.Role = model.Role;
-        employee.DateHired = model.DateHired;
+        employee.DateHired = model.DateHired!.Value;
         employee.IsActive = model.IsActive;
 
         repository.Update();

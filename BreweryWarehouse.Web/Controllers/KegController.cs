@@ -3,6 +3,7 @@ using BreweryWarehouse.Web.Models;
 using BreweryWarehouse.Web.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BreweryWarehouse.Web.Controllers;
 
@@ -11,10 +12,12 @@ namespace BreweryWarehouse.Web.Controllers;
 public class KegController : Controller
 {
     private readonly KegRepository repository;
+    private readonly BeerStyleRepository beerStyleRepository;
 
-    public KegController(KegRepository repository)
+    public KegController(KegRepository repository, BeerStyleRepository beerStyleRepository)
     {
         this.repository = repository;
+        this.beerStyleRepository = beerStyleRepository;
     }
 
     [Route("")]
@@ -39,6 +42,7 @@ public class KegController : Controller
     [Route("create")]
     public IActionResult Create()
     {
+        PopulateBeerStyles();
         return View(new KegCreateModel());
     }
 
@@ -50,18 +54,19 @@ public class KegController : Controller
     {
         if (!ModelState.IsValid)
         {
+            PopulateBeerStyles();
             return View(model);
         }
 
         Keg keg = new Keg
         {
             SLCode = model.SLCode,
-            BestBefore = model.BestBefore,
+            BestBefore = model.BestBefore!.Value,
             Material = model.Material,
             HeadType = model.HeadType,
             VolumeInLitres = model.VolumeInLitres,
             SerialNumber = model.SerialNumber,
-            LastInspection = model.LastInspection,
+            LastInspection = model.LastInspection!.Value,
             BeerStyleId = model.BeerStyleId
         };
 
@@ -94,6 +99,7 @@ public class KegController : Controller
             BeerStyleName = keg.BeerStyle?.Name
         };
 
+        PopulateBeerStyles();
         return View(model);
     }
 
@@ -105,6 +111,7 @@ public class KegController : Controller
     {
         if (!ModelState.IsValid)
         {
+            PopulateBeerStyles();
             return View(model);
         }
 
@@ -116,12 +123,12 @@ public class KegController : Controller
         }
 
         keg.SLCode = model.SLCode;
-        keg.BestBefore = model.BestBefore;
+        keg.BestBefore = model.BestBefore!.Value;
         keg.Material = model.Material;
         keg.HeadType = model.HeadType;
         keg.VolumeInLitres = model.VolumeInLitres;
         keg.SerialNumber = model.SerialNumber;
-        keg.LastInspection = model.LastInspection;
+        keg.LastInspection = model.LastInspection!.Value;
         keg.BeerStyleId = model.BeerStyleId;
 
         repository.Update();
@@ -144,5 +151,13 @@ public class KegController : Controller
         repository.SoftDelete(keg);
 
         return RedirectToAction("Index");
+    }
+
+    private void PopulateBeerStyles()
+    {
+        ViewBag.BeerStyles = new SelectList(
+            beerStyleRepository.GetAll().OrderBy(bs => bs.Name),
+            "Id",
+            "Name");
     }
 }

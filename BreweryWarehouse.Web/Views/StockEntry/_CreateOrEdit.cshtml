@@ -1,0 +1,40 @@
+@model BreweryWarehouse.Web.Models.StockEntryCreateModel
+
+<div class="bw-validation-summary" asp-validation-summary="ModelOnly"></div>
+
+@* Requires ViewBag.Containers and ViewBag.Locations *@
+
+<div class="bw-field-group">
+    <label asp-for="ContainerId" class="bw-form-label"></label>
+    <select asp-for="ContainerId" class="bw-input" asp-items="ViewBag.Containers">
+        <option value="">-- Select Container --</option>
+    </select>
+    <span asp-validation-for="ContainerId" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="LocationId" class="bw-form-label"></label>
+    <select asp-for="LocationId" class="bw-input" asp-items="ViewBag.Locations">
+        <option value="">-- Select Location --</option>
+    </select>
+    <span asp-validation-for="LocationId" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="Quantity" class="bw-form-label"></label>
+    <input asp-for="Quantity" class="bw-input" />
+    <span asp-validation-for="Quantity" class="bw-field-error"></span>
+</div>
+
+@await Html.PartialAsync("_DatePicker", new BreweryWarehouse.Web.Models.DatePickerModel { FieldName = "DateReceived", Value = Model?.DateReceived, Label = "Date Received", IsRequired = true })
+
+<div class="bw-field-group">
+    <label asp-for="Notes" class="bw-form-label"></label>
+    <textarea asp-for="Notes" class="bw-input" rows="4"></textarea>
+    <span asp-validation-for="Notes" class="bw-field-error"></span>
+</div>
+
+<div class="detail-actions">
+    <button type="submit" class="bw-btn bw-btn-primary">Save Entry</button>
+    <a asp-action="Index" class="bw-btn bw-btn-ghost">Cancel</a>
+</div>

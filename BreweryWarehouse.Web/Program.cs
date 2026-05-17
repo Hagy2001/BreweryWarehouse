@@ -1,14 +1,17 @@
+using BreweryWarehouse.Web.Binders;
 using BreweryWarehouse.Web.Data;
 using BreweryWarehouse.Web.Repositories;
 using BreweryWarehouse.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+    options.ModelBinderProviders.Insert(0, new DateTimeModelBinderProvider()));
 builder.Services.AddScoped<BeerStyleRepository>();
 builder.Services.AddScoped<CanRepository>();
 builder.Services.AddScoped<KegRepository>();
@@ -48,6 +51,19 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+var supportedCultures = new[]
+{
+    new CultureInfo("hr"),
+    new CultureInfo("en-US")
+};
+var localizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("hr"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures,
+    RequestCultureProviders = new[] { new AcceptLanguageHeaderRequestCultureProvider() }
+};
+app.UseRequestLocalization(localizationOptions);
 app.UseAuthentication();
 app.UseAuthorization();
 

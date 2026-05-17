@@ -1,0 +1,54 @@
+@model BreweryWarehouse.Web.Models.KegCreateModel
+
+<div class="bw-validation-summary" asp-validation-summary="ModelOnly"></div>
+
+<div class="bw-field-group">
+    <label asp-for="SLCode" class="bw-form-label"></label>
+    <input asp-for="SLCode" class="bw-input" />
+    <span asp-validation-for="SLCode" class="bw-field-error"></span>
+</div>
+
+@await Html.PartialAsync("_DatePicker", new BreweryWarehouse.Web.Models.DatePickerModel { FieldName = "BestBefore", Value = Model?.BestBefore, Label = "Best Before", IsRequired = true })
+
+<div class="bw-field-group">
+    <label asp-for="Material" class="bw-form-label"></label>
+    <select asp-for="Material" asp-items="Html.GetEnumSelectList<BreweryWarehouse.Model.KegMaterial>()" class="bw-input">
+        <option value="">-- Select Material --</option>
+    </select>
+    <span asp-validation-for="Material" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="HeadType" class="bw-form-label"></label>
+    <select asp-for="HeadType" asp-items="Html.GetEnumSelectList<BreweryWarehouse.Model.KegHeadType>()" class="bw-input">
+        <option value="">-- Select Head Type --</option>
+    </select>
+    <span asp-validation-for="HeadType" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="VolumeInLitres" class="bw-form-label"></label>
+    <input asp-for="VolumeInLitres" class="bw-input" />
+    <span asp-validation-for="VolumeInLitres" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="SerialNumber" class="bw-form-label"></label>
+    <input asp-for="SerialNumber" class="bw-input" />
+    <span asp-validation-for="SerialNumber" class="bw-field-error"></span>
+</div>
+
+@await Html.PartialAsync("_DatePicker", new BreweryWarehouse.Web.Models.DatePickerModel { FieldName = "LastInspection", Value = Model?.LastInspection, Label = "Last Inspection", IsRequired = true })
+
+<div class="bw-field-group">
+    <label asp-for="BeerStyleId" class="bw-form-label"></label>
+    <select asp-for="BeerStyleId" asp-items="ViewBag.BeerStyles" class="bw-input">
+        <option value="">-- Select Beer Style --</option>
+    </select>
+    <span asp-validation-for="BeerStyleId" class="bw-field-error"></span>
+</div>
+
+<div class="detail-actions">
+    <button type="submit" class="bw-btn bw-btn-primary">Save Keg</button>
+    <a asp-action="Index" class="bw-btn bw-btn-ghost">Cancel</a>
+</div>

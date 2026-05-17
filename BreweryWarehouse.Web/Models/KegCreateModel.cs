@@ -12,7 +12,7 @@ public class KegCreateModel
 
     [Required]
     [Display(Name = "Best Before")]
-    public DateTime BestBefore { get; set; }
+    public DateTime? BestBefore { get; set; }
 
     [Required]
     [Display(Name = "Material")]
@@ -34,12 +34,12 @@ public class KegCreateModel
 
     [Required]
     [Display(Name = "Last Inspection")]
-    public DateTime LastInspection { get; set; }
+    public DateTime? LastInspection { get; set; }
 
     [Required]
     [Range(1, int.MaxValue, ErrorMessage = "Please select a beer style.")]
     [Display(Name = "Beer Style")]
     public int BeerStyleId { get; set; }
 
-    public string BeerStyleName { get; set; }
+    public string? BeerStyleName { get; set; }
 }

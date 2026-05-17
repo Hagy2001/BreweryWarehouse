@@ -12,7 +12,7 @@ public class CanCreateModel
 
     [Required]
     [Display(Name = "Best Before")]
-    public DateTime BestBefore { get; set; }
+    public DateTime? BestBefore { get; set; }
 
     [Required]
     [Display(Name = "Size")]
@@ -25,12 +25,12 @@ public class CanCreateModel
 
     [Required]
     [Display(Name = "Packaging Date")]
-    public DateTime PackagingDate { get; set; }
+    public DateTime? PackagingDate { get; set; }
 
     [Required]
     [Range(1, int.MaxValue, ErrorMessage = "Please select a beer style.")]
     [Display(Name = "Beer Style")]
     public int BeerStyleId { get; set; }
 
-    public string BeerStyleName { get; set; }
+    public string? BeerStyleName { get; set; }
 }

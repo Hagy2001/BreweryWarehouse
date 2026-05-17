@@ -1,0 +1,42 @@
+@model BreweryWarehouse.Web.Models.KegEditModel
+
+@{
+    ViewData["Title"] = "Edit Keg";
+    ViewData["Culture"] = "hr";
+}
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li><a asp-controller="Keg" asp-action="Index">Kegs</a></li>
+        <li aria-current="page">Edit @Model.SLCode</li>
+    </ol>
+</nav>
+
+<h1 class="bw-page-title">Edit @Model.SLCode</h1>
+
+<div class="detail-card">
+    <div class="detail-card__header">
+        <h2 class="detail-card__title">Keg Information</h2>
+    </div>
+
+    <form asp-action="Edit" method="post" class="bw-form">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        @{
+            var createModel = new BreweryWarehouse.Web.Models.KegCreateModel
+            {
+                SLCode = Model.SLCode,
+                BestBefore = Model.BestBefore,
+                Material = Model.Material,
+                HeadType = Model.HeadType,
+                VolumeInLitres = Model.VolumeInLitres,
+                SerialNumber = Model.SerialNumber,
+                LastInspection = Model.LastInspection,
+                BeerStyleId = Model.BeerStyleId,
+                BeerStyleName = Model.BeerStyleName
+            };
+        }
+        <partial name="_CreateOrEdit" model="createModel" />
+    </form>
+</div>

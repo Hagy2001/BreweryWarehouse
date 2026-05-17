@@ -1,0 +1,24 @@
+@model BreweryWarehouse.Web.Models.WarehouseLocationCreateModel
+
+@{
+    ViewData["Title"] = "New Location";
+}
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li><a asp-controller="WarehouseLocation" asp-action="Index">Locations</a></li>
+        <li aria-current="page">New Location</li>
+    </ol>
+</nav>
+
+<div class="bw-page-header">
+    <h1 class="bw-page-title">New Location</h1>
+</div>
+
+<div class="detail-card">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <partial name="_CreateOrEdit" model="Model" />
+    </form>
+</div>

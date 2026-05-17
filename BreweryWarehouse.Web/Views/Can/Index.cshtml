@@ -5,12 +5,6 @@
     DateTime expiryThreshold = DateTime.Today.AddDays(30);
 }
 
-<style>
-    .row-expiring {
-        color: var(--bw-danger);
-    }
-</style>
-
 <nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
     <ol class="bw-breadcrumb">
         <li><a asp-controller="Home" asp-action="Index">Home</a></li>
@@ -18,7 +12,12 @@
     </ol>
 </nav>
 
-<h1 class="bw-page-title">Cans</h1>
+<div class="bw-page-header">
+    <h1 class="bw-page-title">Cans</h1>
+    <div class="bw-page-actions">
+        <a asp-controller="Can" asp-action="Create" class="bw-btn bw-btn-primary">New Can</a>
+    </div>
+</div>
 
 <div class="bw-table-wrap">
     <table class="bw-table">

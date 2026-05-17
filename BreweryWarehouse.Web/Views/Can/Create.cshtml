@@ -1,0 +1,25 @@
+@model BreweryWarehouse.Web.Models.CanCreateModel
+
+@{
+    ViewData["Title"] = "New Can";
+    ViewData["Culture"] = "hr";
+}
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li><a asp-controller="Can" asp-action="Index">Cans</a></li>
+        <li aria-current="page">New Can</li>
+    </ol>
+</nav>
+
+<div class="bw-page-header">
+    <h1 class="bw-page-title">New Can</h1>
+</div>
+
+<div class="detail-card">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        @await Html.PartialAsync("_CreateOrEdit", Model)
+    </form>
+</div>

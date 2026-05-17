@@ -1,0 +1,38 @@
+@model BreweryWarehouse.Web.Models.WarehouseLocationCreateModel
+
+<div class="bw-validation-summary" asp-validation-summary="ModelOnly"></div>
+
+<div class="bw-field-group">
+    <label asp-for="LocationCode" class="bw-form-label"></label>
+    <input asp-for="LocationCode" class="bw-input" />
+    <span asp-validation-for="LocationCode" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="Aisle" class="bw-form-label"></label>
+    <input asp-for="Aisle" class="bw-input" />
+    <span asp-validation-for="Aisle" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="Shelf" class="bw-form-label"></label>
+    <input asp-for="Shelf" class="bw-input" />
+    <span asp-validation-for="Shelf" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="MaxCapacity" class="bw-form-label"></label>
+    <input asp-for="MaxCapacity" class="bw-input" />
+    <span asp-validation-for="MaxCapacity" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="Description" class="bw-form-label"></label>
+    <textarea asp-for="Description" class="bw-input" rows="3"></textarea>
+    <span asp-validation-for="Description" class="bw-field-error"></span>
+</div>
+
+<div class="detail-actions">
+    <button type="submit" class="bw-btn bw-btn-primary">Save Location</button>
+    <a asp-action="Index" class="bw-btn bw-btn-ghost">Cancel</a>
+</div>

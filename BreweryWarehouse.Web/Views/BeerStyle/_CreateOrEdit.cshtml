@@ -1,0 +1,46 @@
+@model BreweryWarehouse.Web.Models.BeerStyleCreateModel
+
+<div class="bw-validation-summary" asp-validation-summary="ModelOnly"></div>
+
+<div class="bw-field-group">
+    <label asp-for="Name"></label>
+    <input asp-for="Name" class="bw-input" />
+    <span asp-validation-for="Name" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="Description"></label>
+    <textarea asp-for="Description" class="bw-input" rows="4"></textarea>
+    <span asp-validation-for="Description" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="AlcoholPercentage"></label>
+    <input asp-for="AlcoholPercentage" class="bw-input" />
+    <span asp-validation-for="AlcoholPercentage" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="IBU"></label>
+    <input asp-for="IBU" class="bw-input" />
+    <span asp-validation-for="IBU" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="ColorEBC"></label>
+    <input asp-for="ColorEBC" class="bw-input" />
+    <span asp-validation-for="ColorEBC" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="Category"></label>
+    <select asp-for="Category" asp-items="Html.GetEnumSelectList<BreweryWarehouse.Model.BeerCategory>()" class="bw-input">
+        <option value="">-- Select Category --</option>
+    </select>
+    <span asp-validation-for="Category" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <button type="submit" class="bw-btn bw-btn-primary">Save</button>
+    <a asp-action="Index" class="bw-btn bw-btn-ghost">Cancel</a>
+</div>

@@ -3,6 +3,7 @@ using BreweryWarehouse.Web.Models;
 using BreweryWarehouse.Web.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BreweryWarehouse.Web.Controllers;
 
@@ -10,10 +11,20 @@ namespace BreweryWarehouse.Web.Controllers;
 public class StockEntryController : Controller
 {
     private readonly StockEntryRepository repository;
+    private readonly CanRepository canRepository;
+    private readonly KegRepository kegRepository;
+    private readonly WarehouseLocationRepository locationRepository;
 
-    public StockEntryController(StockEntryRepository repository)
+    public StockEntryController(
+        StockEntryRepository repository,
+        CanRepository canRepository,
+        KegRepository kegRepository,
+        WarehouseLocationRepository locationRepository)
     {
         this.repository = repository;
+        this.canRepository = canRepository;
+        this.kegRepository = kegRepository;
+        this.locationRepository = locationRepository;
     }
 
     public IActionResult Index()
@@ -35,6 +46,7 @@ public class StockEntryController : Controller
 
     public IActionResult Create()
     {
+        PopulateDropdowns();
         return View(new StockEntryCreateModel());
     }
 
@@ -45,6 +57,7 @@ public class StockEntryController : Controller
     {
         if (!ModelState.IsValid)
         {
+            PopulateDropdowns();
             return View(model);
         }
 
@@ -53,7 +66,7 @@ public class StockEntryController : Controller
             ContainerId = model.ContainerId,
             LocationId = model.LocationId,
             Quantity = model.Quantity,
-            DateReceived = model.DateReceived,
+            DateReceived = model.DateReceived!.Value,
             DateModified = DateTime.UtcNow,
             Notes = model.Notes ?? string.Empty
         };
@@ -82,6 +95,7 @@ public class StockEntryController : Controller
             Notes = stockEntry.Notes
         };
 
+        PopulateDropdowns();
         return View(model);
     }
 
@@ -92,6 +106,7 @@ public class StockEntryController : Controller
     {
         if (!ModelState.IsValid)
         {
+            PopulateDropdowns();
             return View(model);
         }
 
@@ -105,7 +120,7 @@ public class StockEntryController : Controller
         stockEntry.ContainerId = model.ContainerId;
         stockEntry.LocationId = model.LocationId;
         stockEntry.Quantity = model.Quantity;
-        stockEntry.DateReceived = model.DateReceived;
+        stockEntry.DateReceived = model.DateReceived!.Value;
         stockEntry.DateModified = DateTime.UtcNow;
         stockEntry.Notes = model.Notes ?? string.Empty;
 
@@ -128,5 +143,31 @@ public class StockEntryController : Controller
         repository.Delete(stockEntry);
 
         return RedirectToAction("Index");
+    }
+
+    private void PopulateDropdowns()
+    {
+        var containers = canRepository.GetAll()
+            .Cast<Container>()
+            .Concat(kegRepository.GetAll())
+            .OrderBy(container => container.SLCode)
+            .Select(container => new
+            {
+                container.Id,
+                Label = $"{container.SLCode} ({container.GetType().Name})"
+            })
+            .ToList();
+
+        var locations = locationRepository.GetAll()
+            .OrderBy(location => location.LocationCode)
+            .Select(location => new
+            {
+                location.Id,
+                Label = $"{location.LocationCode} (Aisle {location.Aisle}, Shelf {location.Shelf})"
+            })
+            .ToList();
+
+        ViewBag.Containers = new SelectList(containers, "Id", "Label");
+        ViewBag.Locations = new SelectList(locations, "Id", "Label");
     }
 }

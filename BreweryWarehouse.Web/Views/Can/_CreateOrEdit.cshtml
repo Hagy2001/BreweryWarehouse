@@ -1,0 +1,41 @@
+@using BreweryWarehouse.Model
+@model BreweryWarehouse.Web.Models.CanCreateModel
+
+<div class="bw-validation-summary" asp-validation-summary="ModelOnly"></div>
+
+<div class="bw-field-group">
+    <label asp-for="SLCode" class="bw-form-label"></label>
+    <input asp-for="SLCode" class="bw-input" placeholder="e.g. CAN-001" />
+    <span asp-validation-for="SLCode" class="bw-field-error"></span>
+</div>
+
+@await Html.PartialAsync("_DatePicker", new BreweryWarehouse.Web.Models.DatePickerModel { FieldName = "PackagingDate", Value = Model?.PackagingDate, Label = "Packaging Date", IsRequired = true })
+
+@await Html.PartialAsync("_DatePicker", new BreweryWarehouse.Web.Models.DatePickerModel { FieldName = "BestBefore", Value = Model?.BestBefore, Label = "Best Before", IsRequired = true })
+
+<div class="bw-field-group">
+    <label asp-for="Size" class="bw-form-label"></label>
+    <select asp-for="Size" class="bw-input" asp-items="Html.GetEnumSelectList<CanSize>()">
+        <option value="">-- Select Size --</option>
+    </select>
+    <span asp-validation-for="Size" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="Barcode" class="bw-form-label"></label>
+    <input asp-for="Barcode" class="bw-input" />
+    <span asp-validation-for="Barcode" class="bw-field-error"></span>
+</div>
+
+<div class="bw-field-group">
+    <label asp-for="BeerStyleId" class="bw-form-label"></label>
+    <select asp-for="BeerStyleId" asp-items="ViewBag.BeerStyles" class="bw-input">
+        <option value="">-- Select Beer Style --</option>
+    </select>
+    <span asp-validation-for="BeerStyleId" class="bw-field-error"></span>
+</div>
+
+<div class="detail-actions">
+    <button type="submit" class="bw-btn bw-btn-primary">Save Can</button>
+    <a asp-action="Index" class="bw-btn bw-btn-ghost">Cancel</a>
+</div>

@@ -1,0 +1,21 @@
+@model BreweryWarehouse.Web.Models.BeerStyleCreateModel
+
+@{
+    ViewData["Title"] = "New Beer Style";
+}
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li><a asp-controller="BeerStyle" asp-action="Index">Beer Styles</a></li>
+        <li aria-current="page">New Beer Style</li>
+    </ol>
+</nav>
+
+<h1 class="bw-page-title">New Beer Style</h1>
+
+<div class="detail-card">
+    <form asp-action="Create" method="post">
+        <partial name="_CreateOrEdit" model="Model" />
+    </form>
+</div>

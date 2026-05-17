@@ -1,0 +1,25 @@
+@model BreweryWarehouse.Web.Models.StockEntryCreateModel
+
+@{
+    ViewData["Title"] = "New Stock Entry";
+    ViewData["Culture"] = "hr";
+}
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li><a asp-controller="StockEntry" asp-action="Index">Stock</a></li>
+        <li aria-current="page">New Entry</li>
+    </ol>
+</nav>
+
+<div class="bw-page-header">
+    <h1 class="bw-page-title">New Stock Entry</h1>
+</div>
+
+<div class="detail-card">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <partial name="_CreateOrEdit" model="Model" />
+    </form>
+</div>

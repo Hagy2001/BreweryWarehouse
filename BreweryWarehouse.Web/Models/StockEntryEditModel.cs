@@ -23,9 +23,9 @@ public class StockEntryEditModel
 
     [Required]
     [Display(Name = "Date Received")]
-    public DateTime DateReceived { get; set; }
+    public DateTime? DateReceived { get; set; }
 
     [StringLength(1000)]
     [Display(Name = "Notes")]
-    public string Notes { get; set; }
+    public string? Notes { get; set; }
 }
