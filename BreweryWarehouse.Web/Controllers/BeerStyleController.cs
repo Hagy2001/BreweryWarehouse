@@ -23,6 +23,36 @@ public class BeerStyleController : Controller
         return View(repository.GetAll());
     }
 
+    [HttpGet]
+    [Route("search")]
+    public JsonResult Search(string? q)
+    {
+        IEnumerable<BeerStyle> beerStyles = repository.GetAll();
+
+        if (!string.IsNullOrWhiteSpace(q))
+        {
+            string query = q.Trim();
+            beerStyles = beerStyles.Where(style =>
+                style.Name.Contains(query, StringComparison.OrdinalIgnoreCase));
+        }
+
+        var results = beerStyles
+            .OrderBy(style => style.Name)
+            .Take(20)
+            .Select(style => new
+            {
+                style.Id,
+                style.Name,
+                Category = style.Category.GetDescription(),
+                style.AlcoholPercentage,
+                style.IBU,
+                style.ColorEBC
+            })
+            .ToList();
+
+        return Json(results);
+    }
+
     [Route("{id:int}/detail")]
     public IActionResult Details(int id)
     {

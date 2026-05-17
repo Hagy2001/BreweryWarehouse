@@ -26,6 +26,45 @@ public class CanController : Controller
         return View(repository.GetAll());
     }
 
+    [HttpGet]
+    [Route("search")]
+    public JsonResult Search(string? q)
+    {
+        IEnumerable<Can> cans = repository.GetAll();
+
+        if (!string.IsNullOrWhiteSpace(q))
+        {
+            string query = q.Trim();
+            cans = cans.Where(can =>
+                (can.SLCode?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (can.BeerStyle?.Name?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false));
+        }
+
+        var results = cans
+            .OrderBy(can => can.SLCode)
+            .Take(20)
+            .Select(can => new
+            {
+                can.Id,
+                can.SLCode,
+                BeerStyleName = can.BeerStyle?.Name ?? string.Empty,
+                SizeDisplay = can.Size switch
+                {
+                    CanSize.Can033 => "0.33 L",
+                    CanSize.Can044 => "0.44 L",
+                    _ => can.Size.ToString()
+                },
+                can.Barcode,
+                PackagingDate = can.PackagingDate,
+                PackagingDateDisplay = can.PackagingDate.ToString("dd MMM yyyy"),
+                BestBefore = can.BestBefore,
+                BestBeforeDisplay = can.BestBefore.ToString("dd MMM yyyy")
+            })
+            .ToList();
+
+        return Json(results);
+    }
+
     [Route("{id:int}/info")]
     public IActionResult Details(int id)
     {

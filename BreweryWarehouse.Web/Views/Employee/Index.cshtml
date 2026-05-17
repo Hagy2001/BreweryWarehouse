@@ -18,6 +18,10 @@
     </div>
 </div>
 
+<div class="bw-toolbar">
+    <input type="text" id="employeeSearch" class="bw-input" placeholder="Search by name or email" autocomplete="off" />
+</div>
+
 <div class="bw-table-wrap">
     <table class="bw-table">
         <thead>
@@ -30,7 +34,7 @@
                 <th>Details</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="employeeTableBody">
             @foreach (var emp in Model)
             {
                 <tr>
@@ -56,3 +60,53 @@
         </tbody>
     </table>
 </div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            let searchTimer = null;
+            const $searchInput = $('#employeeSearch');
+            const $tableBody = $('#employeeTableBody');
+
+            $searchInput.on('keyup', function () {
+                clearTimeout(searchTimer);
+                const query = $(this).val();
+
+                searchTimer = setTimeout(function () {
+                    $.ajax({
+                        url: '@Url.Action("Search", "Employee")',
+                        type: 'GET',
+                        data: { q: query },
+                        success: function (data) {
+                            $tableBody.empty();
+
+                            if (!data || data.length === 0) {
+                                $tableBody.append('<tr><td colspan="6">No results found.</td></tr>');
+                                return;
+                            }
+
+                            data.forEach(function (item) {
+                                const detailsUrl = '@Url.Action("Details", "Employee", new { id = "__id__" })'.replace('__id__', item.id);
+                                const statusBadge = item.isActive
+                                    ? '<span class="bw-badge bw-badge--active">Active</span>'
+                                    : '<span class="bw-badge bw-badge--inactive">Inactive</span>';
+
+                                const rowHtml = `
+                                    <tr>
+                                        <td>${item.firstName} ${item.lastName}</td>
+                                        <td>${item.email}</td>
+                                        <td>${item.role}</td>
+                                        <td>${item.dateHiredDisplay}</td>
+                                        <td>${statusBadge}</td>
+                                        <td><a href="${detailsUrl}" class="bw-pill-link">Details</a></td>
+                                    </tr>`;
+
+                                $tableBody.append(rowHtml);
+                            });
+                        }
+                    });
+                }, 300);
+            });
+        });
+    </script>
+}

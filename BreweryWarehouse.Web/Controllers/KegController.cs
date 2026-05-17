@@ -26,6 +26,40 @@ public class KegController : Controller
         return View(repository.GetAll());
     }
 
+    [HttpGet]
+    [Route("search")]
+    public JsonResult Search(string? q)
+    {
+        IEnumerable<Keg> kegs = repository.GetAll();
+
+        if (!string.IsNullOrWhiteSpace(q))
+        {
+            string query = q.Trim();
+            kegs = kegs.Where(keg =>
+                (keg.SLCode?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (keg.BeerStyle?.Name?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false));
+        }
+
+        var results = kegs
+            .OrderBy(keg => keg.SLCode)
+            .Take(20)
+            .Select(keg => new
+            {
+                keg.Id,
+                keg.SLCode,
+                BeerStyleName = keg.BeerStyle?.Name ?? string.Empty,
+                keg.VolumeInLitres,
+                MaterialDisplay = keg.Material.GetDescription(),
+                HeadTypeDisplay = keg.HeadType.GetDescription(),
+                LastInspectionDisplay = keg.LastInspection.ToString("dd MMM yyyy"),
+                BestBefore = keg.BestBefore,
+                BestBeforeDisplay = keg.BestBefore.ToString("dd MMM yyyy")
+            })
+            .ToList();
+
+        return Json(results);
+    }
+
     [Route("{id:int}/info")]
     public IActionResult Details(int id)
     {

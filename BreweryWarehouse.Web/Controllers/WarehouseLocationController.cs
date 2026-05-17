@@ -23,6 +23,48 @@ public class WarehouseLocationController : Controller
         return View(repository.GetAll());
     }
 
+    [HttpGet]
+    [Route("search")]
+    public JsonResult Search(string? q)
+    {
+        IEnumerable<WarehouseLocation> locations = repository.GetAll();
+
+        if (!string.IsNullOrWhiteSpace(q))
+        {
+            string query = q.Trim();
+            locations = locations.Where(location =>
+                (location.LocationCode?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (location.Aisle?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false));
+        }
+
+        var results = locations
+            .OrderBy(location => location.LocationCode)
+            .Take(20)
+            .Select(location =>
+            {
+                int used = location.StockEntries.Sum(entry => entry.Quantity);
+                int max = location.MaxCapacity;
+                bool isOverfill = max > 0 && used > max;
+                double percentage = max > 0 ? (double)used / max * 100 : 0;
+                int bucketedPercentage = (int)(Math.Round(Math.Min(100.0, percentage) / 5.0) * 5);
+
+                return new
+                {
+                    location.Id,
+                    location.LocationCode,
+                    location.Aisle,
+                    location.Shelf,
+                    Used = used,
+                    MaxCapacity = max,
+                    BucketedPercentage = bucketedPercentage,
+                    IsOverfill = isOverfill
+                };
+            })
+            .ToList();
+
+        return Json(results);
+    }
+
     [Route("{id:int}/view")]
     public IActionResult Details(int id)
     {

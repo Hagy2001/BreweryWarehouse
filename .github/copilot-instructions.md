@@ -34,27 +34,28 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - EmployeeRepository: Repositories/EmployeeRepository.cs with EF Core GetAll() and GetById(int id) plus Add/Update/Delete
 - Controllers: all controllers now inject EF repositories instead of mock repositories
 - BeerStyleMockRepository: Repositories/BeerStyleMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
-- BeerStyleController: Controllers/BeerStyleController.cs with Index(), Details(int id), Create, Edit, Delete
+- BeerStyleController: Controllers/BeerStyleController.cs with Index(), Details(int id), Create, Edit, Delete, Search(string q)
 - BeerStyle Views: Views/BeerStyle/Index.cshtml, Views/BeerStyle/Details.cshtml, Views/BeerStyle/Create.cshtml, Views/BeerStyle/Edit.cshtml, Views/BeerStyle/_CreateOrEdit.cshtml
 - CanMockRepository: Repositories/CanMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
-- CanController: Controllers/CanController.cs with [Authorize], Index(), Details(int id), Create, Edit, Delete, PopulateBeerStyles() — injects BeerStyleRepository, ViewBag.BeerStyles SelectList used by Can/_CreateOrEdit
+- CanController: Controllers/CanController.cs with [Authorize], Index(), Details(int id), Create, Edit, Delete, Search(string q), PopulateBeerStyles() — injects BeerStyleRepository, ViewBag.BeerStyles SelectList used by Can/_CreateOrEdit
 - Can Views: Views/Can/Index.cshtml, Views/Can/Details.cshtml, Views/Can/Create.cshtml, Views/Can/Edit.cshtml, Views/Can/_CreateOrEdit.cshtml
 - KegMockRepository: Repositories/KegMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
-- KegController: Controllers/KegController.cs with [Authorize], Index(), Details(int id), Create, Edit, Delete, PopulateBeerStyles() — injects BeerStyleRepository, ViewBag.BeerStyles SelectList used by Keg/_CreateOrEdit
+- KegController: Controllers/KegController.cs with [Authorize], Index(), Details(int id), Create, Edit, Delete, Search(string q), PopulateBeerStyles() — injects BeerStyleRepository, ViewBag.BeerStyles SelectList used by Keg/_CreateOrEdit
 - Keg Views: Views/Keg/Index.cshtml, Views/Keg/Details.cshtml, Views/Keg/Create.cshtml, Views/Keg/Edit.cshtml, Views/Keg/_CreateOrEdit.cshtml
 - WarehouseLocationMockRepository: Repositories/WarehouseLocationMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
-- WarehouseLocationController: Controllers/WarehouseLocationController.cs with [Authorize], Index(), Details(int id), Create, Edit, Delete
+- WarehouseLocationController: Controllers/WarehouseLocationController.cs with [Authorize], Index(), Details(int id), Create, Edit, Delete, Search(string q)
 - WarehouseLocation Views: Views/WarehouseLocation/Index.cshtml, Views/WarehouseLocation/Details.cshtml, Views/WarehouseLocation/Create.cshtml, Views/WarehouseLocation/Edit.cshtml, Views/WarehouseLocation/_CreateOrEdit.cshtml
 - StockEntryMockRepository: Repositories/StockEntryMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
-- StockEntryController: Controllers/StockEntryController.cs with [Authorize], Index(), Details(int id), Create, Edit, Delete plus PopulateDropdowns() for Containers/Locations
+- StockEntryController: Controllers/StockEntryController.cs with [Authorize], Index(), Details(int id), Create, Edit, Delete, Search(string q) plus PopulateDropdowns() for Containers/Locations
 - StockEntry Views: Views/StockEntry/Index.cshtml, Views/StockEntry/Details.cshtml, Views/StockEntry/Create.cshtml, Views/StockEntry/Edit.cshtml, Views/StockEntry/_CreateOrEdit.cshtml
 - EmployeeMockRepository: Repositories/EmployeeMockRepository.cs with GetAll() and GetById(int id) from DataSeeder
-- EmployeeController: Controllers/EmployeeController.cs with [Authorize], Index(), Details(int id), Create, Edit, Delete
+- EmployeeController: Controllers/EmployeeController.cs with [Authorize], Index(), Details(int id), Create, Edit, Delete, Search(string q)
 - Employee Views: Views/Employee/Index.cshtml, Views/Employee/Details.cshtml, Views/Employee/Create.cshtml, Views/Employee/Edit.cshtml, Views/Employee/_CreateOrEdit.cshtml (bw-badge--active/inactive status badges in site.css)
 - HomeController: Controllers/HomeController.cs with [Authorize], BeerStyleRepository, CanRepository, KegRepository, WarehouseLocationRepository injection, dashboard Index() projection, Privacy(), Error()
 - Home Dashboard View: Views/Home/Index.cshtml with KPI cards, expiring combined table, and stock-by-location utilization bars
 - Shared Layout: Views/Shared/_Layout.cshtml uses brewery sidebar navigation and shared site.css theme
 - DatePicker Partial: Views/Shared/_DatePicker.cshtml for custom date inputs
+- BeerStyle Autocomplete Partial: Views/Shared/_BeerStyleAutocomplete.cshtml for AJAX beer style lookup inputs
 - AuthService: Services/AuthService.cs with ValidateCredentials(email,password) and CreatePrincipal(email)
 - AuthController: Controllers/AuthController.cs with Login(GET/POST) and Logout(POST)
 - LoginViewModel: Models/LoginViewModel.cs with Required/EmailAddress validation

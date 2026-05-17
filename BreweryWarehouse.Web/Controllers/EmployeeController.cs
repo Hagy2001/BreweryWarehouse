@@ -21,6 +21,40 @@ public class EmployeeController : Controller
         return View(repository.GetAll());
     }
 
+    [HttpGet]
+    [Route("Employee/search")]
+    public JsonResult Search(string? q)
+    {
+        IEnumerable<Employee> employees = repository.GetAll();
+
+        if (!string.IsNullOrWhiteSpace(q))
+        {
+            string query = q.Trim();
+            employees = employees.Where(employee =>
+                (employee.LastName?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (employee.FirstName?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (employee.Email?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false));
+        }
+
+        var results = employees
+            .OrderBy(employee => employee.LastName)
+            .ThenBy(employee => employee.FirstName)
+            .Take(20)
+            .Select(employee => new
+            {
+                employee.Id,
+                employee.FirstName,
+                employee.LastName,
+                employee.Email,
+                employee.Role,
+                employee.IsActive,
+                DateHiredDisplay = employee.DateHired.ToString("dd MMM yyyy")
+            })
+            .ToList();
+
+        return Json(results);
+    }
+
     public IActionResult Details(int id)
     {
         Employee? employee = repository.GetById(id);

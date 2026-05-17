@@ -32,6 +32,53 @@ public class StockEntryController : Controller
         return View(repository.GetAll());
     }
 
+    [HttpGet]
+    [Route("StockEntry/search")]
+    public JsonResult Search(string? q)
+    {
+        IEnumerable<StockEntry> entries = repository.GetAll();
+
+        if (!string.IsNullOrWhiteSpace(q))
+        {
+            string query = q.Trim();
+            entries = entries.Where(entry =>
+                (entry.Container.SLCode?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (entry.Location.LocationCode?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false));
+        }
+
+        var results = entries
+            .OrderBy(entry => entry.Id)
+            .Take(20)
+            .Select(entry =>
+            {
+                bool isCan = entry.Container is Can;
+                string beerStyleName = "-";
+
+                if (isCan && entry.Container is Can can && can.BeerStyle is not null)
+                {
+                    beerStyleName = can.BeerStyle.Name;
+                }
+                else if (!isCan && entry.Container is Keg keg && keg.BeerStyle is not null)
+                {
+                    beerStyleName = keg.BeerStyle.Name;
+                }
+
+                return new
+                {
+                    entry.Id,
+                    ContainerSLCode = entry.Container.SLCode,
+                    ContainerType = isCan ? "CAN" : "KEG",
+                    BeerStyleName = beerStyleName,
+                    LocationCode = entry.Location.LocationCode,
+                    entry.Quantity,
+                    DateReceivedDisplay = entry.DateReceived.ToString("dd MMM yyyy")
+                };
+            })
+            .ToList();
+
+        return Json(results);
+    }
+
     public IActionResult Details(int id)
     {
         StockEntry? stockEntry = repository.GetById(id);

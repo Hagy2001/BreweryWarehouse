@@ -1,0 +1,72 @@
+@{
+    string fieldName = ViewData["FieldName"] as string ?? "BeerStyleId";
+    int? selectedId = ViewData["SelectedId"] as int?;
+    string selectedName = ViewData["SelectedName"] as string ?? string.Empty;
+    string inputId = $"{fieldName}-Display";
+    string dropdownId = $"{fieldName}-Dropdown";
+    string containerId = $"{fieldName}-Autocomplete";
+}
+
+<div class="bw-autocomplete" id="@containerId">
+    <input type="text" id="@inputId" class="bw-input" placeholder="Search beer styles" autocomplete="off" value="@selectedName" />
+    <input type="hidden" id="@fieldName" name="@fieldName" value="@selectedId" />
+    <ul id="@dropdownId" class="bw-autocomplete__list" aria-label="Beer style results"></ul>
+</div>
+
+<script>
+    $(function () {
+        let searchTimer = null;
+        const $container = $('#@containerId');
+        const $displayInput = $('#@inputId');
+        const $hiddenInput = $('#@fieldName');
+        const $dropdown = $('#@dropdownId');
+        $displayInput.on('keyup', function () {
+            clearTimeout(searchTimer);
+            const query = $(this).val();
+
+            if (!query || query.length < 2) {
+                $dropdown.removeClass('is-open');
+                $dropdown.empty();
+                return;
+            }
+
+            searchTimer = setTimeout(function () {
+                $.ajax({
+                    url: '/beer-styles/search',
+                    type: 'GET',
+                    data: { q: query },
+                    success: function (data) {
+                        $dropdown.empty();
+
+                        if (!data || data.length === 0) {
+                            $dropdown.removeClass('is-open');
+                            return;
+                        }
+
+                        data.forEach(function (item) {
+                            const listItem = `<li class="bw-autocomplete__item" data-id="${item.id}">${item.name}</li>`;
+                            $dropdown.append(listItem);
+                        });
+
+                        $dropdown.addClass('is-open');
+                    }
+                });
+            }, 300);
+        });
+
+        $dropdown.on('click', '.bw-autocomplete__item', function () {
+            const selectedText = $(this).text();
+            const selectedValue = $(this).data('id');
+
+            $hiddenInput.val(selectedValue);
+            $displayInput.val(selectedText);
+            $dropdown.removeClass('is-open');
+        });
+
+        $(document).on('click', function (event) {
+            if (!$(event.target).closest($container).length) {
+                $dropdown.removeClass('is-open');
+            }
+        });
+    });
+</script>

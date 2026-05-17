@@ -18,6 +18,10 @@
     </div>
 </div>
 
+<div class="bw-toolbar">
+    <input type="text" id="locationSearch" class="bw-input" placeholder="Search by location code or aisle" autocomplete="off" />
+</div>
+
 <div class="bw-table-wrap">
     <table class="bw-table">
         <thead>
@@ -30,7 +34,7 @@
                 <th>Details</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="locationTableBody">
             @foreach (var location in Model)
             {
                 int used = location.StockEntries.Sum(entry => entry.Quantity);
@@ -57,3 +61,54 @@
         </tbody>
     </table>
 </div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            let searchTimer = null;
+            const $searchInput = $('#locationSearch');
+            const $tableBody = $('#locationTableBody');
+
+            $searchInput.on('keyup', function () {
+                clearTimeout(searchTimer);
+                const query = $(this).val();
+
+                searchTimer = setTimeout(function () {
+                    $.ajax({
+                        url: '@Url.Action("Search", "WarehouseLocation")',
+                        type: 'GET',
+                        data: { q: query },
+                        success: function (data) {
+                            $tableBody.empty();
+
+                            if (!data || data.length === 0) {
+                                $tableBody.append('<tr><td colspan="6">No results found.</td></tr>');
+                                return;
+                            }
+
+                            data.forEach(function (item) {
+                                const detailsUrl = '@Url.Action("Details", "WarehouseLocation", new { id = "__id__" })'.replace('__id__', item.id);
+                                const overfillClass = item.isOverfill ? 'location-fill--overfill' : '';
+                                const rowHtml = `
+                                    <tr>
+                                        <td>${item.locationCode}</td>
+                                        <td>${item.aisle}</td>
+                                        <td>${item.shelf}</td>
+                                        <td>${item.used} / ${item.maxCapacity}</td>
+                                        <td>
+                                            <div class="location-track location-track--index" aria-label="${item.used} out of ${item.maxCapacity} used">
+                                                <div class="location-fill ${overfillClass} bw-w-${item.bucketedPercentage}"></div>
+                                            </div>
+                                        </td>
+                                        <td><a href="${detailsUrl}" class="bw-pill-link">Details</a></td>
+                                    </tr>`;
+
+                                $tableBody.append(rowHtml);
+                            });
+                        }
+                    });
+                }, 300);
+            });
+        });
+    </script>
+}

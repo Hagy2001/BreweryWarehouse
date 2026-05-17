@@ -19,6 +19,10 @@
     </div>
 </div>
 
+<div class="bw-toolbar">
+    <input type="text" id="canSearch" class="bw-input" placeholder="Search by SL code or beer style" autocomplete="off" />
+</div>
+
 <div class="bw-table-wrap">
     <table class="bw-table">
         <thead>
@@ -32,7 +36,7 @@
                 <th>Details</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="canTableBody">
             @foreach (var can in Model)
             {
                 bool isExpiringSoon = can.BestBefore.Date <= expiryThreshold;
@@ -58,3 +62,57 @@
         </tbody>
     </table>
 </div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            let searchTimer = null;
+            const $searchInput = $('#canSearch');
+            const $tableBody = $('#canTableBody');
+
+            $searchInput.on('keyup', function () {
+                clearTimeout(searchTimer);
+                const query = $(this).val();
+
+                searchTimer = setTimeout(function () {
+                    $.ajax({
+                        url: '@Url.Action("Search", "Can")',
+                        type: 'GET',
+                        data: { q: query },
+                        success: function (data) {
+                            $tableBody.empty();
+
+                            if (!data || data.length === 0) {
+                                $tableBody.append('<tr><td colspan="7">No results found.</td></tr>');
+                                return;
+                            }
+
+                            const threshold = new Date();
+                            threshold.setDate(threshold.getDate() + 30);
+
+                            data.forEach(function (item) {
+                                const detailsUrl = '@Url.Action("Details", "Can", new { id = "__id__" })'.replace('__id__', item.id);
+                                const bestBeforeDate = new Date(item.bestBefore);
+                                const isExpiring = bestBeforeDate <= threshold;
+                                const rowClass = isExpiring ? 'row-expiring' : '';
+
+                                const rowHtml = `
+                                    <tr class="${rowClass}">
+                                        <td>${item.slCode}</td>
+                                        <td>${item.beerStyleName}</td>
+                                        <td>${item.sizeDisplay}</td>
+                                        <td>${item.barcode}</td>
+                                        <td>${item.packagingDateDisplay}</td>
+                                        <td>${item.bestBeforeDisplay}</td>
+                                        <td><a href="${detailsUrl}" class="bw-pill-link">Details</a></td>
+                                    </tr>`;
+
+                                $tableBody.append(rowHtml);
+                            });
+                        }
+                    });
+                }, 300);
+            });
+        });
+    </script>
+}

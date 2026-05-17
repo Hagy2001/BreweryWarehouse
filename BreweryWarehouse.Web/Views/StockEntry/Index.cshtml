@@ -19,6 +19,10 @@
     </div>
 </div>
 
+<div class="bw-toolbar">
+    <input type="text" id="stockEntrySearch" class="bw-input" placeholder="Search by container or location code" autocomplete="off" />
+</div>
+
 <div class="bw-table-wrap">
     <table class="bw-table">
         <thead>
@@ -33,7 +37,7 @@
                 <th>Details</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="stockEntryTableBody">
             @if (Model.Count == 0)
             {
                 <tr>
@@ -74,3 +78,51 @@
         </tbody>
     </table>
 </div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            let searchTimer = null;
+            const $searchInput = $('#stockEntrySearch');
+            const $tableBody = $('#stockEntryTableBody');
+
+            $searchInput.on('keyup', function () {
+                clearTimeout(searchTimer);
+                const query = $(this).val();
+
+                searchTimer = setTimeout(function () {
+                    $.ajax({
+                        url: '@Url.Action("Search", "StockEntry")',
+                        type: 'GET',
+                        data: { q: query },
+                        success: function (data) {
+                            $tableBody.empty();
+
+                            if (!data || data.length === 0) {
+                                $tableBody.append('<tr><td colspan="8">No results found.</td></tr>');
+                                return;
+                            }
+
+                            data.forEach(function (item) {
+                                const detailsUrl = '@Url.Action("Details", "StockEntry", new { id = "__id__" })'.replace('__id__', item.id);
+                                const rowHtml = `
+                                    <tr>
+                                        <td>${item.id}</td>
+                                        <td>${item.containerSLCode}</td>
+                                        <td><span class="bw-badge bw-badge--category">${item.containerType}</span></td>
+                                        <td>${item.beerStyleName}</td>
+                                        <td>${item.locationCode}</td>
+                                        <td>${item.quantity}</td>
+                                        <td>${item.dateReceivedDisplay}</td>
+                                        <td><a href="${detailsUrl}" class="bw-pill-link">Details</a></td>
+                                    </tr>`;
+
+                                $tableBody.append(rowHtml);
+                            });
+                        }
+                    });
+                }, 300);
+            });
+        });
+    </script>
+}
