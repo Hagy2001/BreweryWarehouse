@@ -60,13 +60,16 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - AuthController: Controllers/AuthController.cs with Login(GET/POST) and Logout(POST)
 - LoginViewModel: Models/LoginViewModel.cs with Required/EmailAddress validation
 - Login View: Views/Auth/Login.cshtml standalone login page without shared layout
+- Load animation overlay: _Layout.cshtml overlay injection, wwwroot/css/load-animation.css keyframes, wwwroot/js/load-animation.js sequencing — amber liquid fills viewport bottom-to-top (2500ms cubic-bezier), SMIL wave/foam surface morphing (3s loop, opposite-phase secondary), logo revealed bottom-to-top via SVG mask (defs must be colocated in same SVG as masked element — Chrome requirement), 12 bubbles single-run with slow fade-out (1 forwards), dismiss curtain at 3050ms, skipped on prefers-reduced-motion. See .github/skills/load-animation-skill.md and .github/agents/animation-agent.agent.md for full spec
+- Brand assets: wwwroot/images/logo.svg (The Garden Brewery SVG, fill-inheritable)
 
 ## EF Configuration
 - BreweryWarehouseDbContext: Data/BreweryWarehouseDbContext.cs with DbSets for BeerStyle, Can, Keg, StockEntry, WarehouseLocation, Employee, TPH mapping for Container hierarchy, and DI registration using SqlServer
 - Soft delete: Container and BeerStyle use DeletedAt (DateTime?) for soft deletion
-- Localization: Program.cs configures RequestLocalization with hr and en-US cultures, default hr
+- Localization: Program.cs configures RequestLocalization with hr default and en-US fallback cultures
 - DatabaseSeeder: Data/DatabaseSeeder.cs seeds sample data on startup
 - EF migrations: stored in BreweryWarehouse.Web/Migrations/ with InitialCreate as the first migration
+- Validation: wwwroot/js/site.js sets global jQuery validation to trigger on blur and disables onkeyup
 
 ## Routing
 - BeerStyleController: /beer-styles and /beer-styles/{id:int}/detail

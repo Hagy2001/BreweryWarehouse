@@ -15,6 +15,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+$(function () {
+    if ($.validator) {
+        $.validator.setDefaults({
+            onfocusout: function (element) {
+                $(element).valid();
+            },
+            onkeyup: false
+        });
+    }
+});
+
 function initDatePicker(container) {
     const displayInput = container.querySelector('.bw-datepicker__display');
     const hiddenInput = container.querySelector('.bw-datepicker__hidden');

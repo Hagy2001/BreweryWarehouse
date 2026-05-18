@@ -34,6 +34,12 @@ report back to the main agent with a description of what is needed.
 The UI must feel like a **craft brewery operations tool**: raw materials, steel tanks, dark
 wood shelves. It must look nothing like the default Bootstrap 5 starter template.
 
+## Brand Assets
+- Logo SVG: wwwroot/images/logo.svg — use in sidebar header and login page
+- The SVG has no hardcoded fill attributes — recolor freely via CSS fill property
+- On dark backgrounds use fill: var(--bw-accent) or fill: var(--bw-text)
+- Do not stretch or crop the logo — preserve the 398x223 aspect ratio
+
 ### Colour Palette
 
 ```css
