@@ -5,6 +5,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 public class StockEntry
 {
+	public StockEntry()
+	{
+		Attachments = new List<Attachment>();
+	}
+
 	[Key]
 	public int Id { get; set; }
 
@@ -25,4 +30,6 @@ public class StockEntry
 	public DateTime DateModified { get; set; }
 
 	public string Notes { get; set; } = string.Empty;
+
+	public virtual ICollection<Attachment> Attachments { get; set; }
 }

@@ -75,6 +75,12 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - EmployeeApiController: Controllers/Api/EmployeeApiController.cs — [Route("api/employees")] full CRUD, hard delete, same auth rules
 - DtoExtensions: Models/Dtos/DtoExtensions.cs — ToDto() and ToSummaryDto() extension methods for all 6 entities
 - DTOs: Models/Dtos/ — BeerStyleDto, CanDto, KegDto, WarehouseLocationDto, StockEntryDto, EmployeeDto, ContainerSummaryDto (all response DTOs) plus BeerStyleRequestDto, CanRequestDto, KegRequestDto, WarehouseLocationRequestDto, StockEntryRequestDto, EmployeeRequestDto (all request DTOs with DataAnnotations)
+- Attachment entity: BreweryWarehouse.Model/Attachment.cs — Id, StockEntryId, StockEntry (nav), FileName, FilePath, ContentType, FileSize, CreatedAt; Cascade delete on StockEntry removal
+- StockEntry Attachments: StockEntryController has UploadAttachment, GetAttachments, DeleteAttachment actions; files saved to wwwroot/uploads/stock-entries/{id}/; metadata in Attachments table
+- AttachmentList partial: Views/StockEntry/_AttachmentList.cshtml — table of attachments with download links and delete buttons
+- Dropzone: wwwroot/lib/dropzone v5.9.3 — used on StockEntry Edit view for async optional file upload
+- StockEntry Edit view: includes optional Dropzone upload section and AJAX attachment list loaded on page load and after each upload
+- StockEntry Details view: shows read-only attachment list via ViewBag.Attachments populated in Details() action
 
 ## EF Configuration
 - BreweryWarehouseDbContext: Data/BreweryWarehouseDbContext.cs with DbSets for BeerStyle, Can, Keg, StockEntry, WarehouseLocation, Employee, TPH mapping for Container hierarchy, and DI registration using SqlServer
@@ -112,6 +118,7 @@ the current state of the project. Keep entries concise, one line per item.
 - Can: inherits Container (Id, SLCode, BestBefore), Size (CanSize), Barcode (string), PackagingDate (DateTime), StockEntries (virtual ICollection<StockEntry>), BeerStyleId (int), BeerStyle (virtual BeerStyle, [ForeignKey("BeerStyleId")])
 - Keg: inherits Container (Id, SLCode, BestBefore), Material (KegMaterial), HeadType (KegHeadType), VolumeInLitres (int: 20 or 30), SerialNumber (string), LastInspection (DateTime), StockEntries (virtual ICollection<StockEntry>), BeerStyleId (int), BeerStyle (virtual BeerStyle, [ForeignKey("BeerStyleId")])
 - StockEntry: Id (int, [Key]), ContainerId (int), Container (virtual Container, [ForeignKey("ContainerId")]), LocationId (int), Location (virtual WarehouseLocation, [ForeignKey("LocationId")]), Quantity (int), DateReceived (DateTime), DateModified (DateTime), Notes (string)
+- Attachment: BreweryWarehouse.Model/Attachment.cs — Id (int, [Key]), StockEntryId (int), StockEntry (virtual StockEntry), FileName (string), FilePath (string), ContentType (string), FileSize (long), CreatedAt (DateTime)
 - WarehouseLocation: Id (int, [Key]), LocationCode (string), Aisle (string), Shelf (int), MaxCapacity (int), Description (string), StockEntries (virtual ICollection<StockEntry>)
 - Employee: Id (int, [Key]), FirstName (string), LastName (string), Email (string), Role (string), DateHired (DateTime), IsActive (bool)
 - EnumExtensions: GetDescription(this Enum) helper for enum DescriptionAttribute labels

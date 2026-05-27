@@ -110,4 +110,42 @@
     </div>
 </section>
 
+<div class="bw-card" style="margin-top: 2rem;">
+    <h3 class="bw-card__title">Attachments</h3>
+    @{
+        var attachments = ViewBag.Attachments as
+            List<BreweryWarehouse.Model.Attachment> ?? new();
+    }
+    @if (!attachments.Any())
+    {
+        <p class="bw-text-muted">No attachments.</p>
+    }
+    else
+    {
+        <table class="bw-table">
+            <thead>
+                <tr>
+                    <th>File</th>
+                    <th>Size</th>
+                    <th>Uploaded</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in attachments)
+                {
+                    <tr>
+                        <td>
+                            <a href="@a.FilePath" target="_blank" class="bw-link">
+                                @a.FileName
+                            </a>
+                        </td>
+                        <td>@(Math.Round(a.FileSize / 1024.0, 1)) KB</td>
+                        <td>@a.CreatedAt.ToString("dd MMM yyyy HH:mm")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
 <a asp-controller="StockEntry" asp-action="Index" class="bw-back-link">Back to Stock Entries</a>

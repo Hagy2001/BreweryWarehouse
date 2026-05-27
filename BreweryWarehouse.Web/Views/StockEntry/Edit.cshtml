@@ -32,3 +32,63 @@
         })" />
     </form>
 </div>
+
+<div class="bw-card" style="margin-top: 2rem;">
+    <h3 class="bw-card__title">Attachments</h3>
+    <p class="bw-text-muted">
+        Attach delivery receipts, invoices or quality control documents.
+        Upload is optional.
+    </p>
+
+    <form id="attachmentDropzone"
+          action="/stock-entries/@Model.Id/upload"
+          class="dropzone"
+          enctype="multipart/form-data">
+    </form>
+
+    <div id="attachmentList"></div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="~/lib/dropzone/dropzone.min.css" />
+    <script src="~/lib/dropzone/dropzone.min.js"></script>
+
+    <script>
+        Dropzone.autoDiscover = false;
+
+        var dz = new Dropzone("#attachmentDropzone", {
+            paramName: "file",
+            maxFilesize: 20,
+            addRemoveLinks: false,
+            dictDefaultMessage: "Drop files here or click to upload",
+            success: function (file, response) {
+                this.removeFile(file);
+                loadAttachments();
+            },
+            error: function (file, message) {
+                alert("Upload failed: " + message);
+                this.removeFile(file);
+            }
+        });
+
+        function loadAttachments() {
+            $("#attachmentList").load("/stock-entries/@Model.Id/attachments");
+        }
+
+        function deleteAttachment(id) {
+            if (!confirm("Delete this attachment?")) return;
+            $.ajax({
+                url: "/stock-entries/attachments/" + id + "/delete",
+                method: "POST",
+                headers: {
+                    "RequestVerificationToken":
+                        $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function () { loadAttachments(); },
+                error: function () { alert("Delete failed."); }
+            });
+        }
+
+        $(function () { loadAttachments(); });
+    </script>
+}

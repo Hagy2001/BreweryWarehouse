@@ -1,26 +1,31 @@
 using BreweryWarehouse.Model;
+using BreweryWarehouse.Web.Data;
 using BreweryWarehouse.Web.Models;
 using BreweryWarehouse.Web.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace BreweryWarehouse.Web.Controllers;
 
 [Authorize]
 public class StockEntryController : Controller
 {
+    private readonly BreweryWarehouseDbContext _context;
     private readonly StockEntryRepository repository;
     private readonly CanRepository canRepository;
     private readonly KegRepository kegRepository;
     private readonly WarehouseLocationRepository locationRepository;
 
     public StockEntryController(
+        BreweryWarehouseDbContext context,
         StockEntryRepository repository,
         CanRepository canRepository,
         KegRepository kegRepository,
         WarehouseLocationRepository locationRepository)
     {
+        _context = context;
         this.repository = repository;
         this.canRepository = canRepository;
         this.kegRepository = kegRepository;
@@ -90,6 +95,11 @@ public class StockEntryController : Controller
         {
             return NotFound();
         }
+
+        ViewBag.Attachments = _context.Attachments
+            .Where(a => a.StockEntryId == id)
+            .OrderByDescending(a => a.CreatedAt)
+            .ToList();
 
         return View(stockEntry);
     }
@@ -224,5 +234,86 @@ public class StockEntryController : Controller
 
         ViewBag.Containers = new SelectList(containers, "Id", "Label");
         ViewBag.Locations = new SelectList(locations, "Id", "Label");
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin,WarehouseManager")]
+    [Route("stock-entries/{id}/upload")]
+    public async Task<IActionResult> UploadAttachment(int id, IFormFile file)
+    {
+        var entry = await _context.StockEntries
+            .FirstOrDefaultAsync(s => s.Id == id);
+
+        if (entry == null) return NotFound();
+
+        if (file == null || file.Length == 0)
+            return BadRequest("No file provided.");
+
+        var uploadsPath = Path.Combine(
+            Directory.GetCurrentDirectory(),
+            "wwwroot", "uploads", "stock-entries", id.ToString());
+
+        Directory.CreateDirectory(uploadsPath);
+
+        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+        var filePath = Path.Combine(uploadsPath, fileName);
+        var publicUrl = $"/uploads/stock-entries/{id}/{fileName}";
+
+        await using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        var attachment = new Attachment
+        {
+            StockEntryId = id,
+            FileName = file.FileName,
+            FilePath = publicUrl,
+            ContentType = file.ContentType,
+            FileSize = file.Length,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _context.Attachments.Add(attachment);
+        await _context.SaveChangesAsync();
+
+        return Json(new { success = true });
+    }
+
+    [HttpGet]
+    [Authorize]
+    [Route("stock-entries/{id}/attachments")]
+    public IActionResult GetAttachments(int id)
+    {
+        var attachments = _context.Attachments
+            .Where(a => a.StockEntryId == id)
+            .OrderByDescending(a => a.CreatedAt)
+            .ToList();
+
+        return PartialView("_AttachmentList", attachments);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin,WarehouseManager")]
+    [Route("stock-entries/attachments/{attachmentId}/delete")]
+    public async Task<IActionResult> DeleteAttachment(int attachmentId)
+    {
+        var attachment = await _context.Attachments
+            .FirstOrDefaultAsync(a => a.Id == attachmentId);
+
+        if (attachment == null) return NotFound();
+
+        var physicalPath = Path.Combine(
+            Directory.GetCurrentDirectory(),
+            "wwwroot",
+            attachment.FilePath.TrimStart('/'));
+
+        if (System.IO.File.Exists(physicalPath))
+            System.IO.File.Delete(physicalPath);
+
+        _context.Attachments.Remove(attachment);
+        await _context.SaveChangesAsync();
+
+        return Json(new { success = true });
     }
 }

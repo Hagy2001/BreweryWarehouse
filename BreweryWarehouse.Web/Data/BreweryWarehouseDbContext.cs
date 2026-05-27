@@ -23,6 +23,8 @@ public class BreweryWarehouseDbContext : IdentityDbContext<AppUser>
 
     public DbSet<Employee> Employees { get; set; }
 
+    public DbSet<Attachment> Attachments { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -38,5 +40,14 @@ public class BreweryWarehouseDbContext : IdentityDbContext<AppUser>
             .WithMany(beerStyle => beerStyle.Kegs)
             .HasForeignKey(keg => keg.BeerStyleId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Attachment>(entity =>
+        {
+            entity.HasKey(a => a.Id);
+            entity.HasOne(a => a.StockEntry)
+                .WithMany(s => s.Attachments)
+                .HasForeignKey(a => a.StockEntryId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
     }
 }

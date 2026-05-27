@@ -1,0 +1,42 @@
+@model IEnumerable<BreweryWarehouse.Model.Attachment>
+
+@if (!Model.Any())
+{
+    <p class="bw-text-muted" style="margin-top: 1rem;">
+        No attachments yet.
+    </p>
+}
+else
+{
+    <table class="bw-table" style="margin-top: 1rem;">
+        <thead>
+            <tr>
+                <th>File</th>
+                <th>Size</th>
+                <th>Uploaded</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+                <tr>
+                    <td>
+                        <a href="@a.FilePath" target="_blank" class="bw-link">
+                            @a.FileName
+                        </a>
+                    </td>
+                    <td>@(Math.Round(a.FileSize / 1024.0, 1)) KB</td>
+                    <td>@a.CreatedAt.ToString("dd MMM yyyy HH:mm")</td>
+                    <td>
+                        <button type="button"
+                                class="bw-btn bw-btn--danger bw-btn--sm"
+                                onclick="deleteAttachment(@a.Id)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
