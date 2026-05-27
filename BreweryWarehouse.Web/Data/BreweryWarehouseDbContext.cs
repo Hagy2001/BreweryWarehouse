@@ -1,9 +1,11 @@
 using BreweryWarehouse.Model;
+using BreweryWarehouse.Web.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BreweryWarehouse.Web.Data;
 
-public class BreweryWarehouseDbContext : DbContext
+public class BreweryWarehouseDbContext : IdentityDbContext<AppUser>
 {
     public BreweryWarehouseDbContext(DbContextOptions<BreweryWarehouseDbContext> options) : base(options)
     {

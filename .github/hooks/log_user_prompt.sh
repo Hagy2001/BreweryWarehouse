@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-log_file="/home/$USER/AspNetProjects/BreweryWarehouse/lab-4/agent_log.txt"
+log_file="/home/$USER/AspNetProjects/BreweryWarehouse/lab-5/agent_log.txt"
 mkdir -p "$(dirname "$log_file")"
 
 payload="$(cat || true)"

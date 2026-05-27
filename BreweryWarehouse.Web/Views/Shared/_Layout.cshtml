@@ -154,11 +154,9 @@
             {
                 <div class="bw-sidebar-footer" aria-label="Active user">
                     <div class="bw-sidebar-footer__user">@User.Identity.Name</div>
-                    <form method="post" asp-controller="Auth" asp-action="Logout" class="bw-signout-form">
-                        <button type="submit" class="bw-signout-btn bw-signout-btn--full">Sign Out</button>
-                    </form>
                 </div>
             }
+            <partial name="_LoginPartial" />
         </aside>
 
         <main class="bw-content" role="main">

@@ -7,12 +7,12 @@ public class WarehouseLocationCreateModel
     [Required]
     [StringLength(20, MinimumLength = 1)]
     [Display(Name = "Location Code")]
-    public string LocationCode { get; set; }
+    public string LocationCode { get; set; } = string.Empty;
 
     [Required]
     [StringLength(10, MinimumLength = 1)]
     [Display(Name = "Aisle")]
-    public string Aisle { get; set; }
+    public string Aisle { get; set; } = string.Empty;
 
     [Required]
     [Range(1, 99, ErrorMessage = "Shelf must be between 1 and 99.")]
@@ -26,5 +26,5 @@ public class WarehouseLocationCreateModel
 
     [StringLength(500)]
     [Display(Name = "Description")]
-    public string Description { get; set; }
+    public string? Description { get; set; }
 }

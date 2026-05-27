@@ -21,6 +21,7 @@ public class CanController : Controller
     }
 
     [Route("")]
+    [AllowAnonymous]
     public IActionResult Index()
     {
         return View(repository.GetAll());
@@ -28,6 +29,7 @@ public class CanController : Controller
 
     [HttpGet]
     [Route("search")]
+    [AllowAnonymous]
     public JsonResult Search(string? q)
     {
         IEnumerable<Can> cans = repository.GetAll();
@@ -66,6 +68,7 @@ public class CanController : Controller
     }
 
     [Route("{id:int}/info")]
+    [Authorize]
     public IActionResult Details(int id)
     {
         Can? can = repository.GetById(id);
@@ -79,6 +82,7 @@ public class CanController : Controller
     }
 
     [Route("create")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Create()
     {
         PopulateBeerStyles();
@@ -89,6 +93,7 @@ public class CanController : Controller
     [ActionName("Create")]
     [ValidateAntiForgeryToken]
     [Route("create")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Create(CanCreateModel model)
     {
         if (!ModelState.IsValid)
@@ -113,6 +118,7 @@ public class CanController : Controller
     }
 
     [Route("{id:int}/edit")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Edit(int id)
     {
         Can? can = repository.GetById(id);
@@ -142,6 +148,7 @@ public class CanController : Controller
     [ActionName("Edit")]
     [ValidateAntiForgeryToken]
     [Route("{id:int}/edit")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Edit(int id, CanEditModel model)
     {
         if (!ModelState.IsValid)
@@ -172,6 +179,7 @@ public class CanController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Route("{id:int}/delete")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Delete(int id)
     {
         Can? can = repository.GetById(id);

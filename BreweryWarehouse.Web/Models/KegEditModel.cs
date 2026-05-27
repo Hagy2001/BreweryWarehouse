@@ -10,7 +10,7 @@ public class KegEditModel
     [Required]
     [StringLength(50, MinimumLength = 2)]
     [Display(Name = "SL Code")]
-    public string SLCode { get; set; }
+    public required string SLCode { get; set; }
 
     [Required]
     [Display(Name = "Best Before")]
@@ -32,7 +32,7 @@ public class KegEditModel
     [Required]
     [StringLength(50, MinimumLength = 3)]
     [Display(Name = "Serial Number")]
-    public string SerialNumber { get; set; }
+    public required string SerialNumber { get; set; }
 
     [Required]
     [Display(Name = "Last Inspection")]

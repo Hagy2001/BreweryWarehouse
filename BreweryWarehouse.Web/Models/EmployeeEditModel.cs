@@ -9,23 +9,23 @@ public class EmployeeEditModel
     [Required]
     [StringLength(100, MinimumLength = 1)]
     [Display(Name = "First Name")]
-    public string FirstName { get; set; }
+    public required string FirstName { get; set; }
 
     [Required]
     [StringLength(100, MinimumLength = 1)]
     [Display(Name = "Last Name")]
-    public string LastName { get; set; }
+    public required string LastName { get; set; }
 
     [Required]
     [EmailAddress]
     [StringLength(200)]
     [Display(Name = "Email")]
-    public string Email { get; set; }
+    public required string Email { get; set; }
 
     [Required]
     [StringLength(50, MinimumLength = 2)]
     [Display(Name = "Role")]
-    public string Role { get; set; }
+    public required string Role { get; set; }
 
     [Required]
     [Display(Name = "Date Hired")]

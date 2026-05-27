@@ -1,0 +1,18 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<BreweryWarehouse.Web.Models.AppUser> SignInManager
+@inject UserManager<BreweryWarehouse.Web.Models.AppUser>   UserManager
+
+<div class="bw-nav-user">
+@if (SignInManager.IsSignedIn(User))
+{
+    <span class="bw-nav-user__email">@UserManager.GetUserName(User)</span>
+    <form asp-area="Identity" asp-page="/Account/Logout"
+          asp-route-returnUrl="/" method="post" style="display:inline;">
+        <button type="submit" class="bw-btn bw-btn--ghost bw-btn--sm">Logout</button>
+    </form>
+}
+else
+{
+    <a asp-area="Identity" asp-page="/Account/Login" class="bw-btn bw-btn--ghost bw-btn--sm">Login</a>
+}
+</div>

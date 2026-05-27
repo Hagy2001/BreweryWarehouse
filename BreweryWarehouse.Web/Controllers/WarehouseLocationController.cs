@@ -18,6 +18,7 @@ public class WarehouseLocationController : Controller
     }
 
     [Route("")]
+    [AllowAnonymous]
     public IActionResult Index()
     {
         return View(repository.GetAll());
@@ -25,6 +26,7 @@ public class WarehouseLocationController : Controller
 
     [HttpGet]
     [Route("search")]
+    [AllowAnonymous]
     public JsonResult Search(string? q)
     {
         IEnumerable<WarehouseLocation> locations = repository.GetAll();
@@ -66,6 +68,7 @@ public class WarehouseLocationController : Controller
     }
 
     [Route("{id:int}/view")]
+    [Authorize]
     public IActionResult Details(int id)
     {
         WarehouseLocation? location = repository.GetById(id);
@@ -79,6 +82,7 @@ public class WarehouseLocationController : Controller
     }
 
     [Route("create")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Create()
     {
         return View(new WarehouseLocationCreateModel());
@@ -88,6 +92,7 @@ public class WarehouseLocationController : Controller
     [ActionName("Create")]
     [ValidateAntiForgeryToken]
     [Route("create")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Create(WarehouseLocationCreateModel model)
     {
         if (!ModelState.IsValid)
@@ -110,6 +115,7 @@ public class WarehouseLocationController : Controller
     }
 
     [Route("{id:int}/edit")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Edit(int id)
     {
         WarehouseLocation? location = repository.GetById(id);
@@ -136,6 +142,7 @@ public class WarehouseLocationController : Controller
     [ActionName("Edit")]
     [ValidateAntiForgeryToken]
     [Route("{id:int}/edit")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Edit(int id, WarehouseLocationEditModel model)
     {
         if (!ModelState.IsValid)
@@ -164,6 +171,7 @@ public class WarehouseLocationController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Route("{id:int}/delete")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Delete(int id)
     {
         WarehouseLocation? location = repository.GetById(id);

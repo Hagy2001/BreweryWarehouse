@@ -18,7 +18,7 @@
             overlay.addEventListener('transitionend', function onDismiss() {
                 overlay.removeEventListener('transitionend', onDismiss);
                 overlay.parentNode.removeChild(overlay);
-                //sessionStorage.setItem('bw-animated', 'true');
+                sessionStorage.setItem('bw-animated', 'true');
             });
         }, 3050);
 

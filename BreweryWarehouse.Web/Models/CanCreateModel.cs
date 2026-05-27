@@ -8,7 +8,7 @@ public class CanCreateModel
     [Required]
     [StringLength(50, MinimumLength = 2)]
     [Display(Name = "SL Code")]
-    public string SLCode { get; set; }
+    public string SLCode { get; set; } = string.Empty;
 
     [Required]
     [Display(Name = "Best Before")]
@@ -21,7 +21,7 @@ public class CanCreateModel
     [Required]
     [StringLength(50, MinimumLength = 4)]
     [Display(Name = "Barcode")]
-    public string Barcode { get; set; }
+    public string Barcode { get; set; } = string.Empty;
 
     [Required]
     [Display(Name = "Packaging Date")]

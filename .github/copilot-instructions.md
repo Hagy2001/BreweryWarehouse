@@ -56,10 +56,10 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - Shared Layout: Views/Shared/_Layout.cshtml uses brewery sidebar navigation and shared site.css theme
 - DatePicker Partial: Views/Shared/_DatePicker.cshtml for custom date inputs
 - BeerStyle Autocomplete Partial: Views/Shared/_BeerStyleAutocomplete.cshtml for AJAX beer style lookup inputs
-- AuthService: Services/AuthService.cs with ValidateCredentials(email,password) and CreatePrincipal(email)
-- AuthController: Controllers/AuthController.cs with Login(GET/POST) and Logout(POST)
-- LoginViewModel: Models/LoginViewModel.cs with Required/EmailAddress validation
-- Login View: Views/Auth/Login.cshtml standalone login page without shared layout
+- AppUser: Models/AppUser.cs — extends IdentityUser with OIB (11-digit) and JMBG (13-digit) string properties
+- IdentitySeeder: Services/IdentitySeeder.cs — seeds Admin and WarehouseManager roles; seeds default admin@brewery.com / Admin123! with Admin role on startup
+- Identity Register: Areas/Identity/Pages/Account/Register.cshtml + .cs — custom register page with OIB and JMBG fields, no shared layout
+- LoginPartial: Views/Shared/_LoginPartial.cshtml — Identity-aware login/logout partial injected into sidebar
 - Load animation overlay: _Layout.cshtml overlay injection, wwwroot/css/load-animation.css keyframes, wwwroot/js/load-animation.js sequencing — amber liquid fills viewport bottom-to-top (2500ms cubic-bezier), SMIL wave/foam surface morphing (3s loop, opposite-phase secondary), logo revealed bottom-to-top via SVG mask (defs must be colocated in same SVG as masked element — Chrome requirement), 12 bubbles single-run with slow fade-out (1 forwards), dismiss curtain at 3050ms, skipped on prefers-reduced-motion. See .github/skills/load-animation-skill.md and .github/agents/animation-agent.agent.md for full spec
 - Brand assets: wwwroot/images/logo.svg (The Garden Brewery SVG, fill-inheritable)
 
@@ -70,6 +70,7 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - DatabaseSeeder: Data/DatabaseSeeder.cs seeds sample data on startup
 - EF migrations: stored in BreweryWarehouse.Web/Migrations/ with InitialCreate as the first migration
 - Validation: wwwroot/js/site.js sets global jQuery validation to trigger on blur and disables onkeyup
+- Identity: BreweryWarehouseDbContext extends IdentityDbContext<AppUser>; roles Admin and WarehouseManager seeded via IdentitySeeder on startup
 
 ## Routing
 - BeerStyleController: /beer-styles and /beer-styles/{id:int}/detail
@@ -96,8 +97,8 @@ the current state of the project. Keep entries concise, one line per item.
 - Employee: Id (int, [Key]), FirstName (string), LastName (string), Email (string), Role (string), DateHired (DateTime), IsActive (bool)
 - EnumExtensions: GetDescription(this Enum) helper for enum DescriptionAttribute labels
 - DataSeeder: static class with Seed(out List<BeerStyle>, out List<Can>, out List<Keg>, out List<WarehouseLocation>, out List<StockEntry>, out List<Employee>) using expanded, edge-case-heavy sample data for UI inspection
-- AuthService: mock credential validator and ClaimsPrincipal creator for admin@brewery.com
-- LoginViewModel: Email and Password with DataAnnotations validation
+- AppUser: extends IdentityUser with OIB (string, 11 digits) and JMBG (string, 13 digits)
+- IdentitySeeder: seeds Admin and WarehouseManager roles plus default admin@brewery.com account
 - DashboardViewModel: TotalCans, TotalKegs, TotalLocations, TotalBeerStyles, ExpiringCans (List<Can>), ExpiringKegs (List<Keg>), Locations (List<WarehouseLocation>)
 - BeerStyleCreateModel: Models/BeerStyleCreateModel.cs — Name, Description, AlcoholPercentage, IBU, ColorEBC, Category with DataAnnotations
 - BeerStyleEditModel: Models/BeerStyleEditModel.cs — Id, Name, Description, AlcoholPercentage, IBU, ColorEBC, Category with DataAnnotations
@@ -105,7 +106,7 @@ the current state of the project. Keep entries concise, one line per item.
 - CanEditModel: Models/CanEditModel.cs — Id, SLCode, BestBefore, Size, Barcode, PackagingDate, BeerStyleId, BeerStyleName with DataAnnotations
 - KegCreateModel: Models/KegCreateModel.cs — SLCode, BestBefore, Material, HeadType, VolumeInLitres, SerialNumber, LastInspection, BeerStyleId, BeerStyleName with DataAnnotations
 - KegEditModel: Models/KegEditModel.cs — Id, SLCode, BestBefore, Material, HeadType, VolumeInLitres, SerialNumber, LastInspection, BeerStyleId, BeerStyleName with DataAnnotations
-- WarehouseLocationCreateModel: Models/WarehouseLocationCreateModel.cs — LocationCode, Aisle, Shelf, MaxCapacity, Description with DataAnnotations
+- WarehouseLocationCreateModel: Models/WarehouseLocationCreateModel.cs — LocationCode, Aisle, Shelf, MaxCapacity, Description (string?) with DataAnnotations
 - WarehouseLocationEditModel: Models/WarehouseLocationEditModel.cs — Id, LocationCode, Aisle, Shelf, MaxCapacity, Description with DataAnnotations
 - StockEntryCreateModel: Models/StockEntryCreateModel.cs — ContainerId, LocationId, Quantity, DateReceived, Notes with DataAnnotations
 - StockEntryEditModel: Models/StockEntryEditModel.cs — Id, ContainerId, LocationId, Quantity, DateReceived, Notes with DataAnnotations

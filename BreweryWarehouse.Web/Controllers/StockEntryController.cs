@@ -27,6 +27,7 @@ public class StockEntryController : Controller
         this.locationRepository = locationRepository;
     }
 
+    [AllowAnonymous]
     public IActionResult Index()
     {
         return View(repository.GetAll());
@@ -34,6 +35,7 @@ public class StockEntryController : Controller
 
     [HttpGet]
     [Route("StockEntry/search")]
+    [AllowAnonymous]
     public JsonResult Search(string? q)
     {
         IEnumerable<StockEntry> entries = repository.GetAll();
@@ -79,6 +81,7 @@ public class StockEntryController : Controller
         return Json(results);
     }
 
+    [Authorize]
     public IActionResult Details(int id)
     {
         StockEntry? stockEntry = repository.GetById(id);
@@ -91,6 +94,7 @@ public class StockEntryController : Controller
         return View(stockEntry);
     }
 
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Create()
     {
         PopulateDropdowns();
@@ -100,6 +104,7 @@ public class StockEntryController : Controller
     [HttpPost]
     [ActionName("Create")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Create(StockEntryCreateModel model)
     {
         if (!ModelState.IsValid)
@@ -123,6 +128,7 @@ public class StockEntryController : Controller
         return RedirectToAction("Index");
     }
 
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Edit(int id)
     {
         StockEntry? stockEntry = repository.GetById(id);
@@ -149,6 +155,7 @@ public class StockEntryController : Controller
     [HttpPost]
     [ActionName("Edit")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Edit(int id, StockEntryEditModel model)
     {
         if (!ModelState.IsValid)
@@ -178,6 +185,7 @@ public class StockEntryController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
     public IActionResult Delete(int id)
     {
         StockEntry? stockEntry = repository.GetById(id);

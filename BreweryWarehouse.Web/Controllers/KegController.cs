@@ -21,6 +21,7 @@ public class KegController : Controller
     }
 
     [Route("")]
+    [AllowAnonymous]
     public IActionResult Index()
     {
         return View(repository.GetAll());
@@ -28,6 +29,7 @@ public class KegController : Controller
 
     [HttpGet]
     [Route("search")]
+    [AllowAnonymous]
     public JsonResult Search(string? q)
     {
         IEnumerable<Keg> kegs = repository.GetAll();
@@ -61,6 +63,7 @@ public class KegController : Controller
     }
 
     [Route("{id:int}/info")]
+    [Authorize]
     public IActionResult Details(int id)
     {
         Keg? keg = repository.GetById(id);
@@ -74,6 +77,7 @@ public class KegController : Controller
     }
 
     [Route("create")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Create()
     {
         PopulateBeerStyles();
@@ -84,6 +88,7 @@ public class KegController : Controller
     [ActionName("Create")]
     [ValidateAntiForgeryToken]
     [Route("create")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Create(KegCreateModel model)
     {
         if (!ModelState.IsValid)
@@ -110,6 +115,7 @@ public class KegController : Controller
     }
 
     [Route("{id:int}/edit")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Edit(int id)
     {
         Keg? keg = repository.GetById(id);
@@ -141,6 +147,7 @@ public class KegController : Controller
     [ActionName("Edit")]
     [ValidateAntiForgeryToken]
     [Route("{id:int}/edit")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Edit(int id, KegEditModel model)
     {
         if (!ModelState.IsValid)
@@ -173,6 +180,7 @@ public class KegController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Route("{id:int}/delete")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Delete(int id)
     {
         Keg? keg = repository.GetById(id);

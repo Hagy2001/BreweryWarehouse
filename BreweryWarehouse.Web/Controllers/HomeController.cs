@@ -8,7 +8,6 @@ using BreweryWarehouse.Web.Repositories;
 
 namespace BreweryWarehouse.Web.Controllers;
 
-[Authorize]
 public class HomeController : Controller
 {
     private readonly BeerStyleRepository _beerStyleRepository;
@@ -28,6 +27,7 @@ public class HomeController : Controller
         _warehouseLocationRepository = warehouseLocationRepository;
     }
 
+    [Authorize]
     public IActionResult Index()
     {
         List<Model.BeerStyle> beerStyles = _beerStyleRepository.GetAll();

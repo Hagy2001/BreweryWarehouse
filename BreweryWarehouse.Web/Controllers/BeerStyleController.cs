@@ -18,6 +18,7 @@ public class BeerStyleController : Controller
     }
 
     [Route("")]
+    [AllowAnonymous]
     public IActionResult Index()
     {
         return View(repository.GetAll());
@@ -25,6 +26,7 @@ public class BeerStyleController : Controller
 
     [HttpGet]
     [Route("search")]
+    [AllowAnonymous]
     public JsonResult Search(string? q)
     {
         IEnumerable<BeerStyle> beerStyles = repository.GetAll();
@@ -54,6 +56,7 @@ public class BeerStyleController : Controller
     }
 
     [Route("{id:int}/detail")]
+    [Authorize]
     public IActionResult Details(int id)
     {
         BeerStyle? beerStyle = repository.GetById(id);
@@ -67,6 +70,7 @@ public class BeerStyleController : Controller
     }
 
     [Route("create")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Create()
     {
         return View(new BeerStyleCreateModel());
@@ -76,6 +80,7 @@ public class BeerStyleController : Controller
     [ActionName("Create")]
     [ValidateAntiForgeryToken]
     [Route("create")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Create(BeerStyleCreateModel model)
     {
         if (!ModelState.IsValid)
@@ -99,6 +104,7 @@ public class BeerStyleController : Controller
     }
 
     [Route("{id:int}/edit")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Edit(int id)
     {
         BeerStyle? beerStyle = repository.GetById(id);
@@ -126,6 +132,7 @@ public class BeerStyleController : Controller
     [ActionName("Edit")]
     [ValidateAntiForgeryToken]
     [Route("{id:int}/edit")]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Edit(int id, BeerStyleEditModel model)
     {
         if (!ModelState.IsValid)
@@ -155,6 +162,7 @@ public class BeerStyleController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Route("{id:int}/delete")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Delete(int id)
     {
         BeerStyle? beerStyle = repository.GetById(id);

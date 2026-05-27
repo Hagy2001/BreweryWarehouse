@@ -10,7 +10,7 @@ public class CanEditModel
     [Required]
     [StringLength(50, MinimumLength = 2)]
     [Display(Name = "SL Code")]
-    public string SLCode { get; set; }
+    public required string SLCode { get; set; }
 
     [Required]
     [Display(Name = "Best Before")]
@@ -23,7 +23,7 @@ public class CanEditModel
     [Required]
     [StringLength(50, MinimumLength = 4)]
     [Display(Name = "Barcode")]
-    public string Barcode { get; set; }
+    public required string Barcode { get; set; }
 
     [Required]
     [Display(Name = "Packaging Date")]

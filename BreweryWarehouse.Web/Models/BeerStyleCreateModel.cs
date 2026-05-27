@@ -8,12 +8,12 @@ public class BeerStyleCreateModel
     [Required]
     [StringLength(100, MinimumLength = 2)]
     [Display(Name = "Name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [Required]
     [StringLength(1000, MinimumLength = 5)]
     [Display(Name = "Description")]
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     [Required]
     [Range(0.0, 100.0, ErrorMessage = "Alcohol percentage must be between 0 and 100.")]

@@ -16,6 +16,7 @@ public class EmployeeController : Controller
         this.repository = repository;
     }
 
+    [AllowAnonymous]
     public IActionResult Index()
     {
         return View(repository.GetAll());
@@ -23,6 +24,7 @@ public class EmployeeController : Controller
 
     [HttpGet]
     [Route("Employee/search")]
+    [AllowAnonymous]
     public JsonResult Search(string? q)
     {
         IEnumerable<Employee> employees = repository.GetAll();
@@ -55,6 +57,7 @@ public class EmployeeController : Controller
         return Json(results);
     }
 
+    [Authorize]
     public IActionResult Details(int id)
     {
         Employee? employee = repository.GetById(id);
@@ -67,6 +70,7 @@ public class EmployeeController : Controller
         return View(employee);
     }
 
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Create()
     {
         return View(new EmployeeCreateModel());
@@ -75,6 +79,7 @@ public class EmployeeController : Controller
     [HttpPost]
     [ActionName("Create")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Create(EmployeeCreateModel model)
     {
         if (!ModelState.IsValid)
@@ -97,6 +102,7 @@ public class EmployeeController : Controller
         return RedirectToAction("Index");
     }
 
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Edit(int id)
     {
         Employee? employee = repository.GetById(id);
@@ -123,6 +129,7 @@ public class EmployeeController : Controller
     [HttpPost]
     [ActionName("Edit")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,WarehouseManager")]
     public IActionResult Edit(int id, EmployeeEditModel model)
     {
         if (!ModelState.IsValid)
@@ -151,6 +158,7 @@ public class EmployeeController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
     public IActionResult Delete(int id)
     {
         Employee? employee = repository.GetById(id);

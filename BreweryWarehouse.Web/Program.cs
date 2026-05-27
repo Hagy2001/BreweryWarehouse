@@ -2,10 +2,11 @@ using BreweryWarehouse.Web.Binders;
 using BreweryWarehouse.Web.Data;
 using BreweryWarehouse.Web.Repositories;
 using BreweryWarehouse.Web.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using BreweryWarehouse.Web.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,19 +19,21 @@ builder.Services.AddScoped<KegRepository>();
 builder.Services.AddScoped<WarehouseLocationRepository>();
 builder.Services.AddScoped<StockEntryRepository>();
 builder.Services.AddScoped<EmployeeRepository>();
-builder.Services.AddSingleton<AuthService>();
+builder.Services
+    .AddDefaultIdentity<AppUser>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+        options.Password.RequireDigit = true;
+        options.Password.RequiredLength = 8;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireNonAlphanumeric = true;
+    })
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<BreweryWarehouseDbContext>();
 builder.Services.AddDbContext<BreweryWarehouseDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BreweryWarehouseDbContext")));
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Auth/Login";
-        options.LogoutPath = "/Auth/Logout";
-        options.AccessDeniedPath = "/Auth/Login";
-        options.ExpireTimeSpan = TimeSpan.FromHours(8);
-        options.SlidingExpiration = true;
-    });
 builder.Services.AddAuthorization();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -48,9 +51,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
 var supportedCultures = new[]
 {
     new CultureInfo("hr"),
@@ -64,12 +64,21 @@ var localizationOptions = new RequestLocalizationOptions
     RequestCultureProviders = new[] { new AcceptLanguageHeaderRequestCultureProvider() }
 };
 app.UseRequestLocalization(localizationOptions);
+app.UseStaticFiles();
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Auth}/{action=Login}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
+
+using (var scope = app.Services.CreateScope())
+{
+    await IdentitySeeder.SeedAsync(scope.ServiceProvider);
+}
 
 
 app.Run();
