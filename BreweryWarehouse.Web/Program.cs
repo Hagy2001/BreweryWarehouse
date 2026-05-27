@@ -30,6 +30,14 @@ builder.Services
     })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<BreweryWarehouseDbContext>();
+
+builder.Services
+    .AddAuthentication()
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+    });
 builder.Services.AddDbContext<BreweryWarehouseDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BreweryWarehouseDbContext")));
 builder.Services.AddAuthorization();

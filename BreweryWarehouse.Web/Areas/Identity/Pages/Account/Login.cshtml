@@ -1,0 +1,52 @@
+@page
+@model LoginModel
+@{ Layout = null; }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login — The Garden Brewery</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body class="bw-auth-page">
+    <div class="bw-auth-card">
+        <div class="bw-auth-card__logo">
+            <img src="~/images/logo.svg" alt="The Garden Brewery" style="height: 60px;" />
+        </div>
+        <h1 class="bw-auth-card__title">Warehouse Login</h1>
+
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="bw-form-error"></div>
+
+            <div class="bw-form-group">
+                <label asp-for="Input.Email">Email</label>
+                <input asp-for="Input.Email" class="bw-form-control" autocomplete="username" />
+                <span asp-validation-for="Input.Email" class="bw-form-hint bw-form-hint--error"></span>
+            </div>
+
+            <div class="bw-form-group">
+                <label asp-for="Input.Password">Password</label>
+                <input asp-for="Input.Password" class="bw-form-control" type="password" autocomplete="current-password" />
+                <span asp-validation-for="Input.Password" class="bw-form-hint bw-form-hint--error"></span>
+            </div>
+
+            <button type="submit" class="bw-btn bw-btn--primary bw-btn--full">Login</button>
+        </form>
+
+        <div class="bw-auth-divider"><span>or</span></div>
+
+        <form method="post" asp-page-handler="ExternalLogin">
+            <input type="hidden" name="provider" value="Google" />
+            <button type="submit" class="bw-btn bw-btn--ghost bw-btn--full">
+                Continue with Google
+            </button>
+        </form>
+
+        <p class="bw-auth-card__footer">
+            No account?
+            <a asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </p>
+    </div>
+</body>
+</html>

@@ -59,6 +59,10 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - AppUser: Models/AppUser.cs — extends IdentityUser with OIB (11-digit) and JMBG (13-digit) string properties
 - IdentitySeeder: Services/IdentitySeeder.cs — seeds Admin and WarehouseManager roles; seeds default admin@brewery.com / Admin123! with Admin role on startup
 - Identity Register: Areas/Identity/Pages/Account/Register.cshtml + .cs — custom register page with OIB and JMBG fields, no shared layout
+- Google OAuth: Program.cs configured with AddGoogle reading Authentication:Google:ClientId and ClientSecret from user secrets
+- Login View: Areas/Identity/Pages/Account/Login.cshtml — brewery-styled login page with local form and Google login button
+- ExternalLogin View: Areas/Identity/Pages/Account/ExternalLogin.cshtml + .cs — handles Google OAuth callback, collects OIB and JMBG on first login, creates AppUser and signs in
+- Logout Page: Areas/Identity/Pages/Account/Logout.cshtml.cs — signs out and redirects to /
 - LoginPartial: Views/Shared/_LoginPartial.cshtml — Identity-aware login/logout partial injected into sidebar
 - Load animation overlay: _Layout.cshtml overlay injection, wwwroot/css/load-animation.css keyframes, wwwroot/js/load-animation.js sequencing — amber liquid fills viewport bottom-to-top (2500ms cubic-bezier), SMIL wave/foam surface morphing (3s loop, opposite-phase secondary), logo revealed bottom-to-top via SVG mask (defs must be colocated in same SVG as masked element — Chrome requirement), 12 bubbles single-run with slow fade-out (1 forwards), dismiss curtain at 3050ms, skipped on prefers-reduced-motion. See .github/skills/load-animation-skill.md and .github/agents/animation-agent.agent.md for full spec
 - Brand assets: wwwroot/images/logo.svg (The Garden Brewery SVG, fill-inheritable)
