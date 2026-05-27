@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using BreweryWarehouse.Web.Models;
+using System.Reflection;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +33,31 @@ builder.Services
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<BreweryWarehouseDbContext>();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Events.OnRedirectToLogin = context =>
+    {
+        if (context.Request.Path.StartsWithSegments("/api"))
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.CompletedTask;
+        }
+        context.Response.Redirect(context.RedirectUri);
+        return Task.CompletedTask;
+    };
+
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        if (context.Request.Path.StartsWithSegments("/api"))
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            return Task.CompletedTask;
+        }
+        context.Response.Redirect(context.RedirectUri);
+        return Task.CompletedTask;
+    };
+});
+
 builder.Services
     .AddAuthentication()
     .AddGoogle(options =>
@@ -42,6 +69,24 @@ builder.Services.AddDbContext<BreweryWarehouseDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BreweryWarehouseDbContext")));
 builder.Services.AddAuthorization();
 builder.Services.AddRazorPages();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title   = "BreweryWarehouse API",
+        Version = "v1"
+    });
+
+    options.DocInclusionPredicate((docName, apiDesc) =>
+    {
+        if (!apiDesc.TryGetMethodInfo(out var methodInfo)) return false;
+        return methodInfo.DeclaringType?
+            .GetCustomAttributes(true)
+            .OfType<Microsoft.AspNetCore.Mvc.ApiControllerAttribute>()
+            .Any() ?? false;
+    });
+});
 
 var app = builder.Build();
 
@@ -73,6 +118,11 @@ var localizationOptions = new RequestLocalizationOptions
 };
 app.UseRequestLocalization(localizationOptions);
 app.UseStaticFiles();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

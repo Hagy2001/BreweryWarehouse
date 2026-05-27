@@ -31,5 +31,20 @@ public static class IdentitySeeder
             await userManager.CreateAsync(admin, "Admin123!");
             await userManager.AddToRoleAsync(admin, "Admin");
         }
+
+        const string managerEmail = "manager@brewery.com";
+        if (await userManager.FindByEmailAsync(managerEmail) == null)
+        {
+            var manager = new AppUser
+            {
+                UserName = managerEmail,
+                Email = managerEmail,
+                OIB = "98765432109",
+                JMBG = "9876543210987",
+                EmailConfirmed = true
+            };
+            await userManager.CreateAsync(manager, "Manager123!");
+            await userManager.AddToRoleAsync(manager, "WarehouseManager");
+        }
     }
 }

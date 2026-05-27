@@ -66,6 +66,15 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - LoginPartial: Views/Shared/_LoginPartial.cshtml — Identity-aware login/logout partial injected into sidebar
 - Load animation overlay: _Layout.cshtml overlay injection, wwwroot/css/load-animation.css keyframes, wwwroot/js/load-animation.js sequencing — amber liquid fills viewport bottom-to-top (2500ms cubic-bezier), SMIL wave/foam surface morphing (3s loop, opposite-phase secondary), logo revealed bottom-to-top via SVG mask (defs must be colocated in same SVG as masked element — Chrome requirement), 12 bubbles single-run with slow fade-out (1 forwards), dismiss curtain at 3050ms, skipped on prefers-reduced-motion. See .github/skills/load-animation-skill.md and .github/agents/animation-agent.agent.md for full spec
 - Brand assets: wwwroot/images/logo.svg (The Garden Brewery SVG, fill-inheritable)
+- Swagger: available at /swagger in Development; registered via AddEndpointsApiExplorer + AddSwaggerGen in Program.cs
+- BeerStyleApiController: Controllers/Api/BeerStyleApiController.cs — [ApiController] [Route("api/beer-styles")] full CRUD, soft delete, GET AllowAnonymous, POST/PUT Admin+WarehouseManager, DELETE Admin
+- CanApiController: Controllers/Api/CanApiController.cs — [Route("api/cans")] full CRUD, soft delete, same auth rules
+- KegApiController: Controllers/Api/KegApiController.cs — [Route("api/kegs")] full CRUD, soft delete, same auth rules
+- WarehouseLocationApiController: Controllers/Api/WarehouseLocationApiController.cs — [Route("api/locations")] full CRUD, hard delete, same auth rules
+- StockEntryApiController: Controllers/Api/StockEntryApiController.cs — [Route("api/stock-entries")] full CRUD, hard delete, same auth rules
+- EmployeeApiController: Controllers/Api/EmployeeApiController.cs — [Route("api/employees")] full CRUD, hard delete, same auth rules
+- DtoExtensions: Models/Dtos/DtoExtensions.cs — ToDto() and ToSummaryDto() extension methods for all 6 entities
+- DTOs: Models/Dtos/ — BeerStyleDto, CanDto, KegDto, WarehouseLocationDto, StockEntryDto, EmployeeDto, ContainerSummaryDto (all response DTOs) plus BeerStyleRequestDto, CanRequestDto, KegRequestDto, WarehouseLocationRequestDto, StockEntryRequestDto, EmployeeRequestDto (all request DTOs with DataAnnotations)
 
 ## EF Configuration
 - BreweryWarehouseDbContext: Data/BreweryWarehouseDbContext.cs with DbSets for BeerStyle, Can, Keg, StockEntry, WarehouseLocation, Employee, TPH mapping for Container hierarchy, and DI registration using SqlServer
@@ -81,6 +90,12 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - CanController: /cans and /cans/{id:int}/info
 - KegController: /kegs and /kegs/{id:int}/info
 - WarehouseLocationController: /locations and /locations/{id:int}/view
+- BeerStyleApiController: GET/POST /api/beer-styles, GET/PUT/DELETE /api/beer-styles/{id}
+- CanApiController: GET/POST /api/cans, GET/PUT/DELETE /api/cans/{id}
+- KegApiController: GET/POST /api/kegs, GET/PUT/DELETE /api/kegs/{id}
+- WarehouseLocationApiController: GET/POST /api/locations, GET/PUT/DELETE /api/locations/{id}
+- StockEntryApiController: GET/POST /api/stock-entries, GET/PUT/DELETE /api/stock-entries/{id}
+- EmployeeApiController: GET/POST /api/employees, GET/PUT/DELETE /api/employees/{id}
 
 ## Sub-Agent
 A UX sub-agent is defined at `.github/agents/ux-agent.agent.md` (model: gemini-3.1-pro).
