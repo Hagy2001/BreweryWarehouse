@@ -81,6 +81,7 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - Dropzone: wwwroot/lib/dropzone v5.9.3 — used on StockEntry Edit view for async optional file upload
 - StockEntry Edit view: includes optional Dropzone upload section and AJAX attachment list loaded on page load and after each upload
 - StockEntry Details view: shows read-only attachment list via ViewBag.Attachments populated in Details() action
+- Integration Tests: BreweryWarehouse.Tests project — xUnit tests covering full CRUD for BeerStyleApi, WarehouseLocationApi, EmployeeApi, StockEntryApi; uses WebApplicationFactory with InMemory EF database; BreweryWarehouseWebApplicationFactory swaps SQL Server for InMemory and stubs Google OAuth config; ApiTestBase provides seed helpers and authenticated client creation
 
 ## EF Configuration
 - BreweryWarehouseDbContext: Data/BreweryWarehouseDbContext.cs with DbSets for BeerStyle, Can, Keg, StockEntry, WarehouseLocation, Employee, TPH mapping for Container hierarchy, and DI registration using SqlServer
