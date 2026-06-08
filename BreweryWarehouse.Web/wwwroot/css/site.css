@@ -673,8 +673,9 @@ a:hover {
 
 .bw-login-logo {
   display: block;
+  fill: var(--bw-accent);
   height: 56px;
-  margin: 0 auto 0.5rem;
+  margin: 0 auto 1.2rem;
   width: auto;
 }
 
