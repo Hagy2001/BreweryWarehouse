@@ -671,6 +671,67 @@ a:hover {
   margin-top: 0.25rem;
 }
 
+.bw-login-logo {
+  display: block;
+  height: 56px;
+  margin: 0 auto 0.5rem;
+  width: auto;
+}
+
+.bw-login-divider {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  margin: 1rem 0 0.85rem;
+}
+
+.bw-login-divider__line {
+  background: var(--bw-border);
+  flex: 1;
+  height: 1px;
+}
+
+.bw-login-divider__label {
+  color: var(--bw-text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bw-login-footer {
+  margin-bottom: 0;
+  margin-top: 1rem;
+}
+
+.bw-field-hint {
+  color: var(--bw-text-muted);
+  font-size: 0.85em;
+  font-weight: normal;
+}
+
+.bw-google-form {
+  display: flex;
+  justify-content: center;
+}
+
+.bw-google-btn {
+  align-items: center;
+  background: var(--bw-surface-2);
+  border: 1px solid var(--bw-border);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  transition: border-color 140ms ease, background 140ms ease;
+  width: 40px;
+}
+
+.bw-google-btn:hover {
+  background: var(--bw-surface);
+  border-color: var(--bw-accent);
+}
+
 .row-expiring {
   color: var(--bw-danger);
 }

@@ -15,7 +15,7 @@
 <body class="bw-login-body">
     <main class="bw-login-main" role="main">
         <section class="bw-login-card" aria-label="Complete registration">
-            <img src="~/images/logo.svg" alt="The Garden Brewery" style="display:block; height:56px; margin:0 auto 0.5rem;" />
+            <img src="~/images/logo.svg" alt="The Garden Brewery" class="bw-login-logo" />
             <h1 class="bw-login-brand">BreweryWarehouse</h1>
             <p class="bw-login-subtitle">Signed in via @Model.ProviderDisplayName. Complete your profile to continue.</p>
 
@@ -30,13 +30,13 @@
                 </div>
 
                 <div class="bw-field-group">
-                    <label asp-for="Input.OIB">OIB <span class="bw-login-subtitle" style="display:inline; margin:0; font-size:0.8rem;">(11 digits)</span></label>
+                    <label asp-for="Input.OIB">OIB <span class="bw-field-hint">(11 digits)</span></label>
                     <input asp-for="Input.OIB" class="bw-input" maxlength="11" />
                     <span asp-validation-for="Input.OIB" class="bw-field-error"></span>
                 </div>
 
                 <div class="bw-field-group">
-                    <label asp-for="Input.JMBG">JMBG <span class="bw-login-subtitle" style="display:inline; margin:0; font-size:0.8rem;">(13 digits)</span></label>
+                    <label asp-for="Input.JMBG">JMBG <span class="bw-field-hint">(13 digits)</span></label>
                     <input asp-for="Input.JMBG" class="bw-input" maxlength="13" />
                     <span asp-validation-for="Input.JMBG" class="bw-field-error"></span>
                 </div>
@@ -44,7 +44,7 @@
                 <button type="submit" class="bw-login-btn">Complete Registration</button>
             </form>
 
-            <p class="bw-login-subtitle" style="margin-top:1rem; margin-bottom:0;">
+            <p class="bw-login-subtitle bw-login-footer">
                 <a asp-page="./Login">Back to sign in</a>
             </p>
         </section>
