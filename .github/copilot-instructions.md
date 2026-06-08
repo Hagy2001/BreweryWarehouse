@@ -81,7 +81,13 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - Dropzone: wwwroot/lib/dropzone v5.9.3 — used on StockEntry Edit view for async optional file upload
 - StockEntry Edit view: includes optional Dropzone upload section and AJAX attachment list loaded on page load and after each upload
 - StockEntry Details view: shows read-only attachment list via ViewBag.Attachments populated in Details() action
-- Integration Tests: BreweryWarehouse.Tests project — xUnit tests covering full CRUD for BeerStyleApi, WarehouseLocationApi, EmployeeApi, StockEntryApi; uses WebApplicationFactory with InMemory EF database; BreweryWarehouseWebApplicationFactory swaps SQL Server for InMemory and stubs Google OAuth config; ApiTestBase provides seed helpers and authenticated client creation
+- Integration Tests: BreweryWarehouse.Tests project — xUnit tests covering full CRUD for all 6 API endpoints (BeerStyleApi, CanApi, KegApi, WarehouseLocationApi, StockEntryApi, EmployeeApi); uses WebApplicationFactory with InMemory EF database; BreweryWarehouseWebApplicationFactory swaps SQL Server for InMemory and stubs Google OAuth config; ApiTestBase provides seed helpers and authenticated client creation
+- BeerStyleApiTests: xUnit tests with GetAll, GetById (found/not found), GetAll_WithQuery search, Post (unauth/201/400), Put (200/404), Delete (204/404/403)
+- CanApiTests: xUnit tests with GetAll, GetById (found/not found), GetAll_WithQuery search, Post (unauth/201/400), Put (200/404), Delete (204/404/403)
+- KegApiTests: xUnit tests with GetAll, GetById (found/not found), GetAll_WithQuery search, Post (unauth/201/400), Put (200/404), Delete (204/404/403)
+- WarehouseLocationApiTests: xUnit tests with GetAll, GetById (found/not found), Post (unauth/201/400), Put (200/404), Delete (204/404/403)
+- StockEntryApiTests: xUnit tests with GetAll, GetById (found/not found), Post (unauth/201/400), Put (200/404), Delete (204/404/403)
+- EmployeeApiTests: xUnit tests with GetAll, GetById (found/not found), Post (unauth/201/400), Put (200/404), Delete (204/404/403)
 
 ## EF Configuration
 - BreweryWarehouseDbContext: Data/BreweryWarehouseDbContext.cs with DbSets for BeerStyle, Can, Keg, StockEntry, WarehouseLocation, Employee, TPH mapping for Container hierarchy, and DI registration using SqlServer

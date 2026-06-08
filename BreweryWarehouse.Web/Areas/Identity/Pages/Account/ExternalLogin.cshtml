@@ -6,45 +6,46 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Complete Registration — The Garden Brewery</title>
-    <link rel="stylesheet" href="~/css/site.css" />
+    <title>Complete Registration — BreweryWarehouse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body class="bw-auth-page">
-    <div class="bw-auth-card">
-        <div class="bw-auth-card__logo">
-            <img src="~/images/logo.svg" alt="The Garden Brewery" style="height: 60px;" />
-        </div>
-        <h1 class="bw-auth-card__title">Complete Registration</h1>
-        <p class="bw-auth-card__subtitle">
-            Signed in via @Model.ProviderDisplayName. Please complete your profile.
-        </p>
+<body class="bw-login-body">
+    <main class="bw-login-main" role="main">
+        <section class="bw-login-card" aria-label="Complete registration">
+            <h1 class="bw-login-brand">BreweryWarehouse</h1>
+            <p class="bw-login-subtitle">Signed in via @Model.ProviderDisplayName. Complete your profile to continue.</p>
 
-        <form method="post" asp-page-handler="Confirmation">
-            <div asp-validation-summary="ModelOnly" class="bw-form-error"></div>
-            <input type="hidden" asp-for="ProviderDisplayName" />
+            <form method="post" asp-page-handler="Confirmation" class="bw-login-form">
+                <div asp-validation-summary="ModelOnly" class="bw-validation-summary"></div>
+                <input type="hidden" asp-for="ProviderDisplayName" />
 
-            <div class="bw-form-group">
-                <label asp-for="Input.Email">Email</label>
-                <input asp-for="Input.Email" class="bw-form-control" autocomplete="email" />
-                <span asp-validation-for="Input.Email" class="bw-form-hint bw-form-hint--error"></span>
-            </div>
+                <div class="bw-field-group">
+                    <label asp-for="Input.Email"></label>
+                    <input asp-for="Input.Email" class="bw-input" autocomplete="email" />
+                    <span asp-validation-for="Input.Email" class="bw-field-error"></span>
+                </div>
 
-            <div class="bw-form-group">
-                <label asp-for="Input.OIB">OIB <span class="bw-form-hint">(11 digits)</span></label>
-                <input asp-for="Input.OIB" class="bw-form-control" maxlength="11" />
-                <span asp-validation-for="Input.OIB" class="bw-form-hint bw-form-hint--error"></span>
-            </div>
+                <div class="bw-field-group">
+                    <label asp-for="Input.OIB">OIB <span class="bw-login-subtitle" style="display:inline; margin:0; font-size:0.8rem;">(11 digits)</span></label>
+                    <input asp-for="Input.OIB" class="bw-input" maxlength="11" />
+                    <span asp-validation-for="Input.OIB" class="bw-field-error"></span>
+                </div>
 
-            <div class="bw-form-group">
-                <label asp-for="Input.JMBG">JMBG <span class="bw-form-hint">(13 digits)</span></label>
-                <input asp-for="Input.JMBG" class="bw-form-control" maxlength="13" />
-                <span asp-validation-for="Input.JMBG" class="bw-form-hint bw-form-hint--error"></span>
-            </div>
+                <div class="bw-field-group">
+                    <label asp-for="Input.JMBG">JMBG <span class="bw-login-subtitle" style="display:inline; margin:0; font-size:0.8rem;">(13 digits)</span></label>
+                    <input asp-for="Input.JMBG" class="bw-input" maxlength="13" />
+                    <span asp-validation-for="Input.JMBG" class="bw-field-error"></span>
+                </div>
 
-            <button type="submit" class="bw-btn bw-btn--primary bw-btn--full">
-                Complete Registration
-            </button>
-        </form>
-    </div>
+                <button type="submit" class="bw-login-btn">Complete Registration</button>
+            </form>
+
+            <p class="bw-login-subtitle" style="margin-top:1rem; margin-bottom:0;">
+                <a asp-page="./Login">Back to sign in</a>
+            </p>
+        </section>
+    </main>
 </body>
+</html>
 </html>

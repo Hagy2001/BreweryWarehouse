@@ -7,55 +7,58 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register — The Garden Brewery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
-<body class="bw-auth-page">
-    <div class="bw-auth-card">
-        <div class="bw-auth-card__logo">
-            <img src="~/images/logo.svg" alt="The Garden Brewery" style="fill: var(--bw-accent); height: 60px;" />
-        </div>
-        <h1 class="bw-auth-card__title">Create Account</h1>
+<body class="bw-login-body">
+    <main class="bw-login-main" role="main">
+        <section class="bw-login-card" aria-label="Create account">
+            <h1 class="bw-login-brand">BreweryWarehouse</h1>
+            <p class="bw-login-subtitle">Create Account</p>
 
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="bw-form-error"></div>
+            <form method="post" class="bw-login-form">
+                <div asp-validation-summary="ModelOnly" class="bw-validation-summary"></div>
 
-            <div class="bw-form-group">
-                <label asp-for="Input.Email">Email</label>
-                <input asp-for="Input.Email" class="bw-form-control" autocomplete="username" />
-                <span asp-validation-for="Input.Email" class="bw-form-hint bw-form-hint--error"></span>
-            </div>
+                <div class="bw-field-group">
+                    <label asp-for="Input.Email"></label>
+                    <input asp-for="Input.Email" class="bw-input" autocomplete="username" />
+                    <span asp-validation-for="Input.Email" class="bw-field-error"></span>
+                </div>
 
-            <div class="bw-form-group">
-                <label asp-for="Input.Password">Password</label>
-                <input asp-for="Input.Password" class="bw-form-control" type="password" autocomplete="new-password" />
-                <span asp-validation-for="Input.Password" class="bw-form-hint bw-form-hint--error"></span>
-            </div>
+                <div class="bw-field-group">
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" class="bw-input" type="password" autocomplete="new-password" />
+                    <span asp-validation-for="Input.Password" class="bw-field-error"></span>
+                </div>
 
-            <div class="bw-form-group">
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                <input asp-for="Input.ConfirmPassword" class="bw-form-control" type="password" autocomplete="new-password" />
-                <span asp-validation-for="Input.ConfirmPassword" class="bw-form-hint bw-form-hint--error"></span>
-            </div>
+                <div class="bw-field-group">
+                    <label asp-for="Input.ConfirmPassword"></label>
+                    <input asp-for="Input.ConfirmPassword" class="bw-input" type="password" autocomplete="new-password" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="bw-field-error"></span>
+                </div>
 
-            <div class="bw-form-group">
-                <label asp-for="Input.OIB">OIB <span class="bw-form-hint">(11 digits)</span></label>
-                <input asp-for="Input.OIB" class="bw-form-control" maxlength="11" />
-                <span asp-validation-for="Input.OIB" class="bw-form-hint bw-form-hint--error"></span>
-            </div>
+                <div class="bw-field-group">
+                    <label asp-for="Input.OIB">OIB <span style="font-weight:normal; font-size:0.85em; color:var(--bw-text-muted)">(11 digits)</span></label>
+                    <input asp-for="Input.OIB" class="bw-input" maxlength="11" />
+                    <span asp-validation-for="Input.OIB" class="bw-field-error"></span>
+                </div>
 
-            <div class="bw-form-group">
-                <label asp-for="Input.JMBG">JMBG <span class="bw-form-hint">(13 digits)</span></label>
-                <input asp-for="Input.JMBG" class="bw-form-control" maxlength="13" />
-                <span asp-validation-for="Input.JMBG" class="bw-form-hint bw-form-hint--error"></span>
-            </div>
+                <div class="bw-field-group">
+                    <label asp-for="Input.JMBG">JMBG <span style="font-weight:normal; font-size:0.85em; color:var(--bw-text-muted)">(13 digits)</span></label>
+                    <input asp-for="Input.JMBG" class="bw-input" maxlength="13" />
+                    <span asp-validation-for="Input.JMBG" class="bw-field-error"></span>
+                </div>
 
-            <button type="submit" class="bw-btn bw-btn--primary bw-btn--full">Register</button>
-        </form>
+                <button type="submit" class="bw-login-btn">Register</button>
+            </form>
 
-        <p class="bw-auth-card__footer">
-            Already have an account?
-            <a asp-area="Identity" asp-page="/Account/Login">Sign in</a>
-        </p>
-    </div>
+            <p class="bw-login-subtitle" style="margin-top:1rem; margin-bottom:0;">
+                Already have an account?
+                <a asp-area="Identity" asp-page="/Account/Login">Sign in</a>
+            </p>
+        </section>
+    </main>
 </body>
 </html>

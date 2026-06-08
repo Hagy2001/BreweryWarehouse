@@ -73,14 +73,16 @@ public abstract class ApiTestBase : IDisposable
     // Seeds a Can and returns it
     protected async Task<Can> SeedCanAsync(
         BreweryWarehouseDbContext db,
-        int beerStyleId)
+        int beerStyleId,
+        string slCode = "SL-001",
+        string barcode = "1234567890")
     {
         var can = new Can
         {
-            SLCode = "SL-001",
+            SLCode = slCode,
             BestBefore = DateTime.UtcNow.AddMonths(6),
             Size = CanSize.Can033,
-            Barcode = "1234567890",
+            Barcode = barcode,
             PackagingDate = DateTime.UtcNow,
             BeerStyleId = beerStyleId
         };
@@ -92,16 +94,18 @@ public abstract class ApiTestBase : IDisposable
     // Seeds a Keg and returns it
     protected async Task<Keg> SeedKegAsync(
         BreweryWarehouseDbContext db,
-        int beerStyleId)
+        int beerStyleId,
+        string slCode = "SL-KEG-001",
+        string serialNumber = "SN-001")
     {
         var keg = new Keg
         {
-            SLCode = "SL-KEG-001",
+            SLCode = slCode,
             BestBefore = DateTime.UtcNow.AddMonths(12),
             Material = KegMaterial.Metal,
             HeadType = KegHeadType.SHead,
             VolumeInLitres = 30,
-            SerialNumber = "SN-001",
+            SerialNumber = serialNumber,
             LastInspection = DateTime.UtcNow,
             BeerStyleId = beerStyleId
         };
