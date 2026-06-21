@@ -2,5 +2,6 @@
   <Project Path="BreweryWarehouse.Console/BreweryWarehouse.Console.csproj" />
   <Project Path="BreweryWarehouse.Model/BreweryWarehouse.Model.csproj" />
   <Project Path="BreweryWarehouse.Tests/BreweryWarehouse.Tests.csproj" />
+  <Project Path="BreweryWarehouse.E2ETests/BreweryWarehouse.E2ETests.csproj" />
   <Project Path="BreweryWarehouse.Web/BreweryWarehouse.Web.csproj" />
 </Solution>

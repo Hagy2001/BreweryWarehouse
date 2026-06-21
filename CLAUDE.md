@@ -5,6 +5,8 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - `BreweryWarehouse.Model` — class library, all domain classes
 - `BreweryWarehouse.Console` — LINQ queries and seed data (Lab 1)
 - `BreweryWarehouse.Web` — ASP.NET Core MVC web app (active from Lab 2)
+- `BreweryWarehouse.Tests` — xUnit integration tests (fast, in-memory, no browser)
+- `BreweryWarehouse.E2ETests` — Playwright E2E tests (slow, real browser, app must be running)
 - `docs/semantic-model.md` — AI context document for the database/domain model
 - `docs/sitemap.md` — AI routing sitemap for app URLs
 - `.github/skills/ef-skill.md` — EF Core workflow skill for BreweryWarehouse
@@ -161,6 +163,43 @@ Add to your MCP client config (e.g. Claude Code `mcp.json`, VS Code `settings.js
 
 For local development: `"url": "https://localhost:7001/mcp"` (or whichever port the app runs on).
 Set the key locally via `dotnet user-secrets set "Mcp__ApiKey" "<your-key>"` or in environment as `Mcp__ApiKey=<value>`.
+
+## E2E Testing
+
+Project: `BreweryWarehouse.E2ETests` — Playwright browser automation with xUnit. Intentionally separate from `BreweryWarehouse.Tests` (which is fast and in-memory). E2E tests require a live running app and are not run as part of the normal CI test pass.
+
+### One-time setup (per machine)
+```bash
+# Build the project to generate playwright.ps1
+dotnet build BreweryWarehouse.E2ETests/BreweryWarehouse.E2ETests.csproj
+
+# Install Chromium (only chromium — no need for Firefox/WebKit)
+pwsh BreweryWarehouse.E2ETests/bin/Debug/net8.0/playwright.ps1 install chromium
+```
+
+### Running the E2E tests
+```bash
+# 1. Start the app in a separate terminal
+dotnet run --project BreweryWarehouse.Web
+
+# 2. In another terminal, run only the E2E project
+dotnet test BreweryWarehouse.E2ETests/BreweryWarehouse.E2ETests.csproj
+```
+
+The test targets `http://localhost:5289` (http profile from `launchSettings.json`). It logs in as `admin@brewery.com` / `Admin123!` (seeded by `IdentitySeeder`) — do not use the Google OAuth flow in E2E tests (bot detection, external dependency).
+
+### Test scenario
+`BeerStyleE2ETests.BeerStyle_FullLifecycle_10Steps` — 10 clearly-commented steps:
+1. Navigate to login page
+2. Log in with seeded admin credentials
+3. Navigate to BeerStyle Index
+4. Create a new BeerStyle ("Playwright Test Ale")
+5. Assert it appears in the Index list
+6. Navigate to its Details page
+7. Edit the Description field, save
+8. Assert the updated Description appears in Details
+9. Delete through the confirmation flow
+10. Assert it no longer appears in Index, then log out
 
 ## Self-Update Rule
 After completing any task that adds, removes or modifies classes, methods, 
