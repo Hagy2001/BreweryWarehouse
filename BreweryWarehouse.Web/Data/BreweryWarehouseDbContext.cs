@@ -48,6 +48,18 @@ public class BreweryWarehouseDbContext : IdentityDbContext<AppUser>
             .IsRequired(false)
             .OnDelete(DeleteBehavior.SetNull);
 
+        modelBuilder.Entity<StockEntry>()
+            .HasOne(se => se.Container)
+            .WithMany()
+            .HasForeignKey(se => se.ContainerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<StockEntry>()
+            .HasOne(se => se.Location)
+            .WithMany(l => l.StockEntries)
+            .HasForeignKey(se => se.LocationId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         modelBuilder.Entity<Attachment>(entity =>
         {
             entity.HasKey(a => a.Id);

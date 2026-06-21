@@ -212,8 +212,29 @@ public class StockEntryController : Controller
             return NotFound();
         }
 
+        var attachments = _context.Attachments
+            .Where(a => a.StockEntryId == id)
+            .ToList();
+
+        foreach (var attachment in attachments)
+        {
+            var physicalPath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                attachment.FilePath.TrimStart('/'));
+            try
+            {
+                if (System.IO.File.Exists(physicalPath))
+                    System.IO.File.Delete(physicalPath);
+            }
+            catch (IOException ex)
+            {
+                _logger.LogWarning(ex, "Could not delete attachment file {FilePath} during StockEntry {Id} deletion", attachment.FilePath, id);
+            }
+        }
+
         repository.Delete(stockEntry);
-        _logger.LogInformation("StockEntry {Id} deleted by {User}", id, User.Identity?.Name);
+        _logger.LogInformation("StockEntry {Id} deleted (including {AttachmentCount} attachment files) by {User}", id, attachments.Count, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }
@@ -244,6 +265,18 @@ public class StockEntryController : Controller
         ViewBag.Locations = new SelectList(locations, "Id", "Label");
     }
 
+    private static readonly HashSet<string> _allowedContentTypes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "image/jpeg", "image/png", "image/gif", "image/webp",
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    };
+
+    private const long MaxFileSizeBytes = 10L * 1024 * 1024;
+
     [HttpPost]
     [Authorize(Roles = "Admin,WarehouseManager")]
     [Route("stock-entries/{id}/upload")]
@@ -256,6 +289,12 @@ public class StockEntryController : Controller
 
         if (file == null || file.Length == 0)
             return BadRequest("No file provided.");
+
+        if (file.Length > MaxFileSizeBytes)
+            return BadRequest("File exceeds the 10 MB size limit.");
+
+        if (!_allowedContentTypes.Contains(file.ContentType))
+            return BadRequest("File type not allowed. Accepted: images (JPEG, PNG, GIF, WebP), PDF, Word, Excel.");
 
         var uploadsPath = Path.Combine(
             Directory.GetCurrentDirectory(),

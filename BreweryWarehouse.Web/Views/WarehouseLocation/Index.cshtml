@@ -35,28 +35,37 @@
             </tr>
         </thead>
         <tbody id="locationTableBody">
-            @foreach (var location in Model)
+            @if (Model.Count == 0)
             {
-                int used = location.StockEntries.Sum(entry => entry.Quantity);
-                int max = location.MaxCapacity;
-                bool isOverfill = max > 0 && used > max;
-                double percentage = max > 0 ? (double)used / max * 100 : 0;
-                int bucketedPercentage = (int)(Math.Round(Math.Min(100.0, percentage) / 5.0) * 5);
-
                 <tr>
-                    <td>@location.LocationCode</td>
-                    <td>@location.Aisle</td>
-                    <td>@location.Shelf</td>
-                    <td>@used / @max</td>
-                    <td>
-                        <div class="location-track location-track--index" aria-label="@used out of @max used">
-                            <div class="location-fill @(isOverfill ? "location-fill--overfill" : "") bw-w-@bucketedPercentage"></div>
-                        </div>
-                    </td>
-                    <td>
-                        <a asp-controller="WarehouseLocation" asp-action="Details" asp-route-id="@location.Id" class="bw-pill-link">Details</a>
-                    </td>
+                    <td colspan="6">No records found.</td>
                 </tr>
+            }
+            else
+            {
+                @foreach (var location in Model)
+                {
+                    int used = location.StockEntries.Sum(entry => entry.Quantity);
+                    int max = location.MaxCapacity;
+                    bool isOverfill = max > 0 && used > max;
+                    double percentage = max > 0 ? (double)used / max * 100 : 0;
+                    int bucketedPercentage = (int)(Math.Round(Math.Min(100.0, percentage) / 5.0) * 5);
+
+                    <tr>
+                        <td>@location.LocationCode</td>
+                        <td>@location.Aisle</td>
+                        <td>@location.Shelf</td>
+                        <td>@used / @max</td>
+                        <td>
+                            <div class="location-track location-track--index" aria-label="@used out of @max used">
+                                <div class="location-fill @(isOverfill ? "location-fill--overfill" : "") bw-w-@bucketedPercentage"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <a asp-controller="WarehouseLocation" asp-action="Details" asp-route-id="@location.Id" class="bw-pill-link">Details</a>
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>

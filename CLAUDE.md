@@ -94,7 +94,11 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - Soft delete: Container and BeerStyle use DeletedAt (DateTime?) for soft deletion
 - Localization: Program.cs configures RequestLocalization with hr default and en-US fallback cultures
 - DatabaseSeeder: Data/DatabaseSeeder.cs seeds sample data on startup
-- EF migrations: stored in BreweryWarehouse.Web/Migrations/ with InitialCreate as the first migration
+- EF migrations: stored in BreweryWarehouse.Web/Migrations/ with InitialCreate as the first migration; RestrictStockEntryForeignKeys migration changes StockEntry.ContainerId and StockEntry.LocationId from CASCADE to RESTRICT
+- Delete behavior: Can.BeerStyleId, Keg.BeerStyleId, StockEntry.ContainerId, StockEntry.LocationId all use DeleteBehavior.Restrict; Attachment.StockEntryId uses Cascade (intentional); Employee.AppUserId uses SetNull
+- WarehouseLocationController.Delete: pre-checks StockEntries.Any() before attempting delete; shows TempData["Error"] with count if blocked; also catches DbUpdateException as safety net; redirects to Details on error
+- StockEntryController.Delete: cleans up physical attachment files (wwwroot/uploads/stock-entries/{id}/) before DB delete; file I/O errors are logged at Warning but don't abort the operation
+- StockEntryController.UploadAttachment: server-side validation — max 10 MB, allowed content types: image/jpeg, image/png, image/gif, image/webp, application/pdf, Word, Excel
 - Validation: wwwroot/js/site.js sets global jQuery validation to trigger on blur and disables onkeyup
 - Identity: BreweryWarehouseDbContext extends IdentityDbContext<AppUser>; roles Admin and WarehouseManager seeded via IdentitySeeder on startup
 
@@ -109,6 +113,7 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - WarehouseLocationApiController: GET/POST /api/locations, GET/PUT/DELETE /api/locations/{id}
 - StockEntryApiController: GET/POST /api/stock-entries, GET/PUT/DELETE /api/stock-entries/{id}
 - EmployeeApiController: GET/POST /api/employees, GET/PUT/DELETE /api/employees/{id}
+- GlobalSearchController: GET /search/global?q= (returns JSON, requires auth, min 2 chars)
 - UserManagementController: GET /UserManagement (Index), GET/POST /UserManagement/Edit/{id}
 
 ## Self-Update Rule
@@ -148,6 +153,7 @@ the current state of the project. Keep entries concise, one line per item.
 - WarehouseLocationMockRepository: static seeded List<WarehouseLocation> with GetAll() and GetById(int id)
 - StockEntryMockRepository: static seeded List<StockEntry> with GetAll() and GetById(int id)
 - EmployeeMockRepository: static seeded List<Employee> with GetAll() and GetById(int id)
+- GlobalSearchController: Controllers/GlobalSearchController.cs with [Authorize] [Route("search")], GET /search/global?q= returning flat JSON array of {category, label, subtitle, url} — searches BeerStyle.Name, Can.SLCode/Barcode, Keg.SLCode/SerialNumber, WarehouseLocation.LocationCode, StockEntry.Container.SLCode/Location.LocationCode, Employee.FirstName/LastName, plus static page list; min 2 chars required; 5 results per entity; pages appear first, User Roles page only for Admin role; URLs via Url.Action
 - UserManagementController: Controllers/UserManagementController.cs with [Authorize(Roles="Admin")], async Index() listing all users with roles, Edit(string id) GET/POST — injects UserManager&lt;AppUser&gt; and RoleManager&lt;IdentityRole&gt;; self-lockout guard on POST; logs role changes at Information level
 - UserManagement Views: Views/UserManagement/Index.cshtml (user+role table with TempData success alert), Views/UserManagement/Edit.cshtml (role assign form, self-lockout disabled state)
 - UserRoleListItem: Models/UserRoleListItem.cs — Id (string), Email (string), CurrentRole (string?)

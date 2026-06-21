@@ -3,6 +3,7 @@ using BreweryWarehouse.Web.Models;
 using BreweryWarehouse.Web.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BreweryWarehouse.Web.Controllers;
 
@@ -187,8 +188,25 @@ public class WarehouseLocationController : Controller
             return NotFound();
         }
 
-        repository.Delete(location);
-        _logger.LogInformation("WarehouseLocation {Id} '{LocationCode}' deleted by {User}", id, location.LocationCode, User.Identity?.Name);
+        if (location.StockEntries.Any())
+        {
+            int count = location.StockEntries.Count;
+            _logger.LogWarning("WarehouseLocation {Id} '{LocationCode}' delete blocked — {Count} stock {Plural} still reference it, by {User}",
+                id, location.LocationCode, count, count == 1 ? "entry" : "entries", User.Identity?.Name);
+            TempData["Error"] = $"Cannot delete '{location.LocationCode}' — {count} stock {(count == 1 ? "entry" : "entries")} reference this location. Remove the stock entries first.";
+            return RedirectToAction("Details", new { id });
+        }
+
+        try
+        {
+            repository.Delete(location);
+            _logger.LogInformation("WarehouseLocation {Id} '{LocationCode}' deleted by {User}", id, location.LocationCode, User.Identity?.Name);
+        }
+        catch (DbUpdateException)
+        {
+            TempData["Error"] = $"Cannot delete '{location.LocationCode}' — it is still referenced by stock entries.";
+            return RedirectToAction("Details", new { id });
+        }
 
         return RedirectToAction("Index");
     }

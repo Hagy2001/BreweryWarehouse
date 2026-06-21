@@ -139,7 +139,27 @@
 
     <div class="bw-shell">
         <aside class="bw-sidebar" aria-label="Primary">
-            <a asp-controller="Home" asp-action="Index" class="bw-brand">BREWERYWAREHOUSE</a>
+            <div class="bw-sidebar-top">
+                <a asp-controller="Home" asp-action="Index" class="bw-brand">BREWERYWAREHOUSE</a>
+                <button id="bw-nav-toggle" class="bw-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                    <span class="bw-nav-toggle__bar"></span>
+                    <span class="bw-nav-toggle__bar"></span>
+                    <span class="bw-nav-toggle__bar"></span>
+                </button>
+            </div>
+            <div class="bw-global-search">
+                <input type="text"
+                       id="bw-global-search-input"
+                       class="bw-global-search__input"
+                       placeholder="Search…"
+                       autocomplete="off"
+                       aria-label="Global search"
+                       aria-haspopup="listbox" />
+                <ul id="bw-global-search-results"
+                    class="bw-global-search__results"
+                    role="listbox"
+                    aria-label="Search results"></ul>
+            </div>
             <nav class="bw-nav">
                 <a asp-controller="Home" asp-action="Index" class="@GetActive("Home")" aria-current="@GetAriaCurrent("Home")">Home</a>
                 <a asp-controller="BeerStyle" asp-action="Index" class="@GetActive("BeerStyle")" aria-current="@GetAriaCurrent("BeerStyle")">Beer Styles</a>
@@ -174,5 +194,22 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/load-animation.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        (function () {
+            var btn = document.getElementById('bw-nav-toggle');
+            var sidebar = document.querySelector('.bw-sidebar');
+            if (!btn || !sidebar) return;
+            btn.addEventListener('click', function () {
+                var open = sidebar.classList.toggle('is-open');
+                btn.setAttribute('aria-expanded', String(open));
+            });
+            document.addEventListener('click', function (e) {
+                if (!sidebar.contains(e.target)) {
+                    sidebar.classList.remove('is-open');
+                    btn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

@@ -17,6 +17,11 @@
     </ol>
 </nav>
 
+@if (TempData["Error"] != null)
+{
+    <div class="bw-alert bw-alert--error">@TempData["Error"]</div>
+}
+
 <div class="bw-page-header">
     <h1 class="bw-page-title">Location: @Model.LocationCode</h1>
     <div class="bw-page-actions">

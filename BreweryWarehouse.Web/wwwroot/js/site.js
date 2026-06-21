@@ -26,6 +26,61 @@ $(function () {
     }
 });
 
+$(function () {
+    var $input = $('#bw-global-search-input');
+    var $results = $('#bw-global-search-results');
+
+    if (!$input.length) return;
+
+    var searchTimer;
+
+    $input.on('input', function () {
+        clearTimeout(searchTimer);
+        var q = $input.val().trim();
+        if (q.length < 2) { closeGlobalSearch(); return; }
+        searchTimer = setTimeout(function () {
+            $.getJSON('/search/global', { q: q })
+                .done(renderGlobalSearchResults)
+                .fail(closeGlobalSearch);
+        }, 300);
+    });
+
+    function renderGlobalSearchResults(items) {
+        $results.empty();
+        if (!items || !items.length) { $results.hide(); return; }
+
+        var currentCategory = null;
+        items.forEach(function (item) {
+            if (item.category !== currentCategory) {
+                currentCategory = item.category;
+                $results.append(
+                    $('<li class="bw-global-search__group-label"></li>').text(item.category)
+                );
+            }
+            var $item = $('<li class="bw-global-search__item" role="option"></li>');
+            $item.append($('<span class="bw-global-search__item-label"></span>').text(item.label));
+            if (item.subtitle) {
+                $item.append($('<span class="bw-global-search__item-sub"></span>').text(item.subtitle));
+            }
+            $item.on('click', function () { window.location.href = item.url; });
+            $results.append($item);
+        });
+        $results.show();
+    }
+
+    function closeGlobalSearch() {
+        $results.hide().empty();
+    }
+
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest('.bw-global-search').length) closeGlobalSearch();
+    });
+
+    $input.on('keydown', function (e) {
+        if (e.key === 'Escape') { closeGlobalSearch(); $input.blur(); }
+    });
+});
+
 function initDatePicker(container) {
     const displayInput = container.querySelector('.bw-datepicker__display');
     const hiddenInput = container.querySelector('.bw-datepicker__hidden');

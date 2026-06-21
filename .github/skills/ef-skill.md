@@ -14,7 +14,8 @@ description: Use this skill when adding or modifying EF entities, creating migra
 - All 1-N navigation collections are virtual ICollection<T>
 - All foreign keys follow the pattern: public int EntityNameId + [ForeignKey("EntityName")] + public virtual EntityName EntityName
 - TPH inheritance: Can and Keg both inherit Container, stored in a single Container table with a Discriminator column
-- DeleteBehavior.Restrict is set on Can.BeerStyleId and Keg.BeerStyleId in OnModelCreating to avoid cascade conflicts
+- DeleteBehavior.Restrict is set on Can.BeerStyleId, Keg.BeerStyleId, StockEntry.ContainerId, StockEntry.LocationId in OnModelCreating — prevents accidental cascade deletes. Attachment.StockEntryId is explicitly Cascade (intentional). Employee.AppUserId is SetNull.
+- Any new required FK must explicitly set DeleteBehavior in OnModelCreating — never rely on EF Core's default (Cascade for SQL Server), which silently deletes child rows.
 - All EF repositories use AddScoped lifetime in Program.cs
 - Repositories receive BreweryWarehouseDbContext via constructor DI
 - GetAll() uses Include() for direct navigation properties only
