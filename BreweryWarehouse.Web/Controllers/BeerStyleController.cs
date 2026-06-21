@@ -11,10 +11,12 @@ namespace BreweryWarehouse.Web;
 public class BeerStyleController : Controller
 {
     private readonly BeerStyleRepository repository;
+    private readonly ILogger<BeerStyleController> _logger;
 
-    public BeerStyleController(BeerStyleRepository repository)
+    public BeerStyleController(BeerStyleRepository repository, ILogger<BeerStyleController> logger)
     {
         this.repository = repository;
+        _logger = logger;
     }
 
     [Route("")]
@@ -85,6 +87,7 @@ public class BeerStyleController : Controller
     {
         if (!ModelState.IsValid)
         {
+            _logger.LogWarning("BeerStyle creation failed validation for {Name} by {User}", model.Name, User.Identity?.Name);
             return View(model);
         }
 
@@ -99,6 +102,7 @@ public class BeerStyleController : Controller
         };
 
         repository.Add(beerStyle);
+        _logger.LogInformation("BeerStyle {Id} '{Name}' created by {User}", beerStyle.Id, beerStyle.Name, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }
@@ -137,6 +141,7 @@ public class BeerStyleController : Controller
     {
         if (!ModelState.IsValid)
         {
+            _logger.LogWarning("BeerStyle {Id} edit failed validation by {User}", id, User.Identity?.Name);
             return View(model);
         }
 
@@ -155,6 +160,7 @@ public class BeerStyleController : Controller
         beerStyle.Category = model.Category;
 
         repository.Update();
+        _logger.LogInformation("BeerStyle {Id} '{Name}' updated by {User}", id, beerStyle.Name, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }
@@ -173,6 +179,7 @@ public class BeerStyleController : Controller
         }
 
         repository.SoftDelete(beerStyle);
+        _logger.LogInformation("BeerStyle {Id} '{Name}' soft-deleted by {User}", id, beerStyle.Name, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }

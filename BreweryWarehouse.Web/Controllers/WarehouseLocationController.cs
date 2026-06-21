@@ -11,10 +11,12 @@ namespace BreweryWarehouse.Web.Controllers;
 public class WarehouseLocationController : Controller
 {
     private readonly WarehouseLocationRepository repository;
+    private readonly ILogger<WarehouseLocationController> _logger;
 
-    public WarehouseLocationController(WarehouseLocationRepository repository)
+    public WarehouseLocationController(WarehouseLocationRepository repository, ILogger<WarehouseLocationController> logger)
     {
         this.repository = repository;
+        _logger = logger;
     }
 
     [Route("")]
@@ -97,6 +99,7 @@ public class WarehouseLocationController : Controller
     {
         if (!ModelState.IsValid)
         {
+            _logger.LogWarning("WarehouseLocation creation failed validation for {LocationCode} by {User}", model.LocationCode, User.Identity?.Name);
             return View(model);
         }
 
@@ -110,6 +113,7 @@ public class WarehouseLocationController : Controller
         };
 
         repository.Add(location);
+        _logger.LogInformation("WarehouseLocation {Id} '{LocationCode}' created by {User}", location.Id, location.LocationCode, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }
@@ -147,6 +151,7 @@ public class WarehouseLocationController : Controller
     {
         if (!ModelState.IsValid)
         {
+            _logger.LogWarning("WarehouseLocation {Id} edit failed validation by {User}", id, User.Identity?.Name);
             return View(model);
         }
 
@@ -164,6 +169,7 @@ public class WarehouseLocationController : Controller
         location.Description = model.Description ?? string.Empty;
 
         repository.Update();
+        _logger.LogInformation("WarehouseLocation {Id} '{LocationCode}' updated by {User}", id, location.LocationCode, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }
@@ -182,6 +188,7 @@ public class WarehouseLocationController : Controller
         }
 
         repository.Delete(location);
+        _logger.LogInformation("WarehouseLocation {Id} '{LocationCode}' deleted by {User}", id, location.LocationCode, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }

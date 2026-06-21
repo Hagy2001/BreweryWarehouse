@@ -485,3 +485,6 @@ $RECYCLE.BIN/
 
 # Lab requirements and tasks
 LabReqs/
+
+#deployment
+*.zip

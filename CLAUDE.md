@@ -165,9 +165,18 @@ Read and follow the linked skill file whenever the task matches the trigger. Do 
 | Adding or applying the custom date picker partial | `.claude/commands/datepicker-skill.md` |
 | Adding AJAX search, autocomplete dropdowns, or any jQuery interaction | `.claude/commands/ajax-js-skill.md` |
 | Creating or modifying the brewery load animation overlay | `.claude/commands/load-animation-skill.md` |
+| Adding logging to new controllers, changing log levels, or diagnosing log output | `.claude/commands/logging-skill.md` |
 
 ## UX Sub-Agent
 When generating or significantly modifying any Razor view (.cshtml), spawn a subagent using the Agent tool (subagent_type: claude) with the full contents of `.claude/agents/ux-agent.md` as its context. Hand off the specific view task; do not generate view code yourself.
+
+## Logging
+- Library: **Serilog** (`Serilog.AspNetCore` + `Serilog.Sinks.File`). Do not add a second logging library.
+- File path is resolved in `Program.cs` at startup: `/home/LogFiles/Application/log-.txt` on Azure App Service Linux (persistent storage), `logs/log-.txt` locally. Console sink is configured via `appsettings.json`; file sink path is code-only so the runtime check applies.
+- Rolling: daily, 14 files retained (bounded for Azure F1 1 GB cap).
+- Log levels: `BreweryWarehouse.*` → Information; `Microsoft.AspNetCore` → Warning; `Microsoft.AspNetCore.Authorization` → **Information** (surfaces Google-OAuth no-role denial events without custom code); `Microsoft.EntityFrameworkCore` → Warning.
+- Controller convention: log Warning on validation failure, Information on successful Create/Edit/Delete. No GET logging. Never log secrets (connection strings, passwords, OAuth tokens).
+- See `.claude/commands/logging-skill.md` for full conventions.
 
 ## Deployment
 - Hosted on Azure App Service (F1 Free, Linux, .NET 8): https://brewery-warehouse-hagy.azurewebsites.net
@@ -176,6 +185,6 @@ When generating or significantly modifying any Razor view (.cshtml), spawn a sub
 - Google OAuth redirect URI registered for both localhost (dev) and the azurewebsites.net domain (prod)
 - DatabaseSeeder runs unguarded in Production (intentional — populates Azure SQL with sample data on first boot for a demo-ready DB); idempotency already verified safe for repeat cold-starts
 - Known gap: `IdentitySeeder.cs` only assigns roles (Admin/WarehouseManager) to the two hardcoded local accounts (`admin@brewery.com`, `manager@brewery.com`). Google OAuth logins get an `AspNetUsers` row but **no role** — they'll hit "Access denied" on any `[Authorize(Roles=...)]` action until a role is assigned manually via Azure SQL Query editor (`INSERT INTO AspNetUserRoles`). Fixed once manually for testing; not yet automated.
-- TODO: build a real fix for the above — either an admin-email allowlist auto-assigned on first Google login, or an Admin-only "manage user roles" page, so new users don't need a manual SQL insert
+- TODO: build a real fix for the above — an Admin-only "manage user roles" page, so new users don't need a manual SQL insert
 - Known limitation: StockEntry attachment uploads to wwwroot are not guaranteed to survive a redeploy (not yet on Blob Storage)
 - Upgrade path: F1 → B1 App Service tier is a portal-only change, no redeploy needed, for custom domain / no cold-start later

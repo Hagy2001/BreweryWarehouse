@@ -13,11 +13,13 @@ public class EmployeeController : Controller
 {
     private readonly EmployeeRepository repository;
     private readonly UserManager<AppUser> _userManager;
+    private readonly ILogger<EmployeeController> _logger;
 
-    public EmployeeController(EmployeeRepository repository, UserManager<AppUser> userManager)
+    public EmployeeController(EmployeeRepository repository, UserManager<AppUser> userManager, ILogger<EmployeeController> logger)
     {
         this.repository = repository;
         _userManager = userManager;
+        _logger = logger;
     }
 
     [AllowAnonymous]
@@ -91,6 +93,7 @@ public class EmployeeController : Controller
     {
         if (!ModelState.IsValid)
         {
+            _logger.LogWarning("Employee creation failed validation for {FirstName} {LastName} by {User}", model.FirstName, model.LastName, User.Identity?.Name);
             return View(model);
         }
 
@@ -105,6 +108,7 @@ public class EmployeeController : Controller
         };
 
         repository.Add(employee);
+        _logger.LogInformation("Employee {Id} '{FirstName} {LastName}' created by {User}", employee.Id, employee.FirstName, employee.LastName, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }
@@ -148,6 +152,7 @@ public class EmployeeController : Controller
     {
         if (!ModelState.IsValid)
         {
+            _logger.LogWarning("Employee {Id} edit failed validation by {User}", id, User.Identity?.Name);
             var users = _userManager.Users
                 .OrderBy(u => u.Email)
                 .Select(u => new { u.Id, u.Email })
@@ -172,6 +177,7 @@ public class EmployeeController : Controller
         employee.AppUserId = string.IsNullOrEmpty(model.AppUserId) ? null : model.AppUserId;
 
         repository.Update();
+        _logger.LogInformation("Employee {Id} '{FirstName} {LastName}' updated by {User}", id, employee.FirstName, employee.LastName, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }
@@ -189,6 +195,7 @@ public class EmployeeController : Controller
         }
 
         repository.Delete(employee);
+        _logger.LogInformation("Employee {Id} '{FirstName} {LastName}' deleted by {User}", id, employee.FirstName, employee.LastName, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }

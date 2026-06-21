@@ -17,19 +17,22 @@ public class StockEntryController : Controller
     private readonly CanRepository canRepository;
     private readonly KegRepository kegRepository;
     private readonly WarehouseLocationRepository locationRepository;
+    private readonly ILogger<StockEntryController> _logger;
 
     public StockEntryController(
         BreweryWarehouseDbContext context,
         StockEntryRepository repository,
         CanRepository canRepository,
         KegRepository kegRepository,
-        WarehouseLocationRepository locationRepository)
+        WarehouseLocationRepository locationRepository,
+        ILogger<StockEntryController> logger)
     {
         _context = context;
         this.repository = repository;
         this.canRepository = canRepository;
         this.kegRepository = kegRepository;
         this.locationRepository = locationRepository;
+        _logger = logger;
     }
 
     [AllowAnonymous]
@@ -119,6 +122,7 @@ public class StockEntryController : Controller
     {
         if (!ModelState.IsValid)
         {
+            _logger.LogWarning("StockEntry creation failed validation (ContainerId: {ContainerId}, LocationId: {LocationId}) by {User}", model.ContainerId, model.LocationId, User.Identity?.Name);
             PopulateDropdowns();
             return View(model);
         }
@@ -134,6 +138,7 @@ public class StockEntryController : Controller
         };
 
         repository.Add(stockEntry);
+        _logger.LogInformation("StockEntry {Id} created (ContainerId: {ContainerId}, LocationId: {LocationId}, Qty: {Quantity}) by {User}", stockEntry.Id, stockEntry.ContainerId, stockEntry.LocationId, stockEntry.Quantity, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }
@@ -170,6 +175,7 @@ public class StockEntryController : Controller
     {
         if (!ModelState.IsValid)
         {
+            _logger.LogWarning("StockEntry {Id} edit failed validation by {User}", id, User.Identity?.Name);
             PopulateDropdowns();
             return View(model);
         }
@@ -189,6 +195,7 @@ public class StockEntryController : Controller
         stockEntry.Notes = model.Notes ?? string.Empty;
 
         repository.Update();
+        _logger.LogInformation("StockEntry {Id} updated (Qty: {Quantity}) by {User}", id, stockEntry.Quantity, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }
@@ -206,6 +213,7 @@ public class StockEntryController : Controller
         }
 
         repository.Delete(stockEntry);
+        _logger.LogInformation("StockEntry {Id} deleted by {User}", id, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }

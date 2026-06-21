@@ -13,11 +13,13 @@ public class KegController : Controller
 {
     private readonly KegRepository repository;
     private readonly BeerStyleRepository beerStyleRepository;
+    private readonly ILogger<KegController> _logger;
 
-    public KegController(KegRepository repository, BeerStyleRepository beerStyleRepository)
+    public KegController(KegRepository repository, BeerStyleRepository beerStyleRepository, ILogger<KegController> logger)
     {
         this.repository = repository;
         this.beerStyleRepository = beerStyleRepository;
+        _logger = logger;
     }
 
     [Route("")]
@@ -93,6 +95,7 @@ public class KegController : Controller
     {
         if (!ModelState.IsValid)
         {
+            _logger.LogWarning("Keg creation failed validation for SLCode {SLCode} by {User}", model.SLCode, User.Identity?.Name);
             PopulateBeerStyles();
             return View(model);
         }
@@ -110,6 +113,7 @@ public class KegController : Controller
         };
 
         repository.Add(keg);
+        _logger.LogInformation("Keg {Id} (SLCode: {SLCode}) created by {User}", keg.Id, keg.SLCode, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }
@@ -152,6 +156,7 @@ public class KegController : Controller
     {
         if (!ModelState.IsValid)
         {
+            _logger.LogWarning("Keg {Id} edit failed validation by {User}", id, User.Identity?.Name);
             PopulateBeerStyles();
             return View(model);
         }
@@ -173,6 +178,7 @@ public class KegController : Controller
         keg.BeerStyleId = model.BeerStyleId;
 
         repository.Update();
+        _logger.LogInformation("Keg {Id} (SLCode: {SLCode}) updated by {User}", id, keg.SLCode, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }
@@ -191,6 +197,7 @@ public class KegController : Controller
         }
 
         repository.SoftDelete(keg);
+        _logger.LogInformation("Keg {Id} (SLCode: {SLCode}) soft-deleted by {User}", id, keg.SLCode, User.Identity?.Name);
 
         return RedirectToAction("Index");
     }
