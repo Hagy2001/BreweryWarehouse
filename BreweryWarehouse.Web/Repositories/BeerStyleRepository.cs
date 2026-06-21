@@ -19,6 +19,7 @@ public class BeerStyleRepository
             .Where(beerStyle => beerStyle.DeletedAt == null)
             .Include(beerStyle => beerStyle.Cans)
             .Include(beerStyle => beerStyle.Kegs)
+            .AsSplitQuery()
             .ToList();
     }
 
@@ -27,6 +28,7 @@ public class BeerStyleRepository
         return _context.BeerStyles
             .Include(beerStyle => beerStyle.Cans)
             .Include(beerStyle => beerStyle.Kegs)
+            .AsSplitQuery()
             .FirstOrDefault(beerStyle => beerStyle.Id == id);
     }
 

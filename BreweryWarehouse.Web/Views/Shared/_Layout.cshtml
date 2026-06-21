@@ -148,6 +148,10 @@
                 <a asp-controller="WarehouseLocation" asp-action="Index" class="@GetActive("WarehouseLocation")" aria-current="@GetAriaCurrent("WarehouseLocation")">Locations</a>
                 <a asp-controller="StockEntry" asp-action="Index" class="@GetActive("StockEntry")" aria-current="@GetAriaCurrent("StockEntry")">Stock</a>
                 <a asp-controller="Employee" asp-action="Index" class="@GetActive("Employee")" aria-current="@GetAriaCurrent("Employee")">Employees</a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="UserManagement" asp-action="Index" class="@GetActive("UserManagement")" aria-current="@GetAriaCurrent("UserManagement")">User Roles</a>
+                }
             </nav>
 
             <partial name="_LoginPartial" />

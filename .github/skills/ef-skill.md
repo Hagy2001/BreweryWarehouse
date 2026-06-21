@@ -19,6 +19,7 @@ description: Use this skill when adding or modifying EF entities, creating migra
 - Repositories receive BreweryWarehouseDbContext via constructor DI
 - GetAll() uses Include() for direct navigation properties only
 - GetById(int id) uses .FirstOrDefault(x => x.Id == id) with the same includes
+- When a query includes more than one collection navigation (e.g. `.Include(b => b.Cans).Include(b => b.Kegs)`), chain `.AsSplitQuery()` before `.ToList()` / `.FirstOrDefault()` to avoid the EF Core cartesian-explosion warning. Example: BeerStyleRepository does this for both GetAll() and GetById().
 
 ## Migration Workflow
 After any model change, run these commands from BreweryWarehouse.Web/:

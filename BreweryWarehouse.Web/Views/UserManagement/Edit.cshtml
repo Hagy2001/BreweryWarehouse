@@ -1,0 +1,58 @@
+@model BreweryWarehouse.Web.Models.UserRoleEditModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Assign Role";
+    bool isCurrentUser = ViewBag.IsCurrentUser == true;
+}
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li><a asp-controller="UserManagement" asp-action="Index">User Management</a></li>
+        <li aria-current="page">Edit</li>
+    </ol>
+</nav>
+
+<div class="bw-page-header">
+    <h1 class="bw-page-title">Assign Role — @Model.Email</h1>
+</div>
+
+<div class="detail-card">
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+
+        <div class="bw-validation-summary" asp-validation-summary="ModelOnly"></div>
+
+        <div class="bw-field-group">
+            <p class="bw-form-label">@Model.Email</p>
+        </div>
+
+        <div class="bw-field-group">
+            <label class="bw-form-label" for="SelectedRole">Role</label>
+            <select id="SelectedRole" name="SelectedRole" class="bw-input" @(isCurrentUser ? "disabled=\"disabled\"" : "")>
+                @foreach (SelectListItem roleItem in (List<SelectListItem>)ViewBag.Roles)
+                {
+                    if (roleItem.Selected || roleItem.Value == Model.SelectedRole)
+                    {
+                        <option value="@roleItem.Value" selected="selected">@roleItem.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@roleItem.Value">@roleItem.Text</option>
+                    }
+                }
+            </select>
+            @if (isCurrentUser)
+            {
+                <p class="bw-form-note">You cannot change your own role.</p>
+            }
+        </div>
+
+        <div class="detail-actions">
+            <button type="submit" class="bw-btn bw-btn-primary" @(isCurrentUser ? "disabled=\"disabled\"" : "")>Save</button>
+            <a asp-action="Index" class="bw-btn bw-btn-ghost">Cancel</a>
+        </div>
+    </form>
+</div>

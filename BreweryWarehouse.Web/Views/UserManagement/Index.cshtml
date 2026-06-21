@@ -1,0 +1,54 @@
+@model List<BreweryWarehouse.Web.Models.UserRoleListItem>
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<nav aria-label="breadcrumb" class="bw-breadcrumb-nav">
+    <ol class="bw-breadcrumb">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li aria-current="page">User Management</li>
+    </ol>
+</nav>
+
+<div class="bw-page-header">
+    <h1 class="bw-page-title">User Management</h1>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="bw-alert bw-alert--success">@TempData["Success"]</div>
+}
+
+<div class="bw-table-wrap">
+    <table class="bw-table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Current Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Email</td>
+                    <td>
+                        @if (item.CurrentRole == null)
+                        {
+                            <span class="bw-badge bw-badge--inactive">No role assigned</span>
+                        }
+                        else
+                        {
+                            @item.CurrentRole
+                        }
+                    </td>
+                    <td>
+                        <a asp-controller="UserManagement" asp-action="Edit" asp-route-id="@item.Id" class="bw-pill-link">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

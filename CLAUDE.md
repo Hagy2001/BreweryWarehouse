@@ -109,6 +109,7 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - WarehouseLocationApiController: GET/POST /api/locations, GET/PUT/DELETE /api/locations/{id}
 - StockEntryApiController: GET/POST /api/stock-entries, GET/PUT/DELETE /api/stock-entries/{id}
 - EmployeeApiController: GET/POST /api/employees, GET/PUT/DELETE /api/employees/{id}
+- UserManagementController: GET /UserManagement (Index), GET/POST /UserManagement/Edit/{id}
 
 ## Self-Update Rule
 After completing any task that adds, removes or modifies classes, methods, 
@@ -147,6 +148,10 @@ the current state of the project. Keep entries concise, one line per item.
 - WarehouseLocationMockRepository: static seeded List<WarehouseLocation> with GetAll() and GetById(int id)
 - StockEntryMockRepository: static seeded List<StockEntry> with GetAll() and GetById(int id)
 - EmployeeMockRepository: static seeded List<Employee> with GetAll() and GetById(int id)
+- UserManagementController: Controllers/UserManagementController.cs with [Authorize(Roles="Admin")], async Index() listing all users with roles, Edit(string id) GET/POST — injects UserManager&lt;AppUser&gt; and RoleManager&lt;IdentityRole&gt;; self-lockout guard on POST; logs role changes at Information level
+- UserManagement Views: Views/UserManagement/Index.cshtml (user+role table with TempData success alert), Views/UserManagement/Edit.cshtml (role assign form, self-lockout disabled state)
+- UserRoleListItem: Models/UserRoleListItem.cs — Id (string), Email (string), CurrentRole (string?)
+- UserRoleEditModel: Models/UserRoleEditModel.cs — Id (string), Email (string), SelectedRole (string?)
 
 ## Current Enums
 - BeerCategory: Lager, Ale, IPA, Stout, Wheat, Sour, Porter
@@ -184,7 +189,7 @@ When generating or significantly modifying any Razor view (.cshtml), spawn a sub
 - Secrets (connection string under key `BreweryWarehouseDbContext`, Google OAuth) set via App Service Application Settings, never in appsettings.json
 - Google OAuth redirect URI registered for both localhost (dev) and the azurewebsites.net domain (prod)
 - DatabaseSeeder runs unguarded in Production (intentional — populates Azure SQL with sample data on first boot for a demo-ready DB); idempotency already verified safe for repeat cold-starts
-- Known gap: `IdentitySeeder.cs` only assigns roles (Admin/WarehouseManager) to the two hardcoded local accounts (`admin@brewery.com`, `manager@brewery.com`). Google OAuth logins get an `AspNetUsers` row but **no role** — they'll hit "Access denied" on any `[Authorize(Roles=...)]` action until a role is assigned manually via Azure SQL Query editor (`INSERT INTO AspNetUserRoles`). Fixed once manually for testing; not yet automated.
-- TODO: build a real fix for the above — an Admin-only "manage user roles" page, so new users don't need a manual SQL insert
+- Role assignment for new users: Google OAuth logins get an `AspNetUsers` row but no role. Assign roles via the Admin-only `/UserManagement` page (see UserManagementController). The previous workaround of manual `INSERT INTO AspNetUserRoles` via Azure SQL Query editor is no longer needed.
+- Known limitation: StockEntry attachment uploads to wwwroot are not guaranteed to survive a redeploy (not yet on Blob Storage)
 - Known limitation: StockEntry attachment uploads to wwwroot are not guaranteed to survive a redeploy (not yet on Blob Storage)
 - Upgrade path: F1 → B1 App Service tier is a portal-only change, no redeploy needed, for custom domain / no cold-start later

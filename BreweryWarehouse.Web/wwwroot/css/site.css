@@ -1007,6 +1007,13 @@ a:hover {
   font-weight: 600;
 }
 
+/* ─── Alert banners ─────────────────────────────────────────────────────── */
+.bw-alert { padding: .6rem 1rem; border-radius: 4px; margin-bottom: 1rem; font-size: 0.9rem; }
+.bw-alert--success { background: rgba(74,124,63,.18); border: 1px solid rgba(74,124,63,.4); color: var(--bw-success); }
+
+/* ─── Form notes ─────────────────────────────────────────────────────────── */
+.bw-form-note { font-size: 0.85rem; color: var(--bw-text-muted); margin-top: 0.25rem; }
+
 /* ─── Attachments section spacing ───────────────────────────────────────── */
 .bw-attachments-section {
   margin-top: 2rem;
