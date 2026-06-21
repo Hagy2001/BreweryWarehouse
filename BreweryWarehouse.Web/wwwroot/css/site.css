@@ -191,8 +191,13 @@ a:hover {
 }
 
 .bw-page-actions {
+  align-items: center;
   display: flex;
   gap: 0.6rem;
+}
+
+.bw-page-actions form {
+  margin: 0;
 }
 
 .bw-toolbar {
@@ -334,13 +339,14 @@ a:hover {
 .bw-pill-link,
 .bw-back-link {
   background: var(--bw-accent);
-  border-radius: 999px;
+  border-radius: 4px;
   color: var(--bw-bg);
   display: inline-block;
   font-family: "Barlow Condensed", sans-serif;
-  font-size: 0.8rem;
+  font-size: 13px;
   letter-spacing: 0.04em;
-  padding: 0.34rem 0.82rem;
+  line-height: 1;
+  padding: 6px 16px;
   text-transform: uppercase;
 }
 
@@ -579,6 +585,7 @@ a:hover {
   font-family: "Barlow Condensed", sans-serif;
   font-size: 13px;
   letter-spacing: 0.04em;
+  line-height: 1;
   padding: 6px 16px;
   text-align: center;
   text-transform: uppercase;
@@ -998,4 +1005,103 @@ a:hover {
   background: var(--bw-accent);
   color: var(--bw-bg);
   font-weight: 600;
+}
+
+/* ─── Attachments section spacing ───────────────────────────────────────── */
+.bw-attachments-section {
+  margin-top: 2rem;
+}
+
+.bw-attachments-empty {
+  margin-top: 1rem;
+}
+
+.bw-attachments-table {
+  margin-top: 1rem;
+}
+
+/* ─── Dropzone — brewery theme overrides ────────────────────────────────── */
+
+/* Drop area */
+.dropzone {
+  background: var(--bw-surface-2) !important;
+  border: 1px dashed rgba(255, 220, 120, 0.25) !important;
+  border-radius: 8px;
+  min-height: 120px;
+  padding: 2rem 1.5rem;
+  transition: border-color 140ms ease, background 140ms ease;
+}
+
+.dropzone:hover,
+.dropzone.dz-drag-hover {
+  background: var(--bw-surface) !important;
+  border-color: rgba(255, 220, 120, 0.5) !important;
+}
+
+/* Message text */
+.dropzone .dz-message {
+  color: var(--bw-text-muted);
+  font-family: "Barlow", sans-serif;
+  font-size: 0.95rem;
+  margin: 0;
+  text-align: center;
+}
+
+.dropzone .dz-message span,
+.dropzone .dz-message .note {
+  color: var(--bw-text-muted);
+  font-size: 0.85rem;
+}
+
+/* Hide the default upload icon/arrow (Dropzone injects it via ::before pseudo) */
+.dropzone .dz-message::before {
+  display: none;
+}
+
+/* File preview thumbnail */
+.dropzone .dz-preview .dz-image {
+  background: var(--bw-surface);
+  border-radius: 6px;
+}
+
+/* File detail text */
+.dropzone .dz-preview .dz-details {
+  background: var(--bw-surface-2);
+  color: var(--bw-text-muted);
+}
+
+.dropzone .dz-preview .dz-details .dz-filename span,
+.dropzone .dz-preview .dz-details .dz-size span {
+  background: transparent;
+  color: var(--bw-text-muted);
+}
+
+/* Progress bar track */
+.dropzone .dz-preview .dz-progress {
+  background: var(--bw-bg);
+  border-radius: 999px;
+  height: 6px;
+  overflow: hidden;
+}
+
+/* Progress bar fill — amber */
+.dropzone .dz-preview .dz-progress .dz-upload {
+  background: var(--bw-accent);
+}
+
+/* Success mark — amber tint */
+.dropzone .dz-preview.dz-success .dz-success-mark svg,
+.dropzone .dz-preview .dz-success-mark svg {
+  fill: var(--bw-accent);
+}
+
+/* Error mark — danger tint */
+.dropzone .dz-preview.dz-error .dz-error-mark svg,
+.dropzone .dz-preview .dz-error-mark svg {
+  fill: var(--bw-danger);
+}
+
+/* Fade in animation for previews */
+.dropzone .dz-preview {
+  background: var(--bw-surface);
 }

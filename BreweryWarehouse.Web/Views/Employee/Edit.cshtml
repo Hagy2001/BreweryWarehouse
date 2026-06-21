@@ -1,4 +1,5 @@
 @model BreweryWarehouse.Web.Models.EmployeeEditModel
+@using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
     ViewData["Title"] = "Edit Employee";
@@ -31,5 +32,22 @@
             DateHired = Model.DateHired,
             IsActive = Model.IsActive
         })" />
+        <div class="bw-field-group">
+            <label class="bw-form-label" for="AppUserId">Linked Account</label>
+            <select id="AppUserId" name="AppUserId" class="bw-input">
+                <option value="">— No linked account —</option>
+                @foreach (SelectListItem item in (SelectList)ViewBag.AppUsers)
+                {
+                    if (item.Selected)
+                    {
+                        <option value="@item.Value" selected="selected">@item.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                }
+            </select>
+        </div>
     </form>
 </div>

@@ -23,7 +23,7 @@ builder.Services.AddScoped<StockEntryRepository>();
 builder.Services.AddScoped<EmployeeRepository>();
 builder.Services
     .AddDefaultIdentity<AppUser>(options =>
-    {
+    { 
         options.SignIn.RequireConfirmedAccount = false;
         options.Password.RequireDigit = true;
         options.Password.RequiredLength = 8;

@@ -41,6 +41,13 @@ public class BreweryWarehouseDbContext : IdentityDbContext<AppUser>
             .HasForeignKey(keg => keg.BeerStyleId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<Employee>()
+            .HasOne<AppUser>()
+            .WithMany()
+            .HasForeignKey(e => e.AppUserId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
+
         modelBuilder.Entity<Attachment>(entity =>
         {
             entity.HasKey(a => a.Id);

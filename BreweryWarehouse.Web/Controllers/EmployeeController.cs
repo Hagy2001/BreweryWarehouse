@@ -2,7 +2,9 @@ using BreweryWarehouse.Model;
 using BreweryWarehouse.Web.Models;
 using BreweryWarehouse.Web.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BreweryWarehouse.Web.Controllers;
 
@@ -10,10 +12,12 @@ namespace BreweryWarehouse.Web.Controllers;
 public class EmployeeController : Controller
 {
     private readonly EmployeeRepository repository;
+    private readonly UserManager<AppUser> _userManager;
 
-    public EmployeeController(EmployeeRepository repository)
+    public EmployeeController(EmployeeRepository repository, UserManager<AppUser> userManager)
     {
         this.repository = repository;
+        _userManager = userManager;
     }
 
     [AllowAnonymous]
@@ -58,7 +62,7 @@ public class EmployeeController : Controller
     }
 
     [Authorize]
-    public IActionResult Details(int id)
+    public async Task<IActionResult> Details(int id)
     {
         Employee? employee = repository.GetById(id);
 
@@ -66,6 +70,9 @@ public class EmployeeController : Controller
         {
             return NotFound();
         }
+
+        if (employee.AppUserId != null)
+            ViewBag.LinkedUser = await _userManager.FindByIdAsync(employee.AppUserId);
 
         return View(employee);
     }
@@ -120,8 +127,15 @@ public class EmployeeController : Controller
             Email = employee.Email,
             Role = employee.Role,
             DateHired = employee.DateHired,
-            IsActive = employee.IsActive
+            IsActive = employee.IsActive,
+            AppUserId = employee.AppUserId
         };
+
+        var users = _userManager.Users
+            .OrderBy(u => u.Email)
+            .Select(u => new { u.Id, u.Email })
+            .ToList();
+        ViewBag.AppUsers = new SelectList(users, "Id", "Email", employee.AppUserId);
 
         return View(model);
     }
@@ -134,6 +148,11 @@ public class EmployeeController : Controller
     {
         if (!ModelState.IsValid)
         {
+            var users = _userManager.Users
+                .OrderBy(u => u.Email)
+                .Select(u => new { u.Id, u.Email })
+                .ToList();
+            ViewBag.AppUsers = new SelectList(users, "Id", "Email", model.AppUserId);
             return View(model);
         }
 
@@ -150,6 +169,7 @@ public class EmployeeController : Controller
         employee.Role = model.Role;
         employee.DateHired = model.DateHired!.Value;
         employee.IsActive = model.IsActive;
+        employee.AppUserId = string.IsNullOrEmpty(model.AppUserId) ? null : model.AppUserId;
 
         repository.Update();
 

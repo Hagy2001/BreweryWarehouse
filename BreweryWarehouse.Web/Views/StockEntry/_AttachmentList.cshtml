@@ -2,13 +2,13 @@
 
 @if (!Model.Any())
 {
-    <p class="bw-text-muted" style="margin-top: 1rem;">
+    <p class="bw-text-muted bw-attachments-empty">
         No attachments yet.
     </p>
 }
 else
 {
-    <table class="bw-table" style="margin-top: 1rem;">
+    <table class="bw-table bw-attachments-table">
         <thead>
             <tr>
                 <th>File</th>
@@ -30,7 +30,7 @@ else
                     <td>@a.CreatedAt.ToString("dd MMM yyyy HH:mm")</td>
                     <td>
                         <button type="button"
-                                class="bw-btn bw-btn--danger bw-btn--sm"
+                                class="bw-btn bw-btn-danger"
                                 onclick="deleteAttachment(@a.Id)">
                             Delete
                         </button>

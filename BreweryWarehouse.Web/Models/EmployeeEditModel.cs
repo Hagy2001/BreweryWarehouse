@@ -33,4 +33,7 @@ public class EmployeeEditModel
 
     [Display(Name = "Active")]
     public bool IsActive { get; set; } = true;
+
+    [Display(Name = "Linked Account")]
+    public string? AppUserId { get; set; }
 }

@@ -12,6 +12,8 @@ public class DashboardViewModel
 
     public int TotalBeerStyles { get; set; }
 
+    public int TotalStockUnits { get; set; }
+
     public List<Can> ExpiringCans { get; set; } = new();
 
     public List<Keg> ExpiringKegs { get; set; } = new();

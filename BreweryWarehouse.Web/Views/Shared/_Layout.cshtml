@@ -150,12 +150,6 @@
                 <a asp-controller="Employee" asp-action="Index" class="@GetActive("Employee")" aria-current="@GetAriaCurrent("Employee")">Employees</a>
             </nav>
 
-            @if (User.Identity?.IsAuthenticated == true)
-            {
-                <div class="bw-sidebar-footer" aria-label="Active user">
-                    <div class="bw-sidebar-footer__user">@User.Identity.Name</div>
-                </div>
-            }
             <partial name="_LoginPartial" />
         </aside>
 

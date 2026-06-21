@@ -18,4 +18,6 @@ public class Employee
     public DateTime DateHired { get; set; }
 
     public bool IsActive { get; set; }
+
+    public string? AppUserId { get; set; }
 }

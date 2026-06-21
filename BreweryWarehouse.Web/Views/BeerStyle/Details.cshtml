@@ -12,7 +12,16 @@
     </ol>
 </nav>
 
-<h1 class="bw-page-title">@Model.Name</h1>
+<div class="bw-page-header">
+    <h1 class="bw-page-title">@Model.Name</h1>
+    <div class="bw-page-actions">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="bw-btn bw-btn-primary">Edit Style</a>
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this beer style?');">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="bw-btn bw-btn-danger">Delete Style</button>
+        </form>
+    </div>
+</div>
 
 <div class="detail-card">
     <div class="detail-card__header">
@@ -107,13 +116,5 @@
         </table>
     </div>
 </section>
-
-<div class="detail-actions">
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="bw-btn bw-btn-primary">Edit Style</a>
-    <form asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this beer style?');">
-        @Html.AntiForgeryToken()
-        <button type="submit" class="bw-btn bw-btn-danger">Delete Style</button>
-    </form>
-</div>
 
 <a asp-controller="BeerStyle" asp-action="Index" class="bw-back-link">Back to Beer Styles</a>

@@ -14,17 +14,20 @@ public class HomeController : Controller
     private readonly CanRepository _canRepository;
     private readonly KegRepository _kegRepository;
     private readonly WarehouseLocationRepository _warehouseLocationRepository;
+    private readonly StockEntryRepository _stockEntryRepository;
 
     public HomeController(
         BeerStyleRepository beerStyleRepository,
         CanRepository canRepository,
         KegRepository kegRepository,
-        WarehouseLocationRepository warehouseLocationRepository)
+        WarehouseLocationRepository warehouseLocationRepository,
+        StockEntryRepository stockEntryRepository)
     {
         _beerStyleRepository = beerStyleRepository;
         _canRepository = canRepository;
         _kegRepository = kegRepository;
         _warehouseLocationRepository = warehouseLocationRepository;
+        _stockEntryRepository = stockEntryRepository;
     }
 
     [Authorize]
@@ -34,6 +37,7 @@ public class HomeController : Controller
         List<Model.Can> cans = _canRepository.GetAll();
         List<Model.Keg> kegs = _kegRepository.GetAll();
         List<Model.WarehouseLocation> locations = _warehouseLocationRepository.GetAll();
+        List<Model.StockEntry> stockEntries = _stockEntryRepository.GetAll();
 
         DateTime cutoffDate = DateTime.Today.AddDays(30);
 
@@ -43,6 +47,7 @@ public class HomeController : Controller
             TotalKegs = kegs.Count,
             TotalLocations = locations.Count,
             TotalBeerStyles = beerStyles.Count,
+            TotalStockUnits = stockEntries.Sum(e => e.Quantity),
             ExpiringCans = cans
                 .Where(can => can.BestBefore.Date <= cutoffDate)
                 .OrderBy(can => can.BestBefore)

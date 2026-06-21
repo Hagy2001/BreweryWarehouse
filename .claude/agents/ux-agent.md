@@ -1,14 +1,3 @@
----
-name: UX Agent
-description: 'Brewery-themed UI/UX specialist. Generates and refines Razor views for BreweryWarehouse.Web using the brewery industrial design system.'
-model: Gemini 3.1 Pro (Preview) (copilot)
-tools:
-  - search/codebase
-  - edit/editFiles
-  - read/problems
-target: vscode
----
-
 # UX Sub-Agent — BreweryWarehouse.Web
 
 You are a specialised UI/UX agent for the BreweryWarehouse ASP.NET Core MVC project.
@@ -181,6 +170,24 @@ The custom home page must show a **warehouse overview dashboard**:
 - All icon-only buttons need `aria-label`
 - Colour contrast: `--bw-text` on `--bw-surface` must pass WCAG AA (4.5:1)
 - Heading hierarchy: one `<h1>` per page, then `<h2>`, `<h3>` in order
+
+---
+
+### Dropzone Upload Areas
+
+Dropzone.js is used on the StockEntry Edit view for file attachments. Its stylesheet (`dropzone.min.css`) is loaded inside `@section Scripts`, which renders **after** `site.css` in the `<head>` — so Dropzone's default white `background` and blue `border` override any plain site.css rules.
+
+**Always use `!important`** on `background` and `border` overrides for `.dropzone` selectors in `site.css`.
+
+Themed appearance:
+- Rest state: `background: var(--bw-surface-2) !important`, `border: 1px dashed rgba(255,220,120,.25) !important`, `border-radius: 8px`
+- Hover / drag-over: `background: var(--bw-surface) !important`, `border-color: rgba(255,220,120,.5) !important`
+- Message text: `color: var(--bw-text-muted)`, `font-family: "Barlow", sans-serif`
+- Progress bar fill: `var(--bw-accent)` (amber); track: `var(--bw-bg)`
+- Success mark SVG: `fill: var(--bw-accent)`; Error mark SVG: `fill: var(--bw-danger)`
+- File preview / detail backgrounds: `var(--bw-surface)` / `var(--bw-surface-2)`
+
+Never use white, light-grey, or blue tones anywhere in the drop area.
 
 ---
 
