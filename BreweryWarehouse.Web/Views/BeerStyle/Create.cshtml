@@ -14,8 +14,46 @@
 
 <h1 class="bw-page-title">New Beer Style</h1>
 
+<div class="detail-card bw-ai-panel">
+    <h2 class="bw-ai-panel__heading">AI Quick Add</h2>
+    <p class="bw-text-muted">Describe the beer style in plain text and the AI will pre-fill the form below.</p>
+
+    @if (TempData["AiError"] != null)
+    {
+        <div class="bw-alert bw-alert--error">@TempData["AiError"]</div>
+    }
+
+    <form asp-action="AiQuickAdd" method="post">
+        @Html.AntiForgeryToken()
+        <div class="bw-field-group">
+            <label class="bw-form-label" for="aiPrompt">Your description</label>
+            <textarea id="aiPrompt"
+                      name="prompt"
+                      class="bw-input"
+                      rows="3"
+                      placeholder="Describe the beer style in plain text, e.g. a hoppy New England IPA, 6.5% ABV, 60 IBU…"></textarea>
+        </div>
+        <button type="submit" id="aiGenerateBtn" class="bw-btn bw-btn-primary">Generate with AI</button>
+    </form>
+</div>
+
+<div class="bw-section-divider">
+    <span class="bw-section-divider__label">or fill in manually</span>
+</div>
+
 <div class="detail-card">
     <form asp-action="Create" method="post">
         <partial name="_CreateOrEdit" model="Model" />
     </form>
 </div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('#aiGenerateBtn').closest('form').on('submit', function () {
+                var btn = $('#aiGenerateBtn');
+                btn.prop('disabled', true).text('Generating...');
+            });
+        });
+    </script>
+}

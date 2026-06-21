@@ -16,6 +16,7 @@ description: Use this skill when adding or modifying EF entities, creating migra
 - TPH inheritance: Can and Keg both inherit Container, stored in a single Container table with a Discriminator column
 - DeleteBehavior.Restrict is set on Can.BeerStyleId and Keg.BeerStyleId in OnModelCreating to avoid cascade conflicts
 - All EF repositories use AddScoped lifetime in Program.cs
+- DbContext is registered with `EnableRetryOnFailure(maxRetryCount:5, maxRetryDelay:30s)` — required for Azure SQL serverless which can return transient errors on auto-resume; always keep this when modifying the UseSqlServer call
 - Repositories receive BreweryWarehouseDbContext via constructor DI
 - GetAll() uses Include() for direct navigation properties only
 - GetById(int id) uses .FirstOrDefault(x => x.Id == id) with the same includes

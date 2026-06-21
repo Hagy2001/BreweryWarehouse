@@ -115,6 +115,52 @@ A craft brewery warehouse management system built with ASP.NET Core MVC / C# .NE
 - EmployeeApiController: GET/POST /api/employees, GET/PUT/DELETE /api/employees/{id}
 - GlobalSearchController: GET /search/global?q= (returns JSON, requires auth, min 2 chars)
 - UserManagementController: GET /UserManagement (Index), GET/POST /UserManagement/Edit/{id}
+- MCP Server: /mcp (SSE + HTTP transport, API-key auth via X-Mcp-Api-Key header, Mcp__ApiKey app setting)
+
+## MCP Server
+
+Endpoint: `/mcp` — Model Context Protocol server hosted inside the ASP.NET Core app (same process/deployment).
+Packages: `ModelContextProtocol` + `ModelContextProtocol.AspNetCore` v0.3.0-preview.2.
+Auth: `X-Mcp-Api-Key` request header validated against the `Mcp__ApiKey` App Service Application Setting. Missing or wrong key → 401.
+Tool files: `BreweryWarehouse.Web/McpTools/` — one class per entity + `McpApiKeyAuthHandler.cs`.
+
+### Exposed tools
+
+| Tool name | Entity | Operation |
+|---|---|---|
+| `list_beer_styles` | BeerStyle | GetAll() — excludes soft-deleted |
+| `get_beer_style` | BeerStyle | GetById(id) |
+| `create_beer_style` | BeerStyle | Add() — full write proof |
+| `list_cans` | Can | GetAll() |
+| `get_can` | Can | GetById(id) |
+| `list_kegs` | Keg | GetAll() |
+| `get_keg` | Keg | GetById(id) |
+| `list_warehouse_locations` | WarehouseLocation | GetAll() |
+| `get_warehouse_location` | WarehouseLocation | GetById(id) |
+| `list_stock_entries` | StockEntry | GetAll() |
+| `get_stock_entry` | StockEntry | GetById(id) |
+| `list_employees` | Employee | GetAll() |
+| `get_employee` | Employee | GetById(id) |
+
+### Connecting from an agentic IDE
+
+Add to your MCP client config (e.g. Claude Code `mcp.json`, VS Code `settings.json` MCP block):
+
+```json
+{
+  "mcpServers": {
+    "brewery-warehouse": {
+      "url": "https://brewery-warehouse-hagy.azurewebsites.net/mcp",
+      "headers": {
+        "X-Mcp-Api-Key": "<value-of-Mcp__ApiKey-setting>"
+      }
+    }
+  }
+}
+```
+
+For local development: `"url": "https://localhost:7001/mcp"` (or whichever port the app runs on).
+Set the key locally via `dotnet user-secrets set "Mcp__ApiKey" "<your-key>"` or in environment as `Mcp__ApiKey=<value>`.
 
 ## Self-Update Rule
 After completing any task that adds, removes or modifies classes, methods, 
@@ -157,6 +203,13 @@ the current state of the project. Keep entries concise, one line per item.
 - UserManagementController: Controllers/UserManagementController.cs with [Authorize(Roles="Admin")], async Index() listing all users with roles, Edit(string id) GET/POST — injects UserManager&lt;AppUser&gt; and RoleManager&lt;IdentityRole&gt;; self-lockout guard on POST; logs role changes at Information level
 - UserManagement Views: Views/UserManagement/Index.cshtml (user+role table with TempData success alert), Views/UserManagement/Edit.cshtml (role assign form, self-lockout disabled state)
 - UserRoleListItem: Models/UserRoleListItem.cs — Id (string), Email (string), CurrentRole (string?)
+- McpApiKeyHandler: McpTools/McpApiKeyAuthHandler.cs — McpApiKeyRequirement + IAuthorizationHandler; validates X-Mcp-Api-Key header against Mcp__ApiKey config; wired as "McpApiKey" policy
+- BeerStyleTools: McpTools/BeerStyleTools.cs — [McpServerToolType]; list_beer_styles, get_beer_style, create_beer_style
+- CanTools: McpTools/CanTools.cs — [McpServerToolType]; list_cans, get_can
+- KegTools: McpTools/KegTools.cs — [McpServerToolType]; list_kegs, get_keg
+- WarehouseLocationTools: McpTools/WarehouseLocationTools.cs — [McpServerToolType]; list_warehouse_locations, get_warehouse_location
+- StockEntryTools: McpTools/StockEntryTools.cs — [McpServerToolType]; list_stock_entries, get_stock_entry
+- EmployeeTools: McpTools/EmployeeTools.cs — [McpServerToolType]; list_employees, get_employee
 - UserRoleEditModel: Models/UserRoleEditModel.cs — Id (string), Email (string), SelectedRole (string?)
 
 ## Current Enums
@@ -189,13 +242,23 @@ When generating or significantly modifying any Razor view (.cshtml), spawn a sub
 - Controller convention: log Warning on validation failure, Information on successful Create/Edit/Delete. No GET logging. Never log secrets (connection strings, passwords, OAuth tokens).
 - See `.claude/commands/logging-skill.md` for full conventions.
 
+## AI Integration
+- Package: `OpenAI` v2.2.0 (official Microsoft/OpenAI SDK), pointed at DeepSeek's base URL (`https://api.deepseek.com`) — no DeepSeek-specific package needed
+- Model: `deepseek-v4-flash` — do NOT use `deepseek-chat` (legacy alias, stops working 2026-07-24)
+- `OpenAIClient` registered as `AddSingleton` in Program.cs; API key read from `IConfiguration["DeepSeek:ApiKey"]` (App Service setting `DeepSeek__ApiKey`, local dev via user-secrets)
+- Feature: "AI Quick Add" on BeerStyle Create page — user describes a beer style in plain text, AI pre-fills the Create form via `BeerStyleController.AiQuickAdd` POST action (`/beer-styles/ai-quick-add`)
+- Human-in-the-loop design: AI never writes directly to the DB — it returns a pre-populated `BeerStyleCreateModel` back to the Create view for user review and manual Save. This reuses the existing validated Create path and gives a human review step before any data is persisted.
+- JSON output mode (`ChatResponseFormat.CreateJsonObjectFormat()`) used for reliable structured extraction; temperature 0, max 300 tokens
+- Error handling: API failures (including 401 = empty prepaid balance) degrade gracefully to an empty Create form with a user-friendly TempData error message; logged at Warning
+- Extension path: this pattern can be applied to other entities (Can, Keg, etc.) using their respective CreateModel and a matching AiQuickAdd action
+
 ## Deployment
 - Hosted on Azure App Service (F1 Free, Linux, .NET 8): https://brewery-warehouse-hagy.azurewebsites.net
 - Database: Azure SQL Database (free serverless tier), same region (swedencentral)
 - Secrets (connection string under key `BreweryWarehouseDbContext`, Google OAuth) set via App Service Application Settings, never in appsettings.json
 - Google OAuth redirect URI registered for both localhost (dev) and the azurewebsites.net domain (prod)
-- DatabaseSeeder runs unguarded in Production (intentional — populates Azure SQL with sample data on first boot for a demo-ready DB); idempotency already verified safe for repeat cold-starts
+- DatabaseSeeder and IdentitySeeder are wrapped in try/catch in Program.cs — a slow or failed cold-start DB connection logs an error but does NOT crash the app; the app starts and serves requests regardless
+- Azure SQL serverless cold-start risk: free-tier database auto-pauses when idle; the connection string should include `Connection Timeout=60` and EF Core is configured with `EnableRetryOnFailure(maxRetryCount:5, maxRetryDelay:30s)` to handle transient resume delays automatically
 - Role assignment for new users: Google OAuth logins get an `AspNetUsers` row but no role. Assign roles via the Admin-only `/UserManagement` page (see UserManagementController). The previous workaround of manual `INSERT INTO AspNetUserRoles` via Azure SQL Query editor is no longer needed.
-- Known limitation: StockEntry attachment uploads to wwwroot are not guaranteed to survive a redeploy (not yet on Blob Storage)
 - Known limitation: StockEntry attachment uploads to wwwroot are not guaranteed to survive a redeploy (not yet on Blob Storage)
 - Upgrade path: F1 → B1 App Service tier is a portal-only change, no redeploy needed, for custom domain / no cold-start later

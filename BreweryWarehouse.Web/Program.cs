@@ -1,15 +1,19 @@
 using BreweryWarehouse.Web.Binders;
 using BreweryWarehouse.Web.Data;
+using BreweryWarehouse.Web.McpTools;
 using BreweryWarehouse.Web.Repositories;
 using BreweryWarehouse.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using ModelContextProtocol.Server;
 using System.Globalization;
 using BreweryWarehouse.Web.Models;
 using System.Reflection;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Serilog;
+using OpenAI;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -54,7 +58,8 @@ try
     {
         options.Events.OnRedirectToLogin = context =>
         {
-            if (context.Request.Path.StartsWithSegments("/api"))
+            if (context.Request.Path.StartsWithSegments("/api") ||
+                context.Request.Path.StartsWithSegments("/mcp"))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return Task.CompletedTask;
@@ -65,7 +70,8 @@ try
 
         options.Events.OnRedirectToAccessDenied = context =>
         {
-            if (context.Request.Path.StartsWithSegments("/api"))
+            if (context.Request.Path.StartsWithSegments("/api") ||
+                context.Request.Path.StartsWithSegments("/mcp"))
             {
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
                 return Task.CompletedTask;
@@ -83,8 +89,28 @@ try
             options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
         });
     builder.Services.AddDbContext<BreweryWarehouseDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("BreweryWarehouseDbContext")));
-    builder.Services.AddAuthorization();
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("BreweryWarehouseDbContext"),
+            sqlOptions => sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorNumbersToAdd: null)));
+    builder.Services.AddHttpContextAccessor();
+    builder.Services.AddScoped<IAuthorizationHandler, McpApiKeyHandler>();
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("McpApiKey", policy =>
+            policy.AddRequirements(new McpApiKeyRequirement()));
+    });
+    builder.Services
+        .AddMcpServer()
+        .WithHttpTransport()
+        .WithToolsFromAssembly();
+    var deepSeekApiKey = builder.Configuration["DeepSeek:ApiKey"] ?? string.Empty;
+    builder.Services.AddSingleton(new OpenAIClient(
+        new System.ClientModel.ApiKeyCredential(deepSeekApiKey),
+        new OpenAIClientOptions { Endpoint = new Uri("https://api.deepseek.com") }));
+
     builder.Services.AddRazorPages();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(options =>
@@ -109,9 +135,16 @@ try
 
     if (!app.Environment.IsEnvironment("Testing"))
     {
-        using var scope = app.Services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<BreweryWarehouseDbContext>();
-        await DatabaseSeeder.SeedAsync(context);
+        try
+        {
+            using var scope = app.Services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<BreweryWarehouseDbContext>();
+            await DatabaseSeeder.SeedAsync(context);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Database seeding failed — app will continue without seed data");
+        }
     }
 
     // Configure the HTTP request pipeline.
@@ -149,10 +182,16 @@ try
         pattern: "{controller=Home}/{action=Index}/{id?}");
 
     app.MapRazorPages();
+    app.MapMcp("/mcp").RequireAuthorization("McpApiKey");
 
-    using (var scope = app.Services.CreateScope())
+    try
     {
+        using var scope = app.Services.CreateScope();
         await IdentitySeeder.SeedAsync(scope.ServiceProvider);
+    }
+    catch (Exception ex)
+    {
+        Log.Error(ex, "Identity seeding failed — app will continue without seeded roles/users");
     }
 
     app.Run();
