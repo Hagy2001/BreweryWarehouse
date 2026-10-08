@@ -131,7 +131,7 @@ public class BeerStyleController : Controller
 
                 model = new BeerStyleCreateModel
                 {
-                    Name = root.TryGetProperty("Name", out var name) && name.ValueKind != JsonValueKind.Null
+                    Name = root.TryGetProperty(" ", out var name) && name.ValueKind != JsonValueKind.Null
                         ? name.GetString() ?? string.Empty : string.Empty,
                     Description = root.TryGetProperty("Description", out var desc) && desc.ValueKind != JsonValueKind.Null
                         ? desc.GetString() ?? string.Empty : string.Empty,

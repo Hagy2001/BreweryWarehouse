@@ -488,3 +488,5 @@ LabReqs/
 
 #deployment
 *.zip
+
+BreweryWarehouse.Web/appsettings.json
